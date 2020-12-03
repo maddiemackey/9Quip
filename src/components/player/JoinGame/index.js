@@ -1,19 +1,14 @@
 import React from "react";
+import { Input, Label } from "reactstrap";
 import "./index.css";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Input,
-  Label,
-} from "reactstrap";
-//import firebase, { getDbData } from "../Firebase/firebase";
+import Logo from "../../shared/Logo";
 
 function JoinGameScreen() {
   return (
-    <div className="container">
-      <div>LOGO HERE</div>
-      <div>9Quip</div>
+    <div className="join-game-container">
+      <div className="join-game-item">
+        <Logo />
+      </div>
       <div>
         <Label>Name</Label>
         <Input placeholder="George" type="text" />

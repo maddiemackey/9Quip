@@ -13,7 +13,7 @@ export default class Footer extends React.Component {
     return (
       <div className="App-footer">
         <p>Team Zoomer</p>
-        <Button>Exit</Button>
+        <Button style={{marginLeft: "auto", minWidth: "10%"}}>Exit</Button>
       </div>
     );
   }
