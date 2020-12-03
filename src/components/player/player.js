@@ -1,5 +1,6 @@
 import React from "react";
 import "../../App.css";
+import Footer from "../footer";
 import JoinGame from "./JoinGame";
 import Loading from "./Loading";
 //import firebase, { getDbData } from "../Firebase/firebase";
@@ -12,9 +13,12 @@ export default class Player extends React.Component {
 
   render() {
     return (
-      <div className="App-body">
+      <div>
+        <div className="player-body">
         {/* <JoinGame></JoinGame> */}
         <Loading loadingText="Waiting on Players"></Loading>
+        </div>
+        <Footer/>
       </div>
     );
   }
