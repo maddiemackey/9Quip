@@ -38,7 +38,7 @@ export default class Host extends React.Component {
                 const refRounds = firebase.database().ref(`games/${this.state.gameid}/rounds`);
                 refRounds.push(promptsReturned);
                 const ref = firebase.database().ref(`games/${this.state.gameid}`);
-                const newGameRef = ref.update({gamestate: GameState.quipping});
+                ref.update({gamestate: GameState.quipping});
                 this.setState({ gamestate: "QUIPPING" });
             }
         });
