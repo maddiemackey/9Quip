@@ -17,25 +17,6 @@ export default class Player extends React.Component {
     this.state = { prompts: null };
   }
 
-  // componentDidUpdate() {
-  //   if(this.context.mainGameState === GameState.quipping) {
-  //     this.loadPrompts();
-  //   }
-  // }
-
-  // loadPrompts = async () => {
-  //   return new Promise((res, rej) => {
-  //     const ref = firebase.database().ref(`games/${this.state.gameId}/players/${this.state.playerId}/prompts`);
-  //     ref.once("value", (snapshot) => {
-  //         const prompts = snapshot.val();
-  //         this.setState({
-  //           prompts: prompts
-  //         });
-  //         return res(prompts);
-  //       });
-  //   });
-  // }
-
   getViewToRender() {
     switch (this.context.mainGameState) {
       case null:
@@ -60,25 +41,8 @@ export default class Player extends React.Component {
   render() {
     return (
       <div>
-        <div className="player-body">
-          {this.getViewToRender()}
-          {/* <Score /> */}
-          {/* <Voting
-            options={[
-              {
-                answer: "testing mctestface testing 123 different size answer",
-              },
-              { answer: "testing 2" },
-              { answer: "testing 3" },
-              { answer: "testing 4" },
-              { answer: "testing 5" },
-            ]}
-          /> */}
-          {/* <Quipping></Quipping> */}
-          {/* <JoinGame></JoinGame> */}
-          {/* <Loading loadingText="Waiting on Players"></Loading> */}
-        </div>
-        <Footer exit={this.context.exitGame} inGame={!!this.context.gameId}/>
+        <div className="player-body">{this.getViewToRender()}</div>
+        <Footer exit={this.context.exitGame} inGame={!!this.context.gameId} />
       </div>
     );
   }

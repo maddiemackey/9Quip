@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 
 import "./index.css";
-import LegoHead from "../../../assets/lego-head.png";
 
 import { ClientGameContext } from "../GameContext";
+import PlayerLegoHead from "../../shared/playerLegoHead";
 
 // "borrowed" from the internet, don't ask what it does, this is a hackathon for god sakes!
 function ordinal(n) {
@@ -14,8 +14,8 @@ function ordinal(n) {
 
 //WIP
 // TODO: break out into it's own component
-function Avatar() {
-  return <img className="user-avatar" alt="user avatar" src={LegoHead}></img>;
+function Avatar({ iconName }) {
+  return <PlayerLegoHead classThing={"user-avatar"} headName={iconName} />;
 }
 
 function Score() {
@@ -24,19 +24,16 @@ function Score() {
   return (
     <div className="score-container">
       <div className="score-position-container">
-        {/* TOOD: replace with actual value */}
         <div className="score-bubble">
           {context.playerPosition ? ordinal(context.playerPosition) : "?"}
         </div>
       </div>
       <div>
-        <Avatar />
+        <Avatar iconName={context.playerHead} />
       </div>
-      {/* TODO: replace with actual points */}
       <div>
         <span className="score-user-points">{context.playerScore} </span>pts
       </div>
-      {/* </div> */}
     </div>
   );
 }

@@ -32,6 +32,7 @@ export class ClientGameContextProvider extends React.Component {
       playerId: null,
       round: null,
       playerScore: 0,
+      playerHead: null,
       playerPosition: null,
       voteState: null,
     };
@@ -192,62 +193,66 @@ export class ClientGameContextProvider extends React.Component {
       // get round ID
       let roundRef = "";
       if (this.state.round === 0) {
-        roundRef = firebase.database().ref(`games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`);
+        roundRef = firebase
+          .database()
+          .ref(
+            `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
+          );
       }
-      roundRef
-        .once("value", (snapshot) => {
-          const snapshotValue = snapshot.val();
-          if (!snapshotValue) {
-            return res(null);
-          }
-          let quips = [];
-          let i = 0;
-          snapshotValue.forEach((prompt) => {
-            if (prompt.prompt === this.state.voteState) {
-              let p = 0;
-              prompt.players.forEach((player) => {
-                quips.push({quip: player.quip, path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}/votes`});
-                p++;
+      roundRef.once("value", (snapshot) => {
+        const snapshotValue = snapshot.val();
+        if (!snapshotValue) {
+          return res(null);
+        }
+        let quips = [];
+        let i = 0;
+        snapshotValue.forEach((prompt) => {
+          if (prompt.prompt === this.state.voteState) {
+            let p = 0;
+            prompt.players.forEach((player) => {
+              quips.push({
+                quip: player.quip,
+                path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}/votes`,
               });
-            }
-            i++;
-          });
+              p++;
+            });
+          }
+          i++;
+        });
 
-          return res(quips);
+        return res(quips);
       });
     });
   }
 
   vote(path) {
     return new Promise((res, rej) => {
-    const ref = firebase.database().ref(path);
-    ref.once("value", (snapshot) => {
-      const snapshotValue = snapshot.val();
-      if (!snapshotValue) {
-        return res(null);
-      }
-      let voteIndex = 0;
-      snapshotValue.forEach((vote) => {
-        voteIndex++;
+      const ref = firebase.database().ref(path);
+      ref.once("value", (snapshot) => {
+        const snapshotValue = snapshot.val();
+        if (!snapshotValue) {
+          return res(null);
+        }
+        let voteIndex = 0;
+        snapshotValue.forEach((vote) => {
+          voteIndex++;
+        });
+        console.log("VOTEINDEX:", voteIndex);
+        let obj = {};
+        obj[voteIndex] = this.state.playerId;
+        ref.update(obj);
+        return res("yis");
       });
-      console.log("VOTEINDEX:", voteIndex);
-      let obj = {};
-      obj[voteIndex] = this.state.playerId;
-      ref
-      .update(obj);
-      return res("yis");
-    });
     });
   }
 
   startWatchingVoting(gameId) {
     const ref = firebase.database().ref(`games/${gameId}/currentVote`);
-    ref
-      .on("value", (snapshot) => {
-        const voteState = snapshot.val();
-        this.setState({
-          voteState: voteState,
-        });
+    ref.on("value", (snapshot) => {
+      const voteState = snapshot.val();
+      this.setState({
+        voteState: voteState,
+      });
     });
   }
 
