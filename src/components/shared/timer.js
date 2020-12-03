@@ -1,34 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../App.css";
 
-export default function Timer({ seconds }) {
-  const [secondsLeft, setSecondsLeft] = useState(seconds);
-  const secondsLeftRef = useRef(seconds);
+export default function Timer({ seconds, onTimerComplete }) {
+  const [secondsToDisplay, setSecondsToDisplay] = useState(seconds);
+  const secondsRef = useRef(seconds);
   const interval = useRef();
 
   useEffect(() => {
+    secondsRef.current = seconds;
+
     interval.current = setInterval(() => {
-      if (secondsLeftRef.current === 0) {
+      if (secondsRef.current === 0) {
         clearInterval(interval.current);
-        return;
+        onTimerComplete();
+      } else {
+        secondsRef.current = secondsRef.current - 1;
+        setSecondsToDisplay(secondsRef.current);
       }
-
-      setSecondsLeft((currentSeconds) => {
-        const nextSeconds = currentSeconds - 1;
-        secondsLeftRef.current = nextSeconds;
-
-        return nextSeconds;
-      });
-    }, [1000]);
+    }, 1000);
 
     return () => {
       clearInterval(interval.current);
     };
-  }, [seconds]);
+  }, [seconds, onTimerComplete]);
 
-  if (secondsLeft === 0) {
+  if (secondsToDisplay === 0) {
     return <div style={{ fontSize: "2em" }}>Time's Up!</div>;
   }
 
-  return <div>{secondsLeft}</div>;
+  return <div>{secondsToDisplay}</div>;
 }
