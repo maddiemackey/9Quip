@@ -3,13 +3,16 @@ import {
   Button
 } from "reactstrap";
 import '../../App.css';
-import { GameState } from "../../enum";
+import { GameState } from "../../utils/enum";
 import firebase from "../../Firebase/firebase";
+import assignQuips from "../../utils/assignQuips";
 
 export default class StartPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: "Host" };
+    this.state = { 
+      text: "Host"
+    };
   }
 
   createGame = () => {
@@ -33,11 +36,11 @@ export default class StartPage extends React.Component {
     return (
       <div className="start-page">
         <div className="teamName">
-          <image src="" alt="logo"></image>
+          <img src="" alt="logo"></img>
           <p>Team Zoomer</p>
         </div>
         <div className="startPrompt">
-          <image src="" alt="lego-head"></image>
+          <img src="" alt="lego-head"></img>
           <div className="prompt">
             <Button onClick={this.createGame}>Click here to START</Button>
           </div>

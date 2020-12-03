@@ -1,7 +1,7 @@
 import React from "react";
 import "../../App.css";
 import Footer from "../footer";
-import JoinGame from "./JoinGame";
+// import JoinGame from "./JoinGame";
 import Loading from "./Loading";
 //import firebase, { getDbData } from "../Firebase/firebase";
 

@@ -11,7 +11,7 @@ import Footer from "../footer";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gameState: "SCORE" };
+    this.state = { gameState: null };
   }
 
   render() {
