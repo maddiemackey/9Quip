@@ -87,6 +87,27 @@ export default class Host extends React.Component {
     this.setState({ gamestate: "SCOREBOARD"});
   }
 
+  exitGame = () => {
+    return new Promise((res, rej) => {
+
+      // Remove from DB
+      const ref = firebase.database().ref(`games/${this.state.gameid}/`);
+      ref.remove();
+
+      // Remove from localStorage
+      window.localStorage.clear();
+
+      // Remove from state
+      this.setState({
+        gamestate: null,
+        gameid: null,
+        gamecode: null,
+      });
+
+      return(res("Ended game"));
+    });
+  }
+
   render() {
     const { gamestate } = this.state;
     console.log("gamecode: ", this.state.gamecode);
@@ -110,7 +131,7 @@ export default class Host extends React.Component {
         { gamestate === GameState.scoreboard &&
             <ScorePage/>
         }
-        <Footer></Footer>
+        <Footer exit={this.exitGame} inGame={!!this.state.gameid}/>
       </div>
     );
   }
