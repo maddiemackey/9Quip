@@ -1,12 +1,21 @@
 import React from "react";
 import "./index.css";
-import LoadingGif from "./loading.gif";
+
+function Loading() {
+  return (
+    <div className="lds-ripple">
+      <div></div>
+      <div></div>
+    </div>
+  );
+}
 
 function LoadingScreen({ loadingText }) {
   return (
     <div className="loading-container">
-      {/* TODO: replace with Lego design */}
-      <img className="loading-container-item" alt="loading" src={LoadingGif} />
+      <div className="loading-container-item">
+        <Loading />
+      </div>
       <div className="loading-text loading-container-item">{loadingText}</div>
     </div>
   );
