@@ -1,6 +1,5 @@
 import React from "react";
 import '../../App.css';
-import Footer from "../footer";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
 export default class JoiningPage extends React.Component {

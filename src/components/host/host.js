@@ -2,13 +2,14 @@ import React from "react";
 import '../../App.css';
 import StartPage from "./startPage";
 import JoiningPage from "./joiningPage";
+import QuippingPage from "./quippingPage";
 import Footer from "../footer";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gameState: "JOINING" };
+    this.state = { gameState: "QUIPPING" };
   }
 
   render() {
@@ -20,6 +21,9 @@ export default class Host extends React.Component {
         }
         { gameState === "JOINING" &&
             <JoiningPage/>
+        }
+        { gameState === "QUIPPING" &&
+            <QuippingPage/>
         }
         <Footer></Footer>
       </div>
