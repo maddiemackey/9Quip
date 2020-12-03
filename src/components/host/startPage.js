@@ -7,12 +7,13 @@ import { GameState } from "../../utils/enum";
 import firebase from "../../Firebase/firebase";
 import Logo from "../shared/Logo";
 import MrLego from "../shared/mrlego";
+import { legoHeads } from "../../utils/legoHeads";
 
 export default class StartPage extends React.Component {
   createGame = () => {
     const ref = firebase.database().ref("games");
     const gamecode = this.generateGamecode(4);
-    ref.push({gamecode: gamecode, gamestate: GameState.joining});
+    ref.push({gamecode: gamecode, gamestate: GameState.joining, headsAvailable: legoHeads});
   }
 
   render() {
