@@ -1,5 +1,6 @@
 import React from "react";
 import '../../App.css';
+import Timer from "../shared/timer";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
 export default class QuippingPage extends React.Component {
@@ -21,7 +22,7 @@ export default class QuippingPage extends React.Component {
             </ul>
         </div>
         <div className="gameInfo">
-            <div className="timer">4:20</div>
+            <Timer minutes={1} seconds={0}/>
             <div className="promptSection">
                 <div className="prompt">Answer the prompts on your device :p</div>
                 <div className="legoHead">Head of Lego</div>
