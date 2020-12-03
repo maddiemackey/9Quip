@@ -187,8 +187,18 @@
   justify-content: center;
 }
 
-.playerLegoHeadImg {
+.voting-footer {
+  display: flex;
+  flex-direction: row;
+}
+
+.playerLegoHeadImglrg{
   width: 150%;
+  height: auto
+}
+
+.playerLegoHeadImgsml{
+  width: 40px;
   height: auto
 }
 

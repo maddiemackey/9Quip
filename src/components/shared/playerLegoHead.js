@@ -31,12 +31,13 @@ export default class PlayerLegoHead extends React.Component {
     super(props);
 
     this.state = {
-      head: ""
+      head: "",
     }
   }
 
   componentDidMount() {
     let head;
+
     switch(this.props.headName) {
       case("baseball"):
         head = baseball;break;
@@ -97,7 +98,7 @@ export default class PlayerLegoHead extends React.Component {
 
   render() {
     return (
-      <div className="playerLegoHead"><img className="playerLegoHeadImg" src={this.state.head} alt={`${this.props.playerName} Head`}/></div>
+      <div className="playerLegoHead"><img className={this.props.classThing} src={this.state.head} alt={`${this.props.playerName} Head`}/></div>
     );
   }
 }

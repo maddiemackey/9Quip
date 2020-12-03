@@ -20,7 +20,7 @@ export default class VotingPage extends React.Component {
       roundData: {},
       promptNumber: 0,
       votingMode: "VOTING",
-      seconds: 15
+      seconds: 1
     }
   }
 
@@ -67,7 +67,7 @@ export default class VotingPage extends React.Component {
       row = [...row,
         <Col xs="1">
           {rowCount === 0 && playerData && votingMode === "REVEAL" &&
-            <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name}/>
+            <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
           }
         </Col>,
         <Col xs="4" key={player.id}>
@@ -76,26 +76,20 @@ export default class VotingPage extends React.Component {
             <CardBody>
               <CardText>{player.quip}</CardText>
             </CardBody>
-            <CardFooter>{player.votes && player.votes.map(vote => `${vote}, `)}</CardFooter>
+            <CardFooter>
+              <div className="voting-footer">
+                {votingMode === "REVEAL" && player.votes && player.votes.map(vote => 
+                  <PlayerLegoHead headName={playerData[vote].icon} playerName={playerData[vote].name} classThing={"playerLegoHeadImgsml"}/>
+                )}
+              </div>
+            </CardFooter>
           </Card>
         </Col>,
         <Col xs="1">
           {rowCount === 1 && playerData && votingMode === "REVEAL" &&
-            <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name}/>
+            <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
           }
-        </Col>,
-        // <div>
-          /* {rowCount === 0 && playerData && votingMode === "REVEAL" &&
-            <Col xs="1">
-              <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name}/>
-            </Col>
-          } */
-          /* {rowCount === 1 && playerData && votingMode === "REVEAL" &&
-            <Col xs="1">
-              <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name}/>
-            </Col>
-          } */
-        // </div>];
+        </Col>
       ];
       rowCount++;
       quipCount++;
