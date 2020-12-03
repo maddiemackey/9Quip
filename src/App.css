@@ -39,7 +39,7 @@
 
 .App-body {
   background-color: #030d21;
-  height: 80vh;
+  height: 82vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,7 +51,7 @@
 
 .host-body {
   background-color: #030d21;
-  min-height: 70vh;
+  min-height: 82vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,7 +62,7 @@
 
 .player-body {
   background-color: #030d21;
-  min-height: 70vh;
+  min-height: 82vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,7 +73,7 @@
 
 .start-page {
   background-color: #030d21;
-  min-height: 70vh;
+  min-height: 82vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,7 +107,7 @@
 
 .joining-body {
   background-color: #030d21;
-  min-height: 70vh;
+  min-height: 82vh;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -133,7 +133,7 @@
 
 .quipping-body {
   background-color: #030d21;
-  min-height: 70vh;
+  min-height: 82vh;
   display: flex;
   flex-direction: row;
   align-items: center;
