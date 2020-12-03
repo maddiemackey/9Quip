@@ -13,7 +13,7 @@ import assignQuips from "../../utils/assignQuips";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: null, gamecode: null, gameid: null};
+    this.state = { gamestate: "JOINING", gamecode: null, gameid: "gameId1"};
   }
 
   createGame = () => {
@@ -26,25 +26,29 @@ export default class Host extends React.Component {
   }
 
   startGame = () => {
-    const refPrompts = firebase.database().ref("prompts/normal");
-    refPrompts.on("value", snapshot => {
-      let prompts = snapshot.val();
-      if (prompts) {
-        const refPlayers = firebase.database().ref(`games/${this.state.gameid}/players`);
-        refPlayers.on("value", snapshot => {
-            let players = snapshot.val();
+    const ref = firebase.database().ref("/");
+    ref.on("value", snapshot => {
+      let db = snapshot.val();
+      if (db.prompts) {
+            let players = db.games[this.state.gameid].players;
             if (Object.keys(players).length >= 4) {
-                let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), prompts);
-                const refRounds = firebase.database().ref(`games/${this.state.gameid}/rounds`);
-                refRounds.push(promptsReturned);
-                const ref = firebase.database().ref(`games/${this.state.gameid}`);
-                ref.update({gamestate: GameState.quipping});
+                let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), db.prompts);
+                for (const p of Object.keys(players)) {
+                    for (const q of Object.keys(playersReturned)) {
+                        if (p === q) {
+                            db.games[this.state.gameid].players[q].prompts = playersReturned[q];
+                        }
+                    }
+                }
+                console.log(db.games[this.state.gameid]);
+                db.games[this.state.gameid].push({rounds: [{promptsReturned}]});
+                db.games[this.state.gameid].gameState = GameState.quipping;
+                ref.update(db);
                 this.setState({ gamestate: "QUIPPING" });
             }
             else {
                 alert("You dont have enough players, stoopid");
             }
-        });
       }
     });
   }
