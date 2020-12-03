@@ -2,18 +2,19 @@
 
 .lego-speech-bubble-container {
   display: flex;
+  margin-top: 2vh;
 }
 
-.lego-speech-bubble-mr-lego {
-  height: 20%;
-  width: 20%;
+.lego-speech-bubble-mr-lego-maddie {
+  height: 10vh;
+  width: 10vh;
 }
 
 .speech-bubble {
   background: #ccc;
   text-align: center;
   padding: 20px 0;
-  margin-left: 3%;
+  margin-left: 2%;
   border: 1px solid white;
   border-radius: 10px;
   color: #1a1d22;

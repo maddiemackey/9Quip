@@ -8,7 +8,7 @@ export default class MaddiesLegoSpeechBubble extends React.Component {
       <div className="lego-speech-bubble-container">
       <img
         alt="mr lego"
-        className="lego-speech-bubble-mr-lego"
+        className="lego-speech-bubble-mr-lego-maddie"
         src={mrlego}
       ></img>
       <div className="speech-bubble">{this.props.bubbleText}</div>

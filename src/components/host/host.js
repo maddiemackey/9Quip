@@ -13,7 +13,7 @@ import assignQuips from "../../utils/assignQuips";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: null, gamecode: null, gameid: null};
+    this.state = { gamestate: "VOTING", gamecode: null, gameid: null};
   }
 
   createGame = () => {
