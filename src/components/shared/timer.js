@@ -1,44 +1,34 @@
-import React from "react";
-import '../../App.css';
+import React, { useEffect, useRef, useState } from "react";
+import "../../App.css";
 
-/** Countdown tmier by https://medium.com/better-programming/building-a-simple-countdown-timer-with-react-4ca32763dda7 */
+export default function Timer({ seconds }) {
+  const [secondsLeft, setSecondsLeft] = useState(seconds);
+  const secondsLeftRef = useRef(seconds);
+  const interval = useRef();
 
-export default class Timer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { minutes: this.props.minutes, seconds: this.props.seconds};
-  }
-
-  componentDidMount() {
-    this.myInterval = setInterval(() => {
-      const { seconds, minutes } = this.state;
-      if (seconds > 0) {
-        this.setState(({ seconds }) => ({
-          seconds: seconds - 1
-        }))
+  useEffect(() => {
+    interval.current = setInterval(() => {
+      if (secondsLeftRef.current === 0) {
+        clearInterval(interval.current);
+        return;
       }
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(this.myInterval);
-          this.props.startVoting();
-        } else {
-          this.setState(({ minutes }) => ({
-            minutes: minutes - 1,
-            seconds: 59
-          }))
-        }
-      }
-    }, 1000);
+
+      setSecondsLeft((currentSeconds) => {
+        const nextSeconds = currentSeconds - 1;
+        secondsLeftRef.current = nextSeconds;
+
+        return nextSeconds;
+      });
+    }, [1000]);
+
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [seconds]);
+
+  if (secondsLeft === 0) {
+    return <div style={{ fontSize: "2em" }}>Time's Up!</div>;
   }
 
-  render() {
-    const { minutes, seconds } = this.state
-    return (
-      <div className="timer">{ minutes === 0 && seconds === 0
-                    ? <h1 className="timer-text">Time's up!</h1>
-                    : <h1 className="timer-text">{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
-                }
-      </div>
-    );
-  }
+  return <div>{secondsLeft}</div>;
 }
