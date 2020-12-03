@@ -58,6 +58,27 @@ export class ClientGameContextProvider extends React.Component {
           }
           // Get ROUND ID and add to State I guess
           const gameid = Object.keys(snapshot.val())[0];
+          const gameRef = firebase
+            .database()
+            .ref(`games/${gameid}/headsAvailable`);
+
+          gameRef.once("value", (snapshot) => {
+            const snapshotValue = snapshot.val();
+            // pull out state of available heads...
+
+            const head = snapshotValue.pop();
+
+            console.log("setting head", head);
+
+            this.setState({
+              playerHead: head,
+            });
+
+            console.log("setting new snapshot value", snapshotValue);
+
+            gameRef.set(snapshotValue);
+          });
+
           const ref = firebase.database().ref(`games/${gameid}/players`);
           const newPlayer = ref.push({
             name: nameInput,

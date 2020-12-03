@@ -15,10 +15,11 @@
 
 .App-header {
   background-color: #000055;
+  padding-top: 2vh;
   height: 13vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -192,14 +193,22 @@
   flex-direction: row;
 }
 
-.playerLegoHeadImglrg{
+.playerLegoHeadImglrg {
   width: 150%;
-  height: auto
+  height: auto;
 }
 
-.playerLegoHeadImgsml{
+.playerLegoHeadImgsml {
   width: 40px;
-  height: auto
+  height: auto;
+}
+
+.header-player-head {
+  height: 8vh;
+}
+
+.App-header-playerhead-container {
+  padding-right: 2vh;
 }
 
 @keyframes App-logo-spin {

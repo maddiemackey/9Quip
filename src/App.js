@@ -9,19 +9,19 @@ import { ClientGameContextProvider } from "./components/player/GameContext";
 class App extends Component {
   render() {
     return (
-      <div>
-        <header>
-          <Header />
-        </header>
-        <main>
-          <ClientGameContextProvider>
+      <ClientGameContextProvider>
+        <div>
+          <header>
+            <Header />
+          </header>
+          <main>
             <Switch>
               <Route exact path="/" component={Player} />
               <Route path="/host" component={Host} />
             </Switch>
-          </ClientGameContextProvider>
-        </main>
-      </div>
+          </main>
+        </div>
+      </ClientGameContextProvider>
     );
   }
 }
