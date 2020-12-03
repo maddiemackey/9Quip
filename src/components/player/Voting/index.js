@@ -39,6 +39,7 @@ function Voting({ options }) {
   return (
     <div className="voting-container">
       <div className="voting-speech-bubble">
+        {/* TODO: replace with quip from gamestate  */}
         <LegoSpeechBubble bubbleText="Who is Mister Lego?"></LegoSpeechBubble>
       </div>
       <div className="voting-options-container">
