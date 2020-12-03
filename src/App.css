@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #000055;
+  background-color: #030d21;
   padding-top: 2vh;
   height: 13vh;
   display: flex;
@@ -25,7 +25,7 @@
 }
 
 .App-footer {
-  background-color: #004400;
+  background-color: #030d21;
   height: 5vh;
   display: flex;
   flex-direction: row;
