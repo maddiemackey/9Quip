@@ -22,7 +22,7 @@ export default class VotingPage extends React.Component {
       playerData: {},
       promptNumber: 0,
       votingMode: "VOTING",
-      seconds: 4,
+      seconds: 10,
       pointsToAssign: {}
     }
   }
@@ -63,7 +63,10 @@ export default class VotingPage extends React.Component {
   handleNext = () => {
     let { roundData, promptNumber } = this.state;
     roundData[0] && promptNumber < roundData[0].promptsReturned.length - 1 ? promptNumber++ : this.props.startScoring();
-    this.setState({ promptNumber }); 
+    const ref = firebase.database().ref(`games/${this.props.gameId}`);
+    ref.update({currentVote: roundData[0].promptsReturned[promptNumber].prompt})
+
+    this.setState({ promptNumber, votingMode: "VOTING", seconds: 10 }); 
   }
 
   makeQuipGrid = () => {
