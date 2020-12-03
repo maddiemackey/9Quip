@@ -3,19 +3,24 @@
 .lego-speech-bubble-container {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .lego-speech-bubble-mr-lego {
-  height: 10vw;
-  width: 10vw;
+  height: 20vw;
+  width: 20vw;
 }
 
 .speech-bubble {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* background: #ccc; */
   position: relative;
   text-align: center;
   padding: 20px 0;
-  margin-left: 1vw;
+  margin-left: 3vw;
   width: 50vw;
   border: 1px solid white;
   border-radius: 10px;

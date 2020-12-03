@@ -17,7 +17,17 @@ export default class Player extends React.Component {
     return (
       <div>
         <div className="player-body">
-          <Voting />
+          <Voting
+            options={[
+              {
+                answer: "testing mctestface testing 123 different size answer",
+              },
+              { answer: "testing 2" },
+              { answer: "testing 3" },
+              { answer: "testing 4" },
+              { answer: "testing 5" },
+            ]}
+          />
           {/* <Quipping></Quipping> */}
           {/* <JoinGame></JoinGame> */}
           {/* <Loading loadingText="Waiting on Players"></Loading> */}
