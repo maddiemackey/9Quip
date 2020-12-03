@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import "./index.css";
 import LegoHead from "../../../assets/lego-head.png";
+
+import { ClientGameContext } from "../GameContext";
 
 // "borrowed" from the internet, don't ask what it does, this is a hackathon for god sakes!
 function ordinal(n) {
@@ -26,7 +28,6 @@ function Score() {
       <div>
         <Avatar />
       </div>
-      {/* <div className="score-user-points-container"> */}
       {/* TODO: replace with actual points */}
       <div>
         <span className="score-user-points">143 </span>pts
