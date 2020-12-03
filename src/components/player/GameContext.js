@@ -75,6 +75,7 @@ export class ClientGameContextProvider extends React.Component {
 
           // Get ROUND ID and add quip to the DB
           const roundId = Object.keys(snapshot.val())[0];
+          let flag = false;
           let i = 0;
           snapshotValue[roundId].forEach(snap => {
             if(snap.prompt === prompt){
@@ -82,14 +83,16 @@ export class ClientGameContextProvider extends React.Component {
               snap.players.forEach(player => {
                 console.log("player:", player);
                 if(player.id === this.state.playerId){
-                  //snapshotValue[roundId][i].players[p].quip = quip;
-                  console.log("AHHHHHH");//, snapshotValue[roundId][i].players[p].quip);
                   const quipRef = firebase.database().ref(`games/${this.state.gameId}/rounds/${roundId}/${i}/players/${p}`);
                   quipRef.update({quip: quip});
+                  flag = true;
                 }
                 p++;
               });
               i++;
+            }
+            if(flag){
+              return res(null);
             }
           });
           return res(quip);
