@@ -1,4 +1,7 @@
 import React from "react";
+import {
+    Button
+} from "reactstrap";
 import '../App.css';
 
 export default class Footer extends React.Component {
@@ -10,7 +13,7 @@ export default class Footer extends React.Component {
     return (
       <div className="App-body">
         <p>Team Zoomer</p>
-        <button><i class="fas fa-sign-out-alt"></i></button>
+        <Button>Exit</Button>
       </div>
     );
   }
