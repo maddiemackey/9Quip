@@ -82,6 +82,33 @@
   width: 20vh;
 }
 
+.logo-no-zoomer {
+  height: 30vw;
+}
+
+.logo-no-zoomer-container {
+  padding-left: 5%;
+}
+
+.mr-lego {
+  height: 10vw;
+}
+
+.mr-lego-container {
+  padding-left: 5%;
+}
+
+.joining-body {
+  background-color: #030d21;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
 .App-link {
   color: #61dafb;
 }

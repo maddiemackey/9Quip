@@ -12,7 +12,7 @@ import firebase from "../../Firebase/firebase";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: null, gamecode: null, gameid: null};
+    this.state = { gamestate: "JOINING", gamecode: null, gameid: null};
   }
 
   createGame = () => {
@@ -47,7 +47,7 @@ export default class Host extends React.Component {
             <StartPage createGame={this.createGame}/>
         }
         { gamestate === GameState.joining &&
-            <JoiningPage/>
+            <JoiningPage gamecode={"1234"}/>
         }
         { gamestate === GameState.quipping &&
             <QuippingPage/>

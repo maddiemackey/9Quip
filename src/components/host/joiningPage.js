@@ -1,33 +1,34 @@
 import React from "react";
 import '../../App.css';
-//import firebase, { getDbData } from "../Firebase/firebase";
+import LogoWOTeam from "../shared/logowoteam";
+import LegoSpeechBubble from "../../components/player/LegoSpeechBubble/index";
 
 export default class JoiningPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: "Host" };
+    this.state = { players: ["medi", "ben", "jojo", "carlos", "kory"] };
   }
 
   render() {
     return (
-      <div className="App-body">
+      <div className="joining-body">
+        <div className="row">
+        <div className="column">
         <div className="gameInfo">
-          <div className="logo">LOGO</div>
+          <div><LogoWOTeam/></div>
           <div className="codePrompt">
-            <div className="lego-head">This will be a head</div>
-            <div className="code">42069</div>
+            <LegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
           </div>
         </div>
+        </div>
+        <div className="column">
         <div className="players">
           <div className="playersHeader">Players</div>
           <div className="playersBox">
-            <ul>
-              <li className="player">Ben</li>
-              <li className="player">Maddie</li>
-              <li className="player">Kory</li>
-              <li className="player">Carlos</li>
-            </ul>
+            {this.state.players.join(" ")}
           </div>
+        </div>
+        </div>
         </div>
       </div>
     );

@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import mrlego from "../../../assets/lego-head.png";
 
 function LegoSpeechBubble({ bubbleText }) {
   return (
@@ -7,7 +8,7 @@ function LegoSpeechBubble({ bubbleText }) {
       <img
         alt="mr lego"
         className="lego-speech-bubble-mr-lego"
-        src="https://www.fillmurray.com/100/100"
+        src={mrlego}
       ></img>
       <div className="speech-bubble">{bubbleText}</div>
     </div>

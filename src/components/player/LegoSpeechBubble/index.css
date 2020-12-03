@@ -6,8 +6,8 @@
 }
 
 .lego-speech-bubble-mr-lego {
-  height: 100px;
-  width: 100px;
+  height: 10vw;
+  width: 10vw;
 }
 
 .speech-bubble {
@@ -15,7 +15,7 @@
   position: relative;
   text-align: center;
   padding: 20px 0;
-  margin-left: 5vw;
+  margin-left: 1vw;
   width: 50vw;
   border: 1px solid white;
   border-radius: 10px;
