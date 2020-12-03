@@ -3,18 +3,10 @@ import {
   Button
 } from "reactstrap";
 import '../../App.css';
-import { GameState } from "../../utils/enum";
-import firebase from "../../Firebase/firebase";
 import Logo from "../shared/Logo";
-import MrLego from "../shared/mrlego";
-import { legoHeads } from "../../utils/legoHeads";
+import StartMrLego from "../shared/startMrLego";
 
 export default class StartPage extends React.Component {
-  createGame = () => {
-    const ref = firebase.database().ref("games");
-    const gamecode = this.generateGamecode(4);
-    ref.push({gamecode: gamecode, gamestate: GameState.joining, headsAvailable: legoHeads});
-  }
 
   render() {
     return (
@@ -23,7 +15,7 @@ export default class StartPage extends React.Component {
         <div><Logo/></div>
         </div>
         <div className="startPrompt">
-          <MrLego/>
+          <StartMrLego/>
           <div className="prompt">
             <Button onClick={this.props.createGame}>Click here to START</Button>
           </div>

@@ -9,6 +9,7 @@ import Footer from "../footer";
 import { GameState } from "../../utils/enum";
 import firebase from "../../Firebase/firebase";
 import assignQuips from "../../utils/assignQuips";
+import { legoHeads } from "../../utils/legoHeads";
 
 export default class Host extends React.Component {
   constructor(props) {
@@ -19,18 +20,19 @@ export default class Host extends React.Component {
   createGame = () => {
     const ref = firebase.database().ref("games");
     const gamecode = this.generateGamecode(4);
-    const newGameRef = ref.push({gamecode: gamecode, gamestate: GameState.joining});
+    const newGameRef = ref.push({gamecode: gamecode, gamestate: GameState.joining, headsAvailable: legoHeads});
     const gameid = newGameRef.key;
     this.setState({ gamestate: "JOINING", gamecode, gameid });
     window.localStorage.setItem("quipHostedGame", gameid);
   }
 
-  startGame = async () => {
+  startGame = () => {
     const ref = firebase.database().ref("/");
     new Promise((res, rej) => {
       ref.on("value", snapshot => {
         let db = snapshot.val();
         if (db.prompts.normal) {
+          if (db.games[this.state.gameid].players){
               let players = db.games[this.state.gameid].players;
               if (Object.keys(players).length >= 4) {
                   let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), db.prompts.normal);
@@ -43,17 +45,22 @@ export default class Host extends React.Component {
                       }
                   }
                   db.games[this.state.gameid].rounds = [{promptsReturned}];
-                  db.games[this.state.gameid].gameState = GameState.quipping;
+                  db.games[this.state.gameid].gamestate = GameState.quipping;
                   return res(db);
               }
               else {
-                  alert("You dont have enough players, stoopid");
+                return rej("Need more players to start");
               }
+            } else {
+              return rej("Need more players to start");
+            }
         }
       })
     }).then((res) => {
       ref.update(res);
       this.setState({ gamestate: "QUIPPING" });
+    }).catch((err) => {
+      alert(err);
     });
   }
 
