@@ -35,7 +35,7 @@ function getColour(index) {
   }
 }
 
-function Voting({ options }) {
+function Voting({ options = [{answer: "one"},{answer: "two"},{answer: "three"},{answer: "four"},{answer: "five"},] }) {
   return (
     <div className="voting-container">
       <div className="voting-speech-bubble">
@@ -43,7 +43,7 @@ function Voting({ options }) {
         <LegoSpeechBubble bubbleText="Who is Mister Lego?"></LegoSpeechBubble>
       </div>
       <div className="voting-options-container">
-        {options.map((option, i) => {
+        {options && options.map((option, i) => {
           return <Option text={option.answer} colour={getColour(i)} />;
         })}
       </div>

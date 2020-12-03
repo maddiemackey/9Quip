@@ -16,15 +16,19 @@ export class ClientGameContextProvider extends React.Component {
     this.state = {
       // when null it means there is no game started yet
       mainGameState: null,
+      gameId: null,
+      playerId: null,
+      round: null,
     };
 
     this.joinGame = this.joinGame.bind(this);
+    this.submitQuip = this.submitQuip.bind(this);
     this.startWatchingGame = this.startWatchingGame.bind(this);
   }
 
   handleGameStateChange() {}
 
-  async joinGame(gameCode) {
+  async joinGame(gameCode, nameInput) {
     return new Promise((res, rej) => {
       const ref = firebase.database().ref("games");
       ref
@@ -35,9 +39,61 @@ export class ClientGameContextProvider extends React.Component {
           if (!snapshotValue) {
             return res(null);
           }
+          // Get ROUND ID and add to State I guess
+          const gameid = Object.keys(snapshot.val())[0];
+          const ref = firebase.database().ref(`games/${gameid}/players`);
+          const newPlayer = ref.push({name: nameInput, score: 0, icon: "mr-lego"});
+          // Store player in local storage to maintain session
+          window.localStorage.setItem("quipGameId", gameid);
+          window.localStorage.setItem("quipPlayerId", newPlayer.key);
+          // Set in state
+          this.setState({
+            gameId: gameid,
+            playerId: newPlayer.key,
+            round: 0,
+          });
           this.startWatchingGame(gameCode);
           return res(snapshotValue);
         });
+    });
+  }
+
+  async submitQuip(prompt, quip) {
+    return new Promise((res, rej) => {
+      // get round ID
+      let roundRef = "";
+      if (this.state.round === 0) {
+        roundRef = firebase.database().ref(`games/${this.state.gameId}/rounds`).limitToFirst(1);
+      }
+      roundRef
+        .on("value", (snapshot) => {
+          const snapshotValue = snapshot.val();
+          if (!snapshotValue) {
+            return res(null);
+          }
+          console.log("roundValue:", snapshotValue);
+
+          // Get ROUND ID and add quip to the DB
+          const roundId = Object.keys(snapshot.val())[0];
+          let i = 0;
+          snapshotValue[roundId].forEach(snap => {
+            if(snap.prompt === prompt){
+              let p = 0;
+              snap.players.forEach(player => {
+                console.log("player:", player);
+                if(player.id === this.state.playerId){
+                  //snapshotValue[roundId][i].players[p].quip = quip;
+                  console.log("AHHHHHH");//, snapshotValue[roundId][i].players[p].quip);
+                  const quipRef = firebase.database().ref(`games/${this.state.gameId}/rounds/${roundId}/${i}/players/${p}`);
+                  quipRef.update({quip: quip});
+                }
+                p++;
+              });
+              i++;
+            }
+          });
+          return res(quip);
+      });
     });
   }
 
@@ -66,6 +122,7 @@ export class ClientGameContextProvider extends React.Component {
         value={{
           ...this.state,
           joinGame: this.joinGame,
+          submitQuip: this.submitQuip
         }}
       >
         {this.props.children}
