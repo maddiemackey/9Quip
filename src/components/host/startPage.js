@@ -1,9 +1,12 @@
 import React from "react";
+import {
+  Button
+} from "reactstrap";
 import '../../App.css';
 import Footer from "../footer";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
-export default class HomePage extends React.Component {
+export default class StartPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { text: "Host" };
@@ -19,7 +22,7 @@ export default class HomePage extends React.Component {
         <div className="startPrompt">
           <image src="" alt="lego-head"></image>
           <div className="prompt">
-            <p>Press Enter to START</p>
+            <Button >Click here to START</Button>
           </div>
         </div>
         <Footer></Footer>

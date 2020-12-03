@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
-import HomePage from "./components/host/homePage";
+import Host from "./components/host/host";
 import Player from "./components/player/player";
 import JoinGameScreen from "./components/player/screens/JoinGame";
 
@@ -16,7 +16,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Player} />
             <Route exact path="/join-game" component={JoinGameScreen} />
-            <Route path="/host" component={HomePage} />
+            <Route path="/host" component={Host} />
           </Switch>
         </main>
       </div>
