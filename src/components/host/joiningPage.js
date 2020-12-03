@@ -1,7 +1,7 @@
 import React from "react";
 import '../../App.css';
 import LogoWOTeam from "../shared/logowoteam";
-import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble";
+import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 
 export default class JoiningPage extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ export default class JoiningPage extends React.Component {
         <div className="gameInfo">
           <div><LogoWOTeam/></div>
           <div className="codePrompt">
-            <MaddiesLegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
+          <MaddiesLegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
           </div>
           </div>
         <div className="players">
