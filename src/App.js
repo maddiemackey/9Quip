@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import Host from "./components/host/host";
 import Player from "./components/player/player";
 import Header from "./components/header";
+import { ClientGameContextProvider } from "./components/player/GameContext";
 
 class App extends Component {
   render() {
@@ -13,10 +14,12 @@ class App extends Component {
           <Header />
         </header>
         <main>
-          <Switch>
-            <Route exact path="/" component={Player} />
-            <Route path="/host" component={Host} />
-          </Switch>
+          <ClientGameContextProvider>
+            <Switch>
+              <Route exact path="/" component={Player} />
+              <Route path="/host" component={Host} />
+            </Switch>
+          </ClientGameContextProvider>
         </main>
       </div>
     );
