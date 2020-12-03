@@ -1,5 +1,8 @@
 import React from "react";
 import '../../App.css';
+import {
+  Button
+} from "reactstrap";
 import LogoWOTeam from "../shared/logowoteam";
 import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 

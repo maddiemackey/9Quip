@@ -8,6 +8,7 @@ import ScorePage from "./scorePage";
 import Footer from "../footer";
 import { GameState } from "../../utils/enum";
 import firebase from "../../Firebase/firebase";
+import assignQuips from "../../utils/assignQuips";
 
 export default class Host extends React.Component {
   constructor(props) {
@@ -33,8 +34,9 @@ export default class Host extends React.Component {
         refPlayers.on("value", snapshot => {
             let players = snapshot.val();
             if (players) {
-                console.log(prompts);
-                console.log(players);
+                let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), prompts);
+                const refRounds = firebase.database().ref(`games/${this.state.gameid}/rounds`);
+                refRounds.push(promptsReturned);
             }
         });
       }

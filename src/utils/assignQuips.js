@@ -54,16 +54,20 @@ const defaultPrompts = [
 
 export default function assignQuips(players = defaultPlayers, prompts = defaultPrompts) {
     let playersReturned = {};
-    let promptsReturned = {};
+    let promptsReturned = [];
     let remainder = players.length * 2 % 5;
     let assigningLimit = remainder > 0 ? Math.floor(players.length * 2 / 5) + 1 : Math.floor(players.length * 2 / 5);
     let randPrompts = getRandomInArray(prompts, assigningLimit);
-    let lowerLimitCount = 5 - remainder;
+    let lowerLimitCount = remainder === 0 ? 0 : 5 - remainder;
+
+    for (const player of players) {
+        playersReturned[player] = [];
+    }
     
     randPrompts.forEach(prompt => {
         let playersToAssign = lowerLimitCount > 0 ? 4 : 5;
-        let playersNotAssigned = {...players};
-        promptsReturned[prompt] = [];
+        let playersNotAssigned = {...playersReturned};
+        let promptToPush = { "prompt": prompt, "players": [] };
         while (playersToAssign > 0) {
             let playerIndex = Math.floor(Math.random()*Object.keys(playersNotAssigned).length);
             for (const value of Object.values(playersNotAssigned)) {
@@ -73,17 +77,21 @@ export default function assignQuips(players = defaultPlayers, prompts = defaultP
                 }
             }
             if (Object.values(playersNotAssigned)[playerIndex].length < 2) {
-                players[Object.keys(playersNotAssigned)[playerIndex]].push(prompt);
-                promptsReturned[prompt] = [...promptsReturned[prompt], Object.keys(playersNotAssigned)[playerIndex]];
+                playersReturned[Object.keys(playersNotAssigned)[playerIndex]].push(prompt);
+                promptToPush["players"].push({
+                    "id": Object.keys(playersNotAssigned)[playerIndex],
+                    "quip": ""
+                });
                 delete playersNotAssigned[Object.keys(playersNotAssigned)[playerIndex]];
                 playersToAssign--;
             }
         }
+        promptsReturned.push(promptToPush);
         lowerLimitCount--;
     });
 
     return [
-        players,
+        playersReturned,
         promptsReturned
     ];
 }
