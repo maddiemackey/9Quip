@@ -1,5 +1,9 @@
-.container {
+.join-game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.join-game-item {
+  margin-bottom: 10%;
 }
