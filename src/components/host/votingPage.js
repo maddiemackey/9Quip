@@ -5,6 +5,7 @@ import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble";
 import PlayerLegoHead from "../shared/playerLegoHead";
 import firebase from "../../Firebase/firebase";
 import Timer from "../shared/timer";
+import calculatePoints from "../../utils/points";
 
 let colours = {
   0: "red",
@@ -18,9 +19,11 @@ export default class VotingPage extends React.Component {
     super(props);
     this.state = { 
       roundData: {},
+      playerData: {},
       promptNumber: 0,
       votingMode: "VOTING",
-      seconds: 1
+      seconds: 4,
+      pointsToAssign: {}
     }
   }
 
@@ -37,37 +40,46 @@ export default class VotingPage extends React.Component {
   }
 
   startVoting = () => {
+    const { roundData, promptNumber } = this.state;
     const refPlayers = firebase.database().ref(`games/${this.props.gameId}/players`);
     refPlayers.on("value", snapshot => {
       let playerData = snapshot.val();
       if (playerData) {
+        const pointsToAssign = calculatePoints(playerData, roundData[0].promptsReturned[promptNumber]);
+        Object.keys(pointsToAssign).forEach(playerID => {
+          playerData[playerID].score += pointsToAssign[playerID];
+        });
         this.setState({
+          pointsToAssign: pointsToAssign,
           playerData: playerData,
           votingMode:"REVEAL"
         });
+        let updates = {};
+        updates[`games/${this.props.gameId}/players`] = playerData;
       }
     });
   }
 
   handleNext = () => {
-    console.log(this.state);
     let { roundData, promptNumber } = this.state;
     roundData[0] && promptNumber < roundData[0].promptsReturned.length - 1 ? promptNumber++ : this.props.startScoring();
     this.setState({ promptNumber }); 
   }
 
   makeQuipGrid = () => {
-    const { roundData, promptNumber, playerData, votingMode } = this.state;
+    const { roundData, promptNumber, playerData, votingMode, pointsToAssign } = this.state;
     let rowCount = 0,
         quipCount = 0,
         grid = [],
         row = [];
     roundData[0] && roundData[0].promptsReturned[promptNumber].players.forEach(player => {
-      if (playerData) console.log(playerData[player.id].icon);
       row = [...row,
         <Col xs="1">
           {rowCount === 0 && playerData && votingMode === "REVEAL" &&
-            <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
+            <div>
+              <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
+              <h4>+{pointsToAssign[player.id]}</h4>
+            </div>
           }
         </Col>,
         <Col xs="4" key={player.id}>
@@ -87,7 +99,10 @@ export default class VotingPage extends React.Component {
         </Col>,
         <Col xs="1">
           {rowCount === 1 && playerData && votingMode === "REVEAL" &&
+            <div>
             <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
+            <h4>+{pointsToAssign[player.id]}</h4>
+          </div>
           }
         </Col>
       ];
