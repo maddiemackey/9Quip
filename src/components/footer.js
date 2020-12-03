@@ -3,6 +3,7 @@ import {
     Button
 } from "reactstrap";
 import '../App.css';
+import Team from "./shared/team";
 
 export default class Footer extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export default class Footer extends React.Component {
   render() {
     return (
       <div className="App-footer">
-        <p>Team Zoomer</p>
+        <Team/>
         <Button style={{marginLeft: "auto", minWidth: "10%"}}>Exit</Button>
       </div>
     );

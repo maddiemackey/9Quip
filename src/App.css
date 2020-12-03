@@ -78,6 +78,10 @@
   color: white;
 }
 
+.team {
+  width: 20vh;
+}
+
 .App-link {
   color: #61dafb;
 }
