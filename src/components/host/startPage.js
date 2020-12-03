@@ -3,13 +3,31 @@ import {
   Button
 } from "reactstrap";
 import '../../App.css';
-//import firebase, { getDbData } from "../Firebase/firebase";
+import { GameState } from "../../enum";
+import firebase from "../../Firebase/firebase";
 
 export default class StartPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { text: "Host" };
   }
+
+  createGame = () => {
+    const ref = firebase.database().ref("games");
+    const gamecode = this.generateGamecode(4);
+    ref.push({gamecode: gamecode, gamestate: GameState.joining});
+  }
+
+  /** https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript */
+  generateGamecode = (length) => {
+    var result           = '';
+    var characters       = '0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
 
   render() {
     return (
@@ -21,7 +39,7 @@ export default class StartPage extends React.Component {
         <div className="startPrompt">
           <image src="" alt="lego-head"></image>
           <div className="prompt">
-            <Button >Click here to START</Button>
+            <Button onClick={this.createGame}>Click here to START</Button>
           </div>
         </div>
       </div>
