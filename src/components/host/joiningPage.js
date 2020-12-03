@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "reactstrap";
 import '../../App.css';
 import {
   Button
@@ -17,7 +18,7 @@ export default class JoiningPage extends React.Component {
       <div className="joining-body">
         <div className="gameInfo">
           <div><LogoWOTeam/></div>
-          <div className="codePrompt">
+            <div style={{width: "100%"}}>
           <MaddiesLegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
           </div>
         </div>
@@ -26,8 +27,8 @@ export default class JoiningPage extends React.Component {
           <div className="playersBox">
             {this.state.players.join(" ")}
           </div>
+        <Button style={{justifySelf: "flex-end"}} onClick={this.props.startGame}>Start Game</Button>
         </div>
-        <Button onClick={this.props.startGame}>Start Game</Button>
       </div>
     );
   }

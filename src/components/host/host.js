@@ -54,6 +54,12 @@ export default class Host extends React.Component {
     return result;
  }
 
+ startVoting = () => {
+  const ref = firebase.database().ref(`games/${this.state.gameid}`);
+  const newGameRef = ref.update({gamestate: GameState.voting});
+  this.setState({ gamestate: "VOTING"});
+}
+
   render() {
     const { gamestate } = this.state;
     // console.log("gamecode: ", this.state.gamecode);
@@ -69,7 +75,7 @@ export default class Host extends React.Component {
             <JoiningPage gamecode={"1234"} startGame={this.startGame}/>
         }
         { gamestate === GameState.quipping &&
-            <QuippingPage/>
+            <QuippingPage startVoting={this.startVoting}/>
         }
         { gamestate === GameState.voting &&
             <VotingPage/>
