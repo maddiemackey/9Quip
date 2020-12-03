@@ -19,18 +19,22 @@ function Avatar() {
 }
 
 function Score() {
+  const context = useContext(ClientGameContext);
+
   return (
     <div className="score-container">
       <div className="score-position-container">
         {/* TOOD: replace with actual value */}
-        <div className="score-bubble">{ordinal(10)}</div>
+        <div className="score-bubble">
+          {context.playerPosition ? ordinal(context.playerPosition) : "?"}
+        </div>
       </div>
       <div>
         <Avatar />
       </div>
       {/* TODO: replace with actual points */}
       <div>
-        <span className="score-user-points">143 </span>pts
+        <span className="score-user-points">{context.playerScore} </span>pts
       </div>
       {/* </div> */}
     </div>
