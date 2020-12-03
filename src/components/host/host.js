@@ -4,13 +4,14 @@ import StartPage from "./startPage";
 import JoiningPage from "./joiningPage";
 import QuippingPage from "./quippingPage";
 import VotingPage from "./votingPage";
+import ScorePage from "./scorePage";
 import Footer from "../footer";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gameState: "VOTING" };
+    this.state = { gameState: "SCORE" };
   }
 
   render() {
@@ -28,6 +29,9 @@ export default class Host extends React.Component {
         }
         { gameState === "VOTING" &&
             <VotingPage/>
+        }
+        { gameState === "SCORE" &&
+            <ScorePage/>
         }
         <Footer></Footer>
       </div>
