@@ -1,6 +1,7 @@
 import React from "react";
 import '../../App.css';
 import StartPage from "./startPage";
+import Footer from "../footer";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
 export default class Host extends React.Component {
@@ -16,6 +17,7 @@ export default class Host extends React.Component {
         { gameState === null && 
             <StartPage/>
         }
+        <Footer></Footer>
       </div>
     );
   }

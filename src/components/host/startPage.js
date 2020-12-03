@@ -3,7 +3,6 @@ import {
   Button
 } from "reactstrap";
 import '../../App.css';
-import Footer from "../footer";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
 export default class StartPage extends React.Component {
@@ -25,7 +24,6 @@ export default class StartPage extends React.Component {
             <Button >Click here to START</Button>
           </div>
         </div>
-        <Footer></Footer>
       </div>
     );
   }
