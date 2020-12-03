@@ -6,7 +6,7 @@ import QuippingPage from "./quippingPage";
 import VotingPage from "./votingPage";
 import ScorePage from "./scorePage";
 import Footer from "../footer";
-import { GameState } from "../../enum";
+import { GameState } from "../../utils/enum";
 import firebase from "../../Firebase/firebase";
 
 export default class Host extends React.Component {
