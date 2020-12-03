@@ -66,7 +66,7 @@ export default class VotingPage extends React.Component {
     const ref = firebase.database().ref(`games/${this.props.gameId}`);
     ref.update({currentVote: roundData[0].promptsReturned[promptNumber].prompt})
 
-    this.setState({ promptNumber, votingMode: "VOTING", seconds: 10 }); 
+    this.setState({ promptNumber, votingMode: "VOTING", seconds: this.state.seconds+1 }); 
   }
 
   makeQuipGrid = () => {
@@ -77,7 +77,7 @@ export default class VotingPage extends React.Component {
         row = [];
     roundData[0] && roundData[0].promptsReturned[promptNumber].players.forEach(player => {
       row = [...row,
-        <Col xs="1">
+        <Col xs="1" key={Math.random()}>
           {rowCount === 0 && playerData && votingMode === "REVEAL" &&
             <div>
               <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
@@ -94,13 +94,13 @@ export default class VotingPage extends React.Component {
             <CardFooter>
               <div className="voting-footer">
                 {votingMode === "REVEAL" && player.votes && player.votes.map(vote => 
-                  <PlayerLegoHead headName={playerData[vote].icon} playerName={playerData[vote].name} classThing={"playerLegoHeadImgsml"}/>
+                  <PlayerLegoHead key={Math.random()} headName={playerData[vote].icon} playerName={playerData[vote].name} classThing={"playerLegoHeadImgsml"}/>
                 )}
               </div>
             </CardFooter>
           </Card>
         </Col>,
-        <Col xs="1">
+        <Col xs="1" key={Math.random()}>
           {rowCount === 1 && playerData && votingMode === "REVEAL" &&
             <div>
             <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
@@ -124,17 +124,17 @@ export default class VotingPage extends React.Component {
   }
 
   render() {
-    const { roundData, promptNumber } = this.state;
+    const { roundData, promptNumber, votingMode } = this.state;
     return (
       <div className="App-body">
         <div className="voting-header">
           <div style={{marginRight: "2%"}} ><MaddiesLegoSpeechBubble bubbleText={roundData[0] && roundData[0].promptsReturned[promptNumber].prompt ? roundData[0].promptsReturned[promptNumber].prompt : "Loading data"}/></div>
-          <Timer minutes={0} seconds={this.state.seconds} startVoting={this.startVoting}/>
+          {votingMode === "VOTING" && <Timer minutes={0} seconds={this.state.seconds} onTimerComplete={this.startVoting}/>}
         </div>
         <Container>
           {this.makeQuipGrid()}
         </Container>
-        <Button onClick={this.handleNext} style={{alignContent: "flex-end"}}>Next</Button>
+        {votingMode === "REVEAL" && <Button onClick={this.handleNext} style={{alignContent: "flex-end"}}>Next</Button>}
       </div>
     );
   }
