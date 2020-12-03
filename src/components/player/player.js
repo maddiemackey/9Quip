@@ -4,6 +4,7 @@ import Footer from "../footer";
 import JoinGame from "./JoinGame";
 import Loading from "./Loading";
 import Quipping from "./Quipping";
+import Voting from "./Voting";
 //import firebase, { getDbData } from "../Firebase/firebase";
 
 export default class Player extends React.Component {
@@ -16,7 +17,8 @@ export default class Player extends React.Component {
     return (
       <div>
         <div className="player-body">
-          <Quipping></Quipping>
+          <Voting />
+          {/* <Quipping></Quipping> */}
           {/* <JoinGame></JoinGame> */}
           {/* <Loading loadingText="Waiting on Players"></Loading> */}
         </div>

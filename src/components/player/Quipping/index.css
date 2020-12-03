@@ -4,14 +4,7 @@
 }
 
 .quipping-question-container {
-  display: flex;
-  flex-direction: row;
   margin-bottom: 10vw;
-}
-
-.quipping-question-narrator {
-  height: 100px;
-  width: 100px;
 }
 
 .quipping-answer-container {
@@ -29,35 +22,4 @@
 
 .quipping-answer-button {
   width: 75vw;
-}
-
-/* Below is copied and modified from: https://codepen.io/status201/pen/VvwmoY */
-
-.speech-bubble {
-  /* background: #ccc; */
-  position: relative;
-  text-align: center;
-  padding: 20px 0;
-  margin-left: 5vw;
-  width: 50vw;
-  /* border-color: white; */
-  /* border: 1px red; */
-  border: 1px solid white;
-  border-radius: 10px;
-}
-
-.speech-bubble:after {
-  content: "";
-  position: absolute;
-  display: block;
-  top: 50%;
-  right: 100%;
-  margin-top: -10px;
-  width: 0;
-  height: 0;
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-right: 10px solid #ccc;
 }

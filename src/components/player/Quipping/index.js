@@ -1,17 +1,13 @@
 import React from "react";
 import { Button, Input } from "reactstrap";
+import LegoSpeechBubble from "../LegoSpeechBubble";
 import "./index.css";
 
 function Quipping() {
   return (
     <div className="quipping-container">
       <div className="quipping-question-container">
-        <img
-          alt="narrator"
-          className="quipping-question-narrator"
-          src="https://www.fillmurray.com/100/100"
-        ></img>
-        <div className="speech-bubble">Why did Josh cross the river?</div>
+        <LegoSpeechBubble bubbleText="Why did Josh cross the river?" />
       </div>
       <div className="quipping-answer-container">
         <Input
