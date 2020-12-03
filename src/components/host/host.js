@@ -13,7 +13,7 @@ import assignQuips from "../../utils/assignQuips";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: "VOTING", gamecode: null, gameid: null};
+    this.state = { gamestate: null, gamecode: null, gameid: null};
   }
 
   createGame = () => {
@@ -33,13 +33,16 @@ export default class Host extends React.Component {
         const refPlayers = firebase.database().ref(`games/${this.state.gameid}/players`);
         refPlayers.on("value", snapshot => {
             let players = snapshot.val();
-            if (players) {
+            if (Object.keys(players).length >= 4) {
                 let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), prompts);
                 const refRounds = firebase.database().ref(`games/${this.state.gameid}/rounds`);
                 refRounds.push(promptsReturned);
                 const ref = firebase.database().ref(`games/${this.state.gameid}`);
                 ref.update({gamestate: GameState.quipping});
                 this.setState({ gamestate: "QUIPPING" });
+            }
+            else {
+                alert("You dont have enough players, stoopid");
             }
         });
       }
