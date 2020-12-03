@@ -11,7 +11,7 @@ export default class Footer extends React.Component {
 
   render() {
     return (
-      <div className="App-body">
+      <div className="App-footer">
         <p>Team Zoomer</p>
         <Button>Exit</Button>
       </div>
