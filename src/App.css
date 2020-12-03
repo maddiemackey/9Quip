@@ -105,6 +105,25 @@
   align-items: center;
 }
 
+.start-mr-lego {
+  width: 15%;
+  height: auto;
+}
+
+.start-mr-lego-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.startPrompt {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .joining-body {
   background-color: #030d21;
   min-height: 82vh;
