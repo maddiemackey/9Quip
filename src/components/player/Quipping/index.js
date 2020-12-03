@@ -10,65 +10,82 @@ function Quipping() {
   const [prompts, setPrompts] = useState([]);
   const [promptIndex, changePromptIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [answer, setAnswer] = useState("");
 
   useEffect(() => {
-    if(loading === true){
-        thing.getPrompts().then((res) => {
-          if (res === null) {
-            alert("Failed to get prompts, sorry :(");
-          } else {
-            setPrompts(res);
-            setLoading(false);
-          }
-        });
+    if (loading === true) {
+      thing.getPrompts().then((res) => {
+        if (res === null) {
+          alert("Failed to get prompts, sorry :(");
+        } else {
+          setPrompts(res);
+          setLoading(false);
+        }
+      });
     }
   }, [loading, prompts]);
 
-  const handleQuipSubmit = () => {
-    const quipInput = quipRef.current.value;
+  const handleInputOnChange = (event) => {
+    setAnswer(event.target.value);
+  };
 
-    if (!quipInput) {
+  const handleQuipSubmit = () => {
+    if (!answer) {
       console.log("Must not submit blank quip!");
       return;
     }
 
-    thing.submitQuip(prompts[promptIndex], quipInput, promptIndex).then((res) => {
-       console.log("PROMPT:", prompts[promptIndex]);
+    thing.submitQuip(prompts[promptIndex], answer, promptIndex).then((res) => {
+      console.log("PROMPT:", prompts[promptIndex]);
+
+      // clear prompt
+      setAnswer("");
+
       if (res === null) {
         console.log("Failed to submit quip, sorry :(");
       } else {
         console.log("Submitted quip");
-        changePromptIndex(promptIndex+1);
+        changePromptIndex(promptIndex + 1);
       }
     });
-
   };
 
   return (
     <div className="quipping-container">
       <div>
         {promptIndex < 2 && (
-        <div>
-          <div className="quipping-question-container">
-            <LegoSpeechBubble bubbleText={!loading ? prompts[promptIndex] : "Loading..."} />
+          <div>
+            <div className="quipping-question-container">
+              <LegoSpeechBubble
+                bubbleText={!loading ? prompts[promptIndex] : "Loading..."}
+              />
+            </div>
+            <div className="quipping-answer-container">
+              <Input
+                className="quipping-answer-input"
+                placeholder="Enter quip here"
+                type="textarea"
+                value={answer}
+                onChange={handleInputOnChange}
+                innerRef={quipRef}
+              ></Input>
+              <Button
+                onClick={handleQuipSubmit}
+                className="quipping-answer-button"
+              >
+                Submit Answer
+              </Button>
+            </div>
           </div>
-          <div className="quipping-answer-container">
-            <Input
-              className="quipping-answer-input"
-              placeholder="Enter quip here"
-              type="textarea"
-              innerRef={quipRef}
-            ></Input>
-            <Button onClick={handleQuipSubmit} className="quipping-answer-button">Submit Answer</Button>
-          </div>
-        </div>
         )}
         {promptIndex >= 2 && (
-        <div>
-          <div className="quipping-question-container">
-            <LegoSpeechBubble bubbleText={"Please wait while others finish quipping."} />
+          <div>
+            <div className="quipping-question-container">
+              <LegoSpeechBubble
+                bubbleText={"Please wait while others finish quipping."}
+              />
+            </div>
           </div>
-        </div>
         )}
       </div>
     </div>
