@@ -13,7 +13,7 @@ import assignQuips from "../../utils/assignQuips";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: null, gamecode: null, gameid: null};
+    this.state = { gamestate: "VOTING", gamecode: null, gameid: "gameId1"};
   }
 
   createGame = () => {
@@ -70,9 +70,15 @@ export default class Host extends React.Component {
 
  startVoting = () => {
   const ref = firebase.database().ref(`games/${this.state.gameid}`);
-  const newGameRef = ref.update({gamestate: GameState.voting});
+  ref.update({gamestate: GameState.voting});
   this.setState({ gamestate: "VOTING"});
 }
+
+  startScoring = () => {
+    const ref = firebase.database().ref(`games/${this.state.gameid}`);
+    ref.update({gamestate: GameState.scoreboard});
+    this.setState({ gamestate: "SCOREBOARD"});
+  }
 
   render() {
     const { gamestate } = this.state;
@@ -92,7 +98,7 @@ export default class Host extends React.Component {
             <QuippingPage startVoting={this.startVoting}/>
         }
         { gamestate === GameState.voting &&
-            <VotingPage/>
+            <VotingPage gameId={this.state.gameid} startScoring={this.startScoring}/>
         }
         { gamestate === GameState.scoreboard &&
             <ScorePage/>
