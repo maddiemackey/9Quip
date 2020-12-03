@@ -12,7 +12,7 @@ import firebase from "../../Firebase/firebase";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: "JOINING", gamecode: null, gameid: null};
+    this.state = { gamestate: "JOINING", gamecode: null, gameid: "gameId1"};
   }
 
   createGame = () => {
@@ -22,6 +22,23 @@ export default class Host extends React.Component {
     const gameid = newGameRef.key;
     this.setState({ gamestate: "JOINING", gamecode, gameid });
     window.localStorage.setItem("quipHostedGame", gameid);
+  }
+
+  startGame = () => {
+    const refPrompts = firebase.database().ref("prompts/normal");
+    refPrompts.on("value", snapshot => {
+      let prompts = snapshot.val();
+      if (prompts) {
+        const refPlayers = firebase.database().ref(`games/${this.state.gameid}/players`);
+        refPlayers.on("value", snapshot => {
+            let players = snapshot.val();
+            if (players) {
+                console.log(prompts);
+                console.log(players);
+            }
+        });
+      }
+    });
   }
 
   /** https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript */
@@ -47,7 +64,7 @@ export default class Host extends React.Component {
             <StartPage createGame={this.createGame}/>
         }
         { gamestate === GameState.joining &&
-            <JoiningPage gamecode={"1234"}/>
+            <JoiningPage gamecode={"1234"} startGame={this.startGame}/>
         }
         { gamestate === GameState.quipping &&
             <QuippingPage/>

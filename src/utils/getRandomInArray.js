@@ -1,6 +1,6 @@
-export default function getRandomInDict(dict, numberOfItems = 1) {
+export default function getRandomInArray(arr, numberOfItems = 1) {
     let items = new Array(numberOfItems);
-    let len = Object.keys(dict).length;
+    let len = arr.length;
     let taken = new Array(len);
 
     if (numberOfItems > len)
@@ -8,7 +8,7 @@ export default function getRandomInDict(dict, numberOfItems = 1) {
 
     while (numberOfItems--) {
         let x = Math.floor(Math.random() * len);
-        items[numberOfItems] = Object.keys(dict)[x in taken ? taken[x] : x];
+        items[numberOfItems] = arr[x in taken ? taken[x] : x];
         taken[x] = --len in taken ? taken[len] : len;
     }
 

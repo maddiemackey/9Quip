@@ -2,6 +2,7 @@ import React from "react";
 import '../../App.css';
 import LogoWOTeam from "../shared/logowoteam";
 import LegoSpeechBubble from "../../components/player/LegoSpeechBubble/index";
+import { Button } from "reactstrap";
 
 export default class JoiningPage extends React.Component {
   constructor(props) {
@@ -30,6 +31,7 @@ export default class JoiningPage extends React.Component {
         </div>
         </div>
         </div>
+        <Button onClick={this.props.startGame}>Start Game</Button>
       </div>
     );
   }
