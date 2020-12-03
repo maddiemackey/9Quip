@@ -1,4 +1,41 @@
 .voting-container {
   display: flex;
   flex-direction: column;
+  flex: 1 1 0;
+}
+
+.voting-option {
+  height: 10vh;
+  max-width: 80vw;
+  border: 1px white solid;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.voting-option-colour {
+  width: 5%;
+}
+
+.voting-options-container {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.voting-speech-bubble {
+  margin-top: 2vh;
+}
+
+.voting-option-text {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }

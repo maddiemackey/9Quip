@@ -1,8 +1,7 @@
 import React from "react";
 import '../../App.css';
 import LogoWOTeam from "../shared/logowoteam";
-import LegoSpeechBubble from "../../components/player/LegoSpeechBubble/index";
-import { Button } from "reactstrap";
+import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 
 export default class JoiningPage extends React.Component {
   constructor(props) {
@@ -13,23 +12,17 @@ export default class JoiningPage extends React.Component {
   render() {
     return (
       <div className="joining-body">
-        <div className="row">
-        <div className="column">
         <div className="gameInfo">
           <div><LogoWOTeam/></div>
           <div className="codePrompt">
-            <LegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
+          <MaddiesLegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
           </div>
         </div>
-        </div>
-        <div className="column">
         <div className="players">
           <div className="playersHeader">Players</div>
           <div className="playersBox">
             {this.state.players.join(" ")}
           </div>
-        </div>
-        </div>
         </div>
         <Button onClick={this.props.startGame}>Start Game</Button>
       </div>
