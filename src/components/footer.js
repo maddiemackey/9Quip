@@ -14,7 +14,7 @@ export default class Footer extends React.Component {
     return (
       <div className="App-footer">
         <Team/>
-        <Button style={{marginLeft: "auto", minWidth: "10%"}}>Exit</Button>
+        <Button onClick={this.props.exit} style={{marginLeft: "auto", minWidth: "10%"}}>Exit</Button>
       </div>
     );
   }

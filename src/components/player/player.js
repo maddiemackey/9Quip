@@ -17,6 +17,10 @@ export default class Player extends React.Component {
     this.state = { text: "Player" };
   }
 
+  exitGame = () => {
+    alert("eep forgot to do this bit sorry :)");
+  }
+
   getViewToRender() {
     switch (this.context.mainGameState) {
       case null:
@@ -24,7 +28,7 @@ export default class Player extends React.Component {
       case GameState.joining:
         return <Loading loadingText="Waiting on Players" />;
       case GameState.quipping:
-        return <Quipping></Quipping>;
+        return <Quipping />;
       case GameState.voting:
         return <Voting />;
       case GameState.scoreboard:
@@ -59,7 +63,7 @@ export default class Player extends React.Component {
           {/* <JoinGame></JoinGame> */}
           {/* <Loading loadingText="Waiting on Players"></Loading> */}
         </div>
-        <Footer />
+        <Footer exit={this.exitGame}/>
       </div>
     );
   }

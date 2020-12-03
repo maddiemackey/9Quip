@@ -58,6 +58,24 @@ export class ClientGameContextProvider extends React.Component {
     });
   }
 
+  async exitGame() {
+    return new Promise((res, rej) => {
+      const ref = firebase.database().ref(`games/`);
+      // ref
+      //   .remove();
+      //     // Store player in local storage to maintain session
+      //     window.localStorage.clear();
+      //     // Set in state
+      //     this.setState({
+      //       gameId: gameid,
+      //       playerId: newPlayer.key,
+      //       round: 0,
+      //     });
+      //     this.startWatchingGame(gameCode);
+      //     return res(snapshotValue);
+        });
+  }
+
   async submitQuip(prompt, quip) {
     return new Promise((res, rej) => {
       // get round ID
