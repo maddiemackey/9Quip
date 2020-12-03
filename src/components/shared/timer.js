@@ -19,7 +19,8 @@ export default class Timer extends React.Component {
       }
       if (seconds === 0) {
         if (minutes === 0) {
-          clearInterval(this.myInterval)
+          clearInterval(this.myInterval);
+          this.props.startVoting();
         } else {
           this.setState(({ minutes }) => ({
             minutes: minutes - 1,
@@ -27,15 +28,15 @@ export default class Timer extends React.Component {
           }))
         }
       }
-    }, 1000)
+    }, 1000);
   }
 
   render() {
     const { minutes, seconds } = this.state
     return (
       <div className="timer">{ minutes === 0 && seconds === 0
-                    ? <h1>Time's up!</h1>
-                    : <h1>{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
+                    ? <h1 className="timer-text">Time's up!</h1>
+                    : <h1 className="timer-text">{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
                 }
       </div>
     );

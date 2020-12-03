@@ -1,25 +1,21 @@
 import React from "react";
 import '../../App.css';
-//import firebase, { getDbData } from "../Firebase/firebase";
+import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble";
 
 export default class VotingPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: "Host" };
+    this.state = {quips: ["nothing", "idk idc", "honest work", "best programming this side of the murray darling"]}
   }
 
   render() {
     return (
       <div className="App-body">
-        <div className="logo">logo</div>
-        <div className="legoHead">lil head</div>
-        <div className="prompt">What does Josh even do here?</div>
+        <MaddiesLegoSpeechBubble bubbleText={"What does Josh even do here?"}/>
         <ol>
-            <li className="quip">Nothing</li>
-            <li className="quip">Nothing</li>
-            <li className="quip">Nothing</li>
-            <li className="quip">Nothing</li>
-            <li className="quip">Nothing</li>
+        {this.state.quips.map(quip => (
+            <li>{quip}</li>
+          ))}
         </ol>
       </div>
     );

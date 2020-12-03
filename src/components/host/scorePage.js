@@ -5,28 +5,22 @@ import '../../App.css';
 export default class ScorePage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: "Host" };
+    this.state = {topfive: ["carlosss", "medi", "benny boi", "idk some random"], everyoneelse: ["losers: jojo"]}
   }
 
   render() {
     return (
       <div className="App-body">
-        <div className="logo">logo</div>
         <div className="top5">
-            <ol>
-                <li className="leader">1st</li>
-                <li>2nd</li>
-                <li>3rd</li>
-                <li>4th</li>
-                <li>5th</li>
-            </ol>
+            {this.state.topfive.map(player => (
+              <div style={{paddingRight: "5vw"}}>{player}</div>
+            ))}
         </div>
         <div className="otherPlayers">
             <ol>
-                <li>Player 6</li>
-                <li>Player 7</li>
-                <li>Player 8</li>
-                <li>Player 9</li>
+            {this.state.everyoneelse.map(player => (
+              <ul>{player}</ul>
+            ))}
             </ol>
         </div>
       </div>

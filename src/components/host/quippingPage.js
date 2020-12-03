@@ -1,32 +1,29 @@
 import React from "react";
 import '../../App.css';
 import Timer from "../shared/timer";
-//import firebase, { getDbData } from "../Firebase/firebase";
+import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 
 export default class QuippingPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: "Host" };
+    this.state = { players: ["medi", "ben", "jojo", "carlos", "kory"] };
   }
 
   render() {
     return (
-      <div className="App-body">
-        <div className="logo">Ha Another Logo</div>
-        <div className="players">
-            <ul>
-                <li className="player">Josh</li>
-                <li className="player">Josh</li>
-                <li className="player">Josh</li>
-                <li className="player">Josh</li>
-            </ul>
-        </div>
+      <div className="quipping-body">
         <div className="gameInfo">
-            <Timer minutes={1} seconds={0}/>
-            <div className="promptSection">
-                <div className="prompt">Answer the prompts on your device :p</div>
-                <div className="legoHead">Head of Lego</div>
-            </div>
+          <div><Timer minutes={0} seconds={10} startVoting={this.props.startVoting}/></div>
+          <div style={{width: "100%"}}>
+            <MaddiesLegoSpeechBubble bubbleText={"Answer the prompts on your phone!"} />
+          </div>
+        </div>
+
+        <div className="players">
+          <div className="playersHeader">Players</div>
+          <div className="playersBox">
+            {this.state.players.join(" ")}
+          </div>
         </div>
       </div>
     );

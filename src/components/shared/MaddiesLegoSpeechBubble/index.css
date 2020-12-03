@@ -2,9 +2,6 @@
 
 .lego-speech-bubble-container {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 }
 
 .lego-speech-bubble-mr-lego {
@@ -13,14 +10,10 @@
 }
 
 .speech-bubble {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: #ccc;
   text-align: center;
   padding: 20px 0;
   margin-left: 3%;
-  width: 50%;
   border: 1px solid white;
   border-radius: 10px;
   color: #1a1d22;
