@@ -13,7 +13,7 @@ export default class StartPage extends React.Component {
 
   render() {
     return (
-      <div className="App-body">
+      <div className="start-page">
         <div className="teamName">
           <image src="" alt="logo"></image>
           <p>Team Zoomer</p>
