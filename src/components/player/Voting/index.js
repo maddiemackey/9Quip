@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LegoSpeechBubble from "../LegoSpeechBubble";
 import "./index.css";
+import { ClientGameContext } from "../GameContext";
 
 function Option({ text, colour, onClick }) {
   return (
@@ -35,18 +36,36 @@ function getColour(index) {
   }
 }
 
-function Voting({ options = [{answer: "one"},{answer: "two"},{answer: "three"},{answer: "four"},{answer: "five"},] }) {
+function Voting() {
+  const thing = useContext(ClientGameContext);
+  const [quips, setQuips] = useState([]);
+  const [voted, setVoted] = useState(false);
+
+
+  useEffect(() => {
+    setVoted(false);
+    thing.getQuipsForPrompt().then((resQ) => {
+      if (resQ === null) {
+        alert("Failed to see voting, sorry :(");
+      } else {
+        setQuips(resQ);
+      }
+    });
+  }, [thing.voteState]);
+
   return (
     <div className="voting-container">
       <div className="voting-speech-bubble">
         {/* TODO: replace with quip from gamestate  */}
-        <LegoSpeechBubble bubbleText="Who is Mister Lego?"></LegoSpeechBubble>
+        <LegoSpeechBubble bubbleText={!voted ? thing.voteState : "Please wait while others vote"}></LegoSpeechBubble>
       </div>
+      {!voted && (
       <div className="voting-options-container">
-        {options && options.map((option, i) => {
-          return <Option text={option.answer} colour={getColour(i)} />;
+        {quips && quips.map((quip, i) => {
+          return <Option text={quip.quip} colour={getColour(i)} onClick={() => {thing.vote(quip.path); setVoted(true);}}/>;
         })}
       </div>
+      )}
     </div>
   );
 }
