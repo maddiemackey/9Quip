@@ -13,7 +13,7 @@ import assignQuips from "../../utils/assignQuips";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: "JOINING", gamecode: null, gameid: "gameId1"};
+    this.state = { gamestate: null, gamecode: null, gameid: null};
   }
 
   createGame = () => {
@@ -37,6 +37,9 @@ export default class Host extends React.Component {
                 let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), prompts);
                 const refRounds = firebase.database().ref(`games/${this.state.gameid}/rounds`);
                 refRounds.push(promptsReturned);
+                const ref = firebase.database().ref(`games/${this.state.gameid}`);
+                const newGameRef = ref.update({gamestate: GameState.quipping});
+                this.setState({ gamestate: "QUIPPING" });
             }
         });
       }
@@ -62,9 +65,9 @@ export default class Host extends React.Component {
 
   render() {
     const { gamestate } = this.state;
-    // console.log("gamecode: ", this.state.gamecode);
-    // console.log("gameid: ", this.state.gameid);
-    // console.log("gamestate: ", this.state.gamestate);
+    console.log("gamecode: ", this.state.gamecode);
+    console.log("gameid: ", this.state.gameid);
+    console.log("gamestate: ", this.state.gamestate);
 
     return (
       <div>
@@ -72,7 +75,7 @@ export default class Host extends React.Component {
             <StartPage createGame={this.createGame}/>
         }
         { gamestate === GameState.joining &&
-            <JoiningPage gamecode={"1234"} startGame={this.startGame}/>
+            <JoiningPage gamecode={this.state.gamecode} startGame={this.startGame}/>
         }
         { gamestate === GameState.quipping &&
             <QuippingPage startVoting={this.startVoting}/>

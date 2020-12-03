@@ -3,10 +3,6 @@ import './index.css';
 import mrlego from "../../../assets/lego-head.png";
 
 export default class MaddiesLegoSpeechBubble extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="lego-speech-bubble-container">
