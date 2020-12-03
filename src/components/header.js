@@ -1,5 +1,6 @@
 import React from "react";
 import '../App.css';
+import Logo from "./shared/Logo";
 
 export default class Header extends React.Component {
   // constructor(props) {
@@ -9,7 +10,7 @@ export default class Header extends React.Component {
   render() {
     return (
       <div className="App-header">
-        <p>9Quip</p>
+        <Logo/>
       </div>
     );
   }

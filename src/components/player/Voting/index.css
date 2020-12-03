@@ -1,0 +1,4 @@
+.voting-container {
+  display: flex;
+  flex-direction: column;
+}

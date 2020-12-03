@@ -1,0 +1,25 @@
+.quipping-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.quipping-question-container {
+  margin-bottom: 10vw;
+}
+
+.quipping-answer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10vw;
+}
+
+.quipping-answer-input {
+  min-height: 20vw;
+  margin-bottom: 5vw;
+}
+
+.quipping-answer-button {
+  width: 75vw;
+}
