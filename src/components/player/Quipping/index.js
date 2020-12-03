@@ -13,14 +13,12 @@ function Quipping() {
 
   useEffect(() => {
     if(loading === true){
-      console.log("Do the thing xuli");
         thing.getPrompts().then((res) => {
           if (res === null) {
             alert("Failed to get prompts, sorry :(");
           } else {
             setPrompts(res);
             setLoading(false);
-            console.log("Received prompts", res);
           }
         });
     }
