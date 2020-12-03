@@ -14,12 +14,27 @@ export default class Player extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { text: "Player" };
+    this.state = { prompts: null };
   }
 
-  exitGame = () => {
-    alert("eep forgot to do this bit sorry :)");
-  }
+  // componentDidUpdate() {
+  //   if(this.context.mainGameState === GameState.quipping) {
+  //     this.loadPrompts();
+  //   }
+  // }
+
+  // loadPrompts = async () => {
+  //   return new Promise((res, rej) => {
+  //     const ref = firebase.database().ref(`games/${this.state.gameId}/players/${this.state.playerId}/prompts`);
+  //     ref.once("value", (snapshot) => {
+  //         const prompts = snapshot.val();
+  //         this.setState({
+  //           prompts: prompts
+  //         });
+  //         return res(prompts);
+  //       });
+  //   });
+  // }
 
   getViewToRender() {
     switch (this.context.mainGameState) {
@@ -63,7 +78,7 @@ export default class Player extends React.Component {
           {/* <JoinGame></JoinGame> */}
           {/* <Loading loadingText="Waiting on Players"></Loading> */}
         </div>
-        <Footer exit={this.exitGame}/>
+        <Footer exit={this.context.exitGame} inGame={!!this.context.gameId}/>
       </div>
     );
   }

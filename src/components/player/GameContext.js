@@ -1,5 +1,6 @@
 import React from "react";
 import firebase from "../../Firebase/firebase";
+import { GameState } from "../../utils/enum";
 
 export const ClientGameContext = React.createContext();
 
@@ -15,15 +16,17 @@ export class ClientGameContextProvider extends React.Component {
     super(props);
     this.state = {
       // when null it means there is no game started yet
-      mainGameState: null,
-      gameId: null,
-      playerId: null,
-      round: null,
+      mainGameState: GameState.quipping,
+      gameId: "-MNdqksyE3AmEoRi8Odv",
+      playerId: "-MNdqlpvUoiEq1HBdtTl",
+      round: 0,
     };
 
     this.joinGame = this.joinGame.bind(this);
     this.submitQuip = this.submitQuip.bind(this);
     this.startWatchingGame = this.startWatchingGame.bind(this);
+    this.exitGame = this.exitGame.bind(this);
+    this.getPrompts = this.getPrompts.bind(this);
   }
 
   handleGameStateChange() {}
@@ -60,20 +63,36 @@ export class ClientGameContextProvider extends React.Component {
 
   async exitGame() {
     return new Promise((res, rej) => {
-      const ref = firebase.database().ref(`games/`);
-      // ref
-      //   .remove();
-      //     // Store player in local storage to maintain session
-      //     window.localStorage.clear();
-      //     // Set in state
-      //     this.setState({
-      //       gameId: gameid,
-      //       playerId: newPlayer.key,
-      //       round: 0,
-      //     });
-      //     this.startWatchingGame(gameCode);
-      //     return res(snapshotValue);
+
+      // Remove from DB
+      const ref = firebase.database().ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
+      ref.remove();
+
+      // Remove from localStorage
+      window.localStorage.clear();
+
+      // Remove from state
+      this.setState({
+        mainGameState: null,
+        gameId: null,
+        playerId: null,
+        round: null,});
+
+      return(res("Removed player"));
+    });
+  }
+
+  async getPrompts() {
+    return new Promise((res, rej) => {
+      const ref = firebase.database().ref(`games/${this.state.gameId}/players/${this.state.playerId}/prompts`);
+      ref.once("value", (snapshot) => {
+          const prompts = snapshot.val();
+          this.setState({
+            prompts: prompts
+          });
+          return res(prompts);
         });
+    });
   }
 
   async submitQuip(prompt, quip) {
@@ -81,7 +100,7 @@ export class ClientGameContextProvider extends React.Component {
       // get round ID
       let roundRef = "";
       if (this.state.round === 0) {
-        roundRef = firebase.database().ref(`games/${this.state.gameId}/rounds`).limitToFirst(1);
+        roundRef = firebase.database().ref(`games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`);
       }
       roundRef
         .on("value", (snapshot) => {
@@ -89,32 +108,28 @@ export class ClientGameContextProvider extends React.Component {
           if (!snapshotValue) {
             return res(null);
           }
-          console.log("roundValue:", snapshotValue);
 
+          console.log();
           // Get ROUND ID and add quip to the DB
-          const roundId = Object.keys(snapshot.val())[0];
-          let flag = false;
+          //const roundId = Object.keys(snapshot.val())[0];
           let i = 0;
-          snapshotValue[roundId].forEach(snap => {
+          snapshotValue.forEach(snap => {
             if(snap.prompt === prompt){
               let p = 0;
               snap.players.forEach(player => {
-                console.log("player:", player);
                 if(player.id === this.state.playerId){
-                  const quipRef = firebase.database().ref(`games/${this.state.gameId}/rounds/${roundId}/${i}/players/${p}`);
-                  quipRef.update({quip: quip});
-                  flag = true;
+                  // if (this.state)
+                  return res(`games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}`);
                 }
                 p++;
               });
-              i++;
             }
-            if(flag){
-              return res(null);
-            }
+            i++;
           });
-          return res(quip);
       });
+    }).then((res) => {
+      const quipRef = firebase.database().ref(res);
+      quipRef.update({quip: quip});
     });
   }
 
@@ -142,8 +157,11 @@ export class ClientGameContextProvider extends React.Component {
       <ClientGameContext.Provider
         value={{
           ...this.state,
+          startWatchingGame: this.startWatchingGame,
           joinGame: this.joinGame,
-          submitQuip: this.submitQuip
+          submitQuip: this.submitQuip,
+          exitGame: this.exitGame,
+          getPrompts: this.getPrompts,
         }}
       >
         {this.props.children}
