@@ -14,7 +14,7 @@ import { legoHeads } from "../../utils/legoHeads";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: "VOTING", gamecode: null, gameid: "gameId1"};
+    this.state = { gamestate: "SCOREBOARD", gamecode: null, gameid: "-MNewvONqhiG3f__e-YT"};
   }
 
   createGame = () => {
@@ -129,7 +129,7 @@ export default class Host extends React.Component {
             <VotingPage gameId={this.state.gameid} startScoring={this.startScoring}/>
         }
         { gamestate === GameState.scoreboard &&
-            <ScorePage/>
+            <ScorePage gameId={this.state.gameId}/>
         }
         <Footer exit={this.exitGame} inGame={!!this.state.gameid}/>
       </div>

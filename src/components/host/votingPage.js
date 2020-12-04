@@ -45,6 +45,7 @@ export default class VotingPage extends React.Component {
     refPlayers.on("value", snapshot => {
       let playerData = snapshot.val();
       if (playerData) {
+        console.log(playerData)
         const pointsToAssign = calculatePoints(playerData, roundData[0].promptsReturned[promptNumber]);
         Object.keys(pointsToAssign).forEach(playerID => {
           playerData[playerID].score += pointsToAssign[playerID];
