@@ -17,7 +17,7 @@ let colours = {
 export default class VotingPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       roundData: {},
       playerData: {},
       promptNumber: 0,
@@ -36,6 +36,8 @@ export default class VotingPage extends React.Component {
           roundData: roundData
         });
       }
+      const ref = firebase.database().ref(`games/${this.props.gameId}`);
+      ref.update({currentVote: roundData[0].promptsReturned[0].prompt})
     });
   }
 

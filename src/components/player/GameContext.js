@@ -161,8 +161,6 @@ export class ClientGameContextProvider extends React.Component {
         if (!snapshotValue) {
           return res(null);
         }
-
-        console.log();
         // Get ROUND ID and add quip to the DB
         //const roundId = Object.keys(snapshot.val())[0];
         let i = 0;
@@ -192,13 +190,11 @@ export class ClientGameContextProvider extends React.Component {
     return new Promise((res, rej) => {
       // get round ID
       let roundRef = "";
-      if (this.state.round === 0) {
         roundRef = firebase
           .database()
           .ref(
             `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
           );
-      }
       roundRef.once("value", (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
@@ -212,7 +208,7 @@ export class ClientGameContextProvider extends React.Component {
             prompt.players.forEach((player) => {
               quips.push({
                 quip: player.quip,
-                path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}/votes`,
+                path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}`,
               });
               p++;
             });
@@ -226,23 +222,25 @@ export class ClientGameContextProvider extends React.Component {
   }
 
   vote(path) {
+    console.log("VOTING", path);
     return new Promise((res, rej) => {
-      const ref = firebase.database().ref(path);
-      ref.once("value", (snapshot) => {
-        const snapshotValue = snapshot.val();
-        if (!snapshotValue) {
-          return res(null);
-        }
-        let voteIndex = 0;
-        snapshotValue.forEach((vote) => {
-          voteIndex++;
-        });
-        console.log("VOTEINDEX:", voteIndex);
-        let obj = {};
-        obj[voteIndex] = this.state.playerId;
-        ref.update(obj);
-        return res("yis");
+    const ref = firebase.database().ref(path);
+    ref.once("value", (snapshot) => {
+      const snapshotValue = snapshot.val();
+      console.log("SNAP:", snapshotValue);
+      if (!snapshotValue) {
+        return res(null);
+      }
+      let voteIndex = 0;
+      console.log("YEEHAW", snapshotValue.length);
+      snapshotValue.length && snapshotValue.forEach((vote) => {
+        voteIndex++;
       });
+      let obj = {};
+      obj[voteIndex] = this.state.playerId;
+        ref.update({votes: obj});
+        return res("yis");
+    });
     });
   }
 

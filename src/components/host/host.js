@@ -14,7 +14,7 @@ import { legoHeads } from "../../utils/legoHeads";
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: "SCOREBOARD", gamecode: null, gameid: "-MNewvONqhiG3f__e-YT"};
+    this.state = { gamestate: null, gamecode: null, gameid: null};
   }
 
   createGame = () => {
