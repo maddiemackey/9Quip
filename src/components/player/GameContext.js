@@ -208,7 +208,7 @@ export class ClientGameContextProvider extends React.Component {
             prompt.players.forEach((player) => {
               quips.push({
                 quip: player.quip,
-                path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}/votes`,
+                path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}`,
               });
               p++;
             });
@@ -222,22 +222,24 @@ export class ClientGameContextProvider extends React.Component {
   }
 
   vote(path) {
+    console.log("VOTING", path);
     return new Promise((res, rej) => {
     const ref = firebase.database().ref(path);
     ref.once("value", (snapshot) => {
       const snapshotValue = snapshot.val();
+      console.log("SNAP:", snapshotValue);
       if (!snapshotValue) {
         return res(null);
       }
       let voteIndex = 0;
-      snapshotValue.length > 0 && snapshotValue.forEach((vote) => {
+      console.log("YEEHAW", snapshotValue.length);
+      snapshotValue.length && snapshotValue.forEach((vote) => {
         voteIndex++;
       });
       let obj = {};
       obj[voteIndex] = this.state.playerId;
-      ref
-      .update({votes: obj});
-      return res("yis");
+        ref.update({votes: obj});
+        return res("yis");
     });
     });
   }

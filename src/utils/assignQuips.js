@@ -80,7 +80,8 @@ export default function assignQuips(players = defaultPlayers, prompts = defaultP
                 playersReturned[Object.keys(playersNotAssigned)[playerIndex]].push(prompt);
                 promptToPush["players"].push({
                     "id": Object.keys(playersNotAssigned)[playerIndex],
-                    "quip": ""
+                    "quip": "",
+                    "votes": ""
                 });
                 delete playersNotAssigned[Object.keys(playersNotAssigned)[playerIndex]];
                 playersToAssign--;
