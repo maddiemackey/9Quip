@@ -81,26 +81,26 @@ export class ClientGameContextProvider extends React.Component {
             console.log("setting new snapshot value", snapshotValue);
 
             gameRef.set(snapshotValue);
-          });
 
-          const ref = firebase.database().ref(`games/${gameid}/players`);
-          const newPlayer = ref.push({
-            name: nameInput,
-            score: 0,
-            icon: "mr-lego",
+            const ref = firebase.database().ref(`games/${gameid}/players`);
+            const newPlayer = ref.push({
+              name: nameInput,
+              score: 0,
+              icon: head,
+            });
+            // Store player in local storage to maintain session
+            window.localStorage.setItem("quipGameId", gameid);
+            window.localStorage.setItem("quipPlayerId", newPlayer.key);
+            // Set in state
+            this.setState({
+              gameId: gameid,
+              playerId: newPlayer.key,
+              round: 0,
+            });
+            this.startWatchingGame(gameCode);
+            this.startWatchingVoting(gameid);
+            return res(snapshotValue);
           });
-          // Store player in local storage to maintain session
-          window.localStorage.setItem("quipGameId", gameid);
-          window.localStorage.setItem("quipPlayerId", newPlayer.key);
-          // Set in state
-          this.setState({
-            gameId: gameid,
-            playerId: newPlayer.key,
-            round: 0,
-          });
-          this.startWatchingGame(gameCode);
-          this.startWatchingVoting(gameid);
-          return res(snapshotValue);
         });
     });
   }

@@ -31,11 +31,11 @@ export default class Host extends React.Component {
     new Promise((res, rej) => {
       ref.on("value", snapshot => {
         let db = snapshot.val();
-        if (db.prompts.normal) {
+        if (db.prompts.nine) {
           if (db.games[this.state.gameid].players){
               let players = db.games[this.state.gameid].players;
               if (Object.keys(players).length >= 4) {
-                  let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), db.prompts.normal);
+                  let [playersReturned, promptsReturned] = assignQuips(Object.keys(players), db.prompts.nine);
                   for (const p of Object.keys(players)) {
                       for (const q of Object.keys(playersReturned)) {
                           if (p === q) {
