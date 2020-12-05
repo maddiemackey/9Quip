@@ -23,7 +23,7 @@ function Quipping() {
         }
       });
     }
-  }, [loading, prompts]);
+  }, [loading, prompts, thing]);
 
   const handleInputOnChange = (event) => {
     setAnswer(event.target.value);

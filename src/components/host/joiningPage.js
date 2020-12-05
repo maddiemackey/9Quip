@@ -7,7 +7,7 @@ import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 export default class JoiningPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { players: ["medi", "ben", "jojo", "carlos", "kory"] };
+    this.state = {}//{ players: ["medi", "ben", "jojo", "carlos", "kory"] };
   }
 
   render() {
@@ -19,13 +19,15 @@ export default class JoiningPage extends React.Component {
           <MaddiesLegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
           </div>
         </div>
+        {this.state.players && (
         <div className="players">
           <div className="playersHeader">Players</div>
           <div className="playersBox">
-            {this.state.players.join(" ")}
+            {this.state.players && this.state.players.join(" ")}
           </div>
+          </div>
+          )}
         <Button style={{justifySelf: "flex-end"}} onClick={this.props.startGame}>Start Game</Button>
-        </div>
       </div>
     );
   }

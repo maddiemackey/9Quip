@@ -156,7 +156,7 @@ export class ClientGameContextProvider extends React.Component {
             `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
           );
       }
-      roundRef.on("value", (snapshot) => {
+      roundRef.once("value", (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
           return res(null);

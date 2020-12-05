@@ -25,6 +25,7 @@ import tp from "../../assets/lego-heads/tp.png";
 import traffic from "../../assets/lego-heads/traffic.png";
 import viking from "../../assets/lego-heads/viking.png";
 import wizard from "../../assets/lego-heads/wizard.png";
+import nohat from "../../assets/lego-head.png";
 
 export default class PlayerLegoHead extends React.Component {
   constructor(props) {
@@ -114,6 +115,9 @@ export default class PlayerLegoHead extends React.Component {
       case("wizard"):
         headContent = wizard;
           break;
+      default:
+        headContent = nohat;
+        break;
     }
 
     this.setState({

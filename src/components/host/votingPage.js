@@ -8,11 +8,11 @@ import Timer from "../shared/timer";
 import calculatePoints from "../../utils/points";
 
 let colours = {
-  0: "red",
-  1: "blue",
-  2: "green",
-  3: "purple",
-  4: "yellow"
+  0: "#D22C25",
+  1: "#0085CD",
+  2: "#1FC02C",
+  3: "#FFF200",
+  4: "#BD008B"
 }
 export default class VotingPage extends React.Component {
   constructor(props) {
@@ -28,17 +28,25 @@ export default class VotingPage extends React.Component {
   }
 
   componentDidMount() {
-    const refRounds = firebase.database().ref(`games/${this.props.gameId}/rounds`);
-    refRounds.on("value", snapshot => {
-      let roundData = snapshot.val();
-      if (roundData) {
-        this.setState({
-          roundData: roundData
-        });
-      }
+    this.setupVotingData();
+  }
+
+  async setupVotingData() {
+    return new Promise((res, rej) => {
+      const refRounds = firebase.database().ref(`games/${this.props.gameId}/rounds`);
+      refRounds.on("value", snapshot => {
+        let roundData = snapshot.val();
+        if (roundData) {
+          this.setState({
+            roundData: roundData
+          });
+          return res(roundData);
+        }
+      });
+    }).then((roundData) => {
       const ref = firebase.database().ref(`games/${this.props.gameId}`);
       ref.update({currentVote: roundData[0].promptsReturned[0].prompt})
-    });
+    });;
   }
 
   startVoting = () => {
@@ -61,15 +69,17 @@ export default class VotingPage extends React.Component {
         updates[`games/${this.props.gameId}/players`] = playerData;
       }
     });
+    const ref = firebase.database().ref(`games/${this.props.gameId}`);
+    ref.update({currentVote: null})
   }
 
   handleNext = () => {
     let { roundData, promptNumber } = this.state;
     roundData[0] && promptNumber < roundData[0].promptsReturned.length - 1 ? promptNumber++ : this.props.startScoring();
     const ref = firebase.database().ref(`games/${this.props.gameId}`);
-    ref.update({currentVote: roundData[0].promptsReturned[promptNumber].prompt})
+    ref.update({currentVote: roundData[0].promptsReturned[promptNumber].prompt});
 
-    this.setState({ promptNumber, votingMode: "VOTING", seconds: this.state.seconds+1 }); 
+    this.setState({ promptNumber, votingMode: "VOTING", seconds: this.state.seconds+1 });
   }
 
   makeQuipGrid = () => {
@@ -96,7 +106,7 @@ export default class VotingPage extends React.Component {
             </CardBody>
             <CardFooter>
               <div className="voting-footer">
-                {votingMode === "REVEAL" && player.votes && player.votes.map(vote => 
+                {votingMode === "REVEAL" && player.votes && player.votes.map(vote =>
                   <PlayerLegoHead key={Math.random()} headName={playerData[vote].icon} playerName={playerData[vote].name} classThing={"playerLegoHeadImgsml"}/>
                 )}
               </div>
