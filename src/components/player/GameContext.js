@@ -125,7 +125,7 @@ export class ClientGameContextProvider extends React.Component {
       });
 
       return res("Removed player");
-    });
+    }).then(() => {window.location.reload();});
   }
 
   async getPrompts() {

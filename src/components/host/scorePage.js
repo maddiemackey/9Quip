@@ -45,6 +45,8 @@ export default class ScorePage extends React.Component {
     rowCount = Math.floor(playerList/5)
     return (
       <div className="App-body">
+        <h1>There's meant to be a socreboard here</h1>
+        <h1>But I think the real winners are the friends we made along the way</h1>
         <Table id="table">
           <thead>
             <tr>
