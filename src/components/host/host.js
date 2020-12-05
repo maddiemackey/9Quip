@@ -129,7 +129,7 @@ export default class Host extends React.Component {
             <VotingPage gameId={this.state.gameid} startScoring={this.startScoring}/>
         }
         { gamestate === GameState.scoreboard &&
-            <ScorePage gameId={this.state.gameId}/>
+            <ScorePage gameId={this.state.gameId} endGame={this.exitGame}/>
         }
         <Footer exit={this.exitGame} inGame={!!this.state.gameid}/>
       </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import '../../App.css';
 import {
+  Button,
   Table
 } from "reactstrap";
 import firebase from "../../Firebase/firebase";
@@ -69,6 +70,7 @@ export default class ScorePage extends React.Component {
           </tbody>
           }
         </Table>
+        <Button onClick={this.props.endGame}>End game</Button>
       </div>
     );
   }
