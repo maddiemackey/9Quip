@@ -2,13 +2,9 @@ import React from "react";
 import '../../App.css';
 import Timer from "../shared/timer";
 import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
+import PlayerList from "../shared/playerList";
 
 export default class QuippingPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};//{ players: ["medi", "ben", "jojo", "carlos", "kory"] };
-  }
-
   render() {
     return (
       <div className="quipping-body">
@@ -18,15 +14,7 @@ export default class QuippingPage extends React.Component {
             <MaddiesLegoSpeechBubble bubbleText={"Answer the prompts on your phone!"} />
           </div>
         </div>
-
-        {this.state.players && (
-        <div className="players">
-          <div className="playersHeader">Players</div>
-          <div className="playersBox">
-            {this.state.players.join(" ")}
-          </div>
-        </div>
-        )}
+        <PlayerList gameid={this.props.gameid}/>
       </div>
     );
   }

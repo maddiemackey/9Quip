@@ -46,7 +46,7 @@ export default class VotingPage extends React.Component {
     }).then((roundData) => {
       const ref = firebase.database().ref(`games/${this.props.gameId}`);
       ref.update({currentVote: roundData[0].promptsReturned[0].prompt})
-    });;
+    });
   }
 
   startVoting = () => {

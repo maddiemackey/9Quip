@@ -2,12 +2,13 @@ import React from "react";
 import { Button } from "reactstrap";
 import '../../App.css';
 import LogoWOTeam from "../shared/logowoteam";
+import PlayerList from "../shared/playerList";
 import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 
 export default class JoiningPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}//{ players: ["medi", "ben", "jojo", "carlos", "kory"] };
+    this.state = {};
   }
 
   render() {
@@ -19,15 +20,12 @@ export default class JoiningPage extends React.Component {
           <MaddiesLegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
           </div>
         </div>
-        {this.state.players && (
-        <div className="players">
-          <div className="playersHeader">Players</div>
-          <div className="playersBox">
-            {this.state.players && this.state.players.join(" ")}
+        <div style={{display: "flex", flexDirection: "column", width: "40%", height: "50vh"}}>
+          <PlayerList gameid={this.props.gameid}/>
+          <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end"}}>
+          <Button style={{justifySelf: "flex-end", maxWidth: "30%", fontSize: "100%"}} onClick={this.props.startGame}>Start Game</Button>
           </div>
-          </div>
-          )}
-        <Button style={{justifySelf: "flex-end"}} onClick={this.props.startGame}>Start Game</Button>
+        </div>
       </div>
     );
   }

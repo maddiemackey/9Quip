@@ -255,6 +255,7 @@ export class ClientGameContextProvider extends React.Component {
   }
 
   startWatchingGame(gameCode) {
+    return new Promise((res, rej) => {
     const ref = firebase.database().ref("games");
 
     ref
@@ -262,6 +263,10 @@ export class ClientGameContextProvider extends React.Component {
       .equalTo(gameCode)
       .on("value", (snapshot) => {
         const snapshotValue = snapshot.val();
+        if (snapshotValue === null) {
+          alert("Game ended");
+          return rej("Game ended");
+        }
         const gameId = Object.keys(snapshotValue)[0];
         const { gamestate, players } = snapshotValue[gameId];
 
@@ -282,6 +287,9 @@ export class ClientGameContextProvider extends React.Component {
           playerPosition,
         });
       });
+    }).catch((rej) => {
+      window.location.reload();
+    });
   }
 
   render() {

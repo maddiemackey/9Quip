@@ -20,10 +20,14 @@ export default class Host extends React.Component {
   createGame = () => {
     const ref = firebase.database().ref("games");
     const gamecode = this.generateGamecode(4);
-    const newGameRef = ref.push({gamecode: gamecode, gamestate: GameState.joining, headsAvailable: legoHeads});
-    const gameid = newGameRef.key;
-    this.setState({ gamestate: "JOINING", gamecode, gameid });
-    window.localStorage.setItem("quipHostedGame", gameid);
+    return new Promise((res, rej) => {
+      const newGameRef = ref.push({gamecode: gamecode, gamestate: GameState.joining, headsAvailable: legoHeads, players: ""});
+      return res(newGameRef);
+    }).then((newGameRef) => {
+      const gameid = newGameRef.key;
+      this.setState({ gamestate: "JOINING", gamecode, gameid });
+      window.localStorage.setItem("quipHostedGame", gameid);
+    });
   }
 
   startGame = () => {
@@ -105,7 +109,7 @@ export default class Host extends React.Component {
       });
 
       return(res("Ended game"));
-    });
+    }).then(() => {window.location.reload();});
   }
 
   render() {
@@ -120,10 +124,10 @@ export default class Host extends React.Component {
             <StartPage createGame={this.createGame}/>
         }
         { gamestate === GameState.joining &&
-            <JoiningPage gamecode={this.state.gamecode} startGame={this.startGame}/>
+            <JoiningPage gamecode={this.state.gamecode} startGame={this.startGame} gameid={this.state.gameid}/>
         }
         { gamestate === GameState.quipping &&
-            <QuippingPage startVoting={this.startVoting}/>
+            <QuippingPage startVoting={this.startVoting} gameid={this.state.gameid}/>
         }
         { gamestate === GameState.voting &&
             <VotingPage gameId={this.state.gameid} startScoring={this.startScoring}/>
