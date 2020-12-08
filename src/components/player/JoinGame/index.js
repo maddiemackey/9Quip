@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { Input, Label } from "reactstrap";
+import { Button, Form, Input, Label } from "reactstrap";
 import "./index.css";
 import Logo from "../../shared/Logo";
 import { ClientGameContext } from "../GameContext";
@@ -7,19 +7,21 @@ import { ClientGameContext } from "../GameContext";
 function JoinGameScreen() {
   const thing = useContext(ClientGameContext);
   const nameRef = useRef(null);
+  const codeRef = useRef(null);
   const [searchingForGame, setSearchingForGame] = useState(false);
 
-  const handleCodeOnChange = (event) => {
-    const code = event.target.value;
+  function attemptJoinGame() {
     const nameInput = nameRef.current.value;
+    const code = codeRef.current.value;
+
 
     if (!nameInput) {
-      console.log("A name is required");
+      alert("A name is required.");
       return;
     }
 
-    if (code.length < 4) {
-      // console.log("code is not long enough");
+    if (code.length < 4 || code.length > 4) {
+      alert("Incorrect code.");
       return;
     }
 
@@ -29,7 +31,7 @@ function JoinGameScreen() {
       setSearchingForGame(false);
       alert(rej);
     });
-  };
+  }
 
   return (
     <div className="join-game-container">
@@ -41,14 +43,19 @@ function JoinGameScreen() {
           "Joining..."
         ) : (
           <>
+          <Form onSubmit={attemptJoinGame}>
             <Label>Name</Label>
-            <Input innerRef={nameRef} placeholder="George" type="text" />
+            <Input innerRef={nameRef} placeholder="Alex" type="text"/>
             <Label>Code</Label>
             <Input
               placeholder="1234"
               type="text"
-              onChange={handleCodeOnChange}
+              innerRef={codeRef}
             />
+            <div style={{display: "flex", justifyContent: "center"}}>
+              <Button style={{marginTop: "10%", width: "100%"}} type="submit">Join</Button>
+            </div>
+          </Form>
           </>
         )}
       </div>

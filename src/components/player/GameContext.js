@@ -74,17 +74,18 @@ export class ClientGameContextProvider extends React.Component {
 
           gameRef.once("value", (snapshot) => {
             const snapshotValue = snapshot.val();
-            // pull out state of available heads...
 
-            const head = snapshotValue.pop();
+            if (!snapshotValue) {
+              console.log("Could not assign a custom legohead :(");
+            }
 
-            console.log("setting head", head);
+            const randomHeadIndex = Math.floor(Math.random() * _.size(snapshotValue));
+            let head = snapshotValue[randomHeadIndex];
+            snapshotValue.splice(randomHeadIndex, 1);
 
             this.setState({
               playerHead: head,
             });
-
-            console.log("setting new snapshot value", snapshotValue);
 
             gameRef.set(snapshotValue);
 
