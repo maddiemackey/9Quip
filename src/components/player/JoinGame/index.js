@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useState } from "react";
 import { Button, Form, Input, Label } from "reactstrap";
 import "./index.css";
-import Logo from "../../shared/Logo";
 import { ClientGameContext } from "../GameContext";
+import LogoWOTeam from "../../shared/logowoteam";
 
 function JoinGameScreen() {
   const thing = useContext(ClientGameContext);
@@ -10,7 +10,8 @@ function JoinGameScreen() {
   const codeRef = useRef(null);
   const [searchingForGame, setSearchingForGame] = useState(false);
 
-  function attemptJoinGame() {
+  function attemptJoinGame(e) {
+    e.preventDefault();
     const nameInput = nameRef.current.value;
     const code = codeRef.current.value;
 
@@ -36,7 +37,7 @@ function JoinGameScreen() {
   return (
     <div className="join-game-container">
       <div className="join-game-item">
-        <Logo />
+        <LogoWOTeam/>
       </div>
       <div>
         {searchingForGame ? (
@@ -45,7 +46,7 @@ function JoinGameScreen() {
           <>
           <Form onSubmit={attemptJoinGame}>
             <Label>Name</Label>
-            <Input innerRef={nameRef} placeholder="Alex" type="text"/>
+            <Input innerRef={nameRef} placeholder="Alex" type="text" autoFocus={true}/>
             <Label>Code</Label>
             <Input
               placeholder="1234"

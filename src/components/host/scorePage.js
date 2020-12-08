@@ -14,7 +14,7 @@ export default class ScorePage extends React.Component {
 
   componentDidMount() {
     const refPlayers = firebase.database().ref(`games/${this.props.gameId}/players`);
-    refPlayers.on("value", snapshot => {
+    refPlayers.once("value", snapshot => {
       let playerData = snapshot.val();
       if (playerData) {
         console.log("not so far");

@@ -2,8 +2,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .join-game-item {
-  margin-bottom: 10%;
+  margin-bottom: 3vh;
+  width: 70%;
+  display: flex;
+  justify-content: center;
 }

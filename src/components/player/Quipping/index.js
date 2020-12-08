@@ -68,6 +68,7 @@ function Quipping() {
                 value={answer}
                 onChange={handleInputOnChange}
                 innerRef={quipRef}
+                autoFocus={true}
               ></Input>
               <Button
                 onClick={handleQuipSubmit}
