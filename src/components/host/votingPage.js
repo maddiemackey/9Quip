@@ -52,13 +52,15 @@ export default class VotingPage extends React.Component {
   startVoting = () => {
     const { roundData, promptNumber } = this.state;
     const refPlayers = firebase.database().ref(`games/${this.props.gameId}/players`);
-    refPlayers.on("value", snapshot => {
+    refPlayers.once("value", snapshot => {
       let playerData = snapshot.val();
       if (playerData) {
         console.log(playerData)
         const pointsToAssign = calculatePoints(playerData, roundData[0].promptsReturned[promptNumber]);
         Object.keys(pointsToAssign).forEach(playerID => {
-          playerData[playerID].score += pointsToAssign[playerID];
+          if (playerData[playerID]) {
+            playerData[playerID].score += pointsToAssign[playerID];
+          }
         });
         this.setState({
           pointsToAssign: pointsToAssign,
@@ -91,7 +93,7 @@ export default class VotingPage extends React.Component {
     roundData[0] && roundData[0].promptsReturned[promptNumber].players.forEach(player => {
       row = [...row,
         <Col xs="1" key={Math.random()}>
-          {rowCount === 0 && playerData && votingMode === "REVEAL" &&
+          {rowCount === 0 && playerData && playerData[player.id] && votingMode === "REVEAL" &&
             <div>
               <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
               <h4>+{pointsToAssign[player.id]}</h4>
@@ -114,7 +116,7 @@ export default class VotingPage extends React.Component {
           </Card>
         </Col>,
         <Col xs="1" key={Math.random()}>
-          {rowCount === 1 && playerData && votingMode === "REVEAL" &&
+          {rowCount === 1 && playerData && playerData[player.id] && votingMode === "REVEAL" &&
             <div>
             <PlayerLegoHead headName={playerData[player.id].icon} playerName={playerData[player.id].name} classThing={"playerLegoHeadImglrg"}/>
             <h4>+{pointsToAssign[player.id]}</h4>

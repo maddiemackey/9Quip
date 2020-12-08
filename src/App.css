@@ -133,15 +133,6 @@
   color: white;
 }
 
-.gameInfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 40%;
-  padding-right: 2%;
-}
-
 .players {
   display: flex;
   flex-direction: column;
@@ -182,6 +173,22 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.quipping-body-inner {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.gameInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  padding-right: 2%;
 }
 
 .timer-text {

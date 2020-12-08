@@ -43,7 +43,7 @@ export default class Host extends React.Component {
                   for (const p of Object.keys(players)) {
                       for (const q of Object.keys(playersReturned)) {
                           if (p === q) {
-                            console.log("specific prompts for player:", playersReturned[q]);
+                            //console.log("specific prompts for player:", playersReturned[q]);
                               db.games[this.state.gameid].players[q].prompts = playersReturned[q];
                           }
                       }

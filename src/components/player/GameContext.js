@@ -36,6 +36,7 @@ export class ClientGameContextProvider extends React.Component {
       playerHead: null,
       playerPosition: null,
       voteState: null,
+      allQuipsSubmitted: false,
     };
 
     this.joinGame = this.joinGame.bind(this);
@@ -94,6 +95,7 @@ export class ClientGameContextProvider extends React.Component {
               name: nameInput,
               score: 0,
               icon: head,
+              allQuipsSubmitted: false,
             });
             return res({newPlayer: newPlayer, gameId: gameId});
           });
@@ -116,10 +118,10 @@ export class ClientGameContextProvider extends React.Component {
   async exitGame() {
     return new Promise((res, rej) => {
       // Remove from DB
-      const ref = firebase
-        .database()
-        .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
-      ref.remove();
+      // const ref = firebase
+      //   .database()
+      //   .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
+      // ref.remove();
 
       // Remove from localStorage
       window.localStorage.clear();
@@ -153,7 +155,7 @@ export class ClientGameContextProvider extends React.Component {
     });
   }
 
-  async submitQuip(prompt, quip) {
+  async submitQuip(prompt, quip, promptIndex) {
     return new Promise((res, rej) => {
       // get round ID
       let roundRef = "";
@@ -191,6 +193,11 @@ export class ClientGameContextProvider extends React.Component {
     }).then((res) => {
       const quipRef = firebase.database().ref(res);
       quipRef.update({ quip: quip });
+      if (promptIndex >= 1){
+        console.log("All quips submitted!");
+        const allQuipsSubmittedRef = firebase.database().ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
+        allQuipsSubmittedRef.update({allQuipsSubmitted: true});
+      }
     });
   }
 
