@@ -25,13 +25,9 @@ function JoinGameScreen() {
 
     setSearchingForGame(true);
 
-    thing.joinGame(code, nameInput).then((res) => {
-      if (res === null) {
-        setSearchingForGame(false);
-        alert("could not find game");
-      } else {
-        console.log("game found!");
-      }
+    thing.joinGame(code, nameInput).catch((rej) => {
+      setSearchingForGame(false);
+      alert(rej);
     });
   };
 

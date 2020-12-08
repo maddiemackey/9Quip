@@ -1,5 +1,6 @@
 import React from "react";
 import firebase from "../../Firebase/firebase";
+import _ from 'lodash';
 
 export const ClientGameContext = React.createContext();
 
@@ -58,13 +59,18 @@ export class ClientGameContextProvider extends React.Component {
         .once("value", (snapshot) => {
           const snapshotValue = snapshot.val();
           if (!snapshotValue) {
-            return res(null);
+            return rej("Game does not exist.");
           }
-          // Get ROUND ID and add to State I guess
-          const gameid = Object.keys(snapshot.val())[0];
+          const gameId = Object.keys(snapshot.val())[0];
+
+          // PLAYER LIMIT
+          if (snapshotValue[gameId].players && _.size(snapshotValue[gameId].players) >= 25) {
+            return rej("Player limit of 25 has been reached for this game.");
+          }
+
           const gameRef = firebase
             .database()
-            .ref(`games/${gameid}/headsAvailable`);
+            .ref(`games/${gameId}/headsAvailable`);
 
           gameRef.once("value", (snapshot) => {
             const snapshotValue = snapshot.val();
@@ -82,26 +88,27 @@ export class ClientGameContextProvider extends React.Component {
 
             gameRef.set(snapshotValue);
 
-            const ref = firebase.database().ref(`games/${gameid}/players`);
+            const ref = firebase.database().ref(`games/${gameId}/players`);
             const newPlayer = ref.push({
               name: nameInput,
               score: 0,
               icon: head,
             });
-            // Store player in local storage to maintain session
-            window.localStorage.setItem("quipGameId", gameid);
-            window.localStorage.setItem("quipPlayerId", newPlayer.key);
-            // Set in state
-            this.setState({
-              gameId: gameid,
-              playerId: newPlayer.key,
-              round: 0,
-            });
-            this.startWatchingGame(gameCode);
-            this.startWatchingVoting(gameid);
-            return res(snapshotValue);
+            return res({newPlayer: newPlayer, gameId: gameId});
           });
         });
+    }).then((res) => {
+      // Store player in local storage to maintain session
+      window.localStorage.setItem("quipGameId", res.gameId);
+      window.localStorage.setItem("quipPlayerId", res.newPlayer.key);
+      // Set in state
+      this.setState({
+        gameId: res.gameId,
+        playerId: res.newPlayer.key,
+        round: 0,
+      });
+      this.startWatchingGame(gameCode);
+      this.startWatchingVoting(res.gameId);
     });
   }
 
