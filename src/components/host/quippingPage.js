@@ -5,10 +5,6 @@ import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 import PlayerList from "../shared/playerList";
 
 export default class QuippingPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="quipping-body">
