@@ -10,11 +10,13 @@ import { GameState } from "../../utils/enum";
 import firebase from "../../Firebase/firebase";
 import assignQuips from "../../utils/assignQuips";
 import { legoHeads } from "../../utils/legoHeads";
+import MusicPlayer from "../shared/musicPlayer";
+import AudioIcon from "../shared/audioIcon";
 
 export default class Host extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gamestate: null, gamecode: null, gameid: null};
+    this.state = { gamestate: null, gamecode: null, gameid: null, muted: false};
   }
 
   createGame = () => {
@@ -25,7 +27,7 @@ export default class Host extends React.Component {
       return res(newGameRef);
     }).then((newGameRef) => {
       const gameid = newGameRef.key;
-      this.setState({ gamestate: "JOINING", gamecode, gameid });
+      this.setState({ gamestate: "JOINING", gamecode, gameid});
       window.localStorage.setItem("quipHostedGame", gameid);
     });
   }
@@ -112,14 +114,22 @@ export default class Host extends React.Component {
     }).then(() => {window.location.reload();});
   }
 
+  toggleAudio = () => {
+    this.setState({muted: !this.state.muted});
+  }
+
   render() {
     const { gamestate } = this.state;
-    console.log("gamecode: ", this.state.gamecode);
-    console.log("gameid: ", this.state.gameid);
-    console.log("gamestate: ", this.state.gamestate);
+    // console.log("gamecode: ", this.state.gamecode);
+    // console.log("gameid: ", this.state.gameid);
+    // console.log("gamestate: ", this.state.gamestate);
 
     return (
       <div>
+        <AudioIcon toggleAudio={this.toggleAudio} gameState={gamestate} muted={this.state.muted}/>
+        { gamestate !== null && (
+          <MusicPlayer muted={this.state.muted}/>
+        )}
         { gamestate === null &&
             <StartPage createGame={this.createGame}/>
         }
