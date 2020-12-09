@@ -19,11 +19,11 @@ export default class JoiningPage extends React.Component {
             <div style={{width: "100%"}}>
           <MaddiesLegoSpeechBubble bubbleText={"Enter this code to join: " + this.props.gamecode} />
           </div>
+          <Button style={{justifySelf: "flex-end", maxWidth: "30%", fontSize: "100%", marginTop: "3%"}} onClick={this.props.startGame}>Start Game</Button>
         </div>
-        <div style={{display: "flex", flexDirection: "column", width: "40%", height: "50vh"}}>
+        <div style={{display: "flex", flexDirection: "column", width: "40%", height: "80vh"}}>
           <PlayerList gameid={this.props.gameid}/>
           <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end"}}>
-          <Button style={{justifySelf: "flex-end", maxWidth: "30%", fontSize: "100%"}} onClick={this.props.startGame}>Start Game</Button>
           </div>
         </div>
       </div>
