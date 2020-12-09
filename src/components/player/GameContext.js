@@ -237,24 +237,21 @@ export class ClientGameContextProvider extends React.Component {
   }
 
   vote(path) {
-    console.log("VOTING", path);
     return new Promise((res, rej) => {
     const ref = firebase.database().ref(path);
     ref.once("value", (snapshot) => {
       const snapshotValue = snapshot.val();
-      console.log("SNAP:", snapshotValue);
       if (!snapshotValue) {
         return res(null);
       }
-      let voteIndex = 0;
-      console.log("YEEHAW", snapshotValue.length);
-      snapshotValue.length && snapshotValue.forEach((vote) => {
-        voteIndex++;
-      });
-      let obj = {};
-      obj[voteIndex] = this.state.playerId;
-        ref.update({votes: obj});
-        return res("yis");
+      let currentVotes = [];
+      if (snapshotValue.votes) {
+        currentVotes = snapshotValue.votes;
+      }
+      currentVotes.push(this.state.playerId);
+      const voteRef = firebase.database().ref(path+"/votes");
+      voteRef.update(currentVotes);
+      return res("yis");
     });
     });
   }
