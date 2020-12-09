@@ -10,7 +10,7 @@ export default class QuippingPage extends React.Component {
       <div className="quipping-body">
       <div className="quipping-body-inner">
         <div className="gameInfo">
-          <div><Timer seconds={6000} onTimerComplete={this.props.startVoting}/></div>
+          <div><Timer seconds={60} onTimerComplete={this.props.startVoting}/></div>
           <div style={{width: "100%"}}>
             <MaddiesLegoSpeechBubble bubbleText={"Answer the prompts on your phone!"} />
           </div>

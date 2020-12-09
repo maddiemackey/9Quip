@@ -59,7 +59,10 @@ export default class VotingPage extends React.Component {
         const pointsToAssign = calculatePoints(playerData, roundData[0].promptsReturned[promptNumber]);
         Object.keys(pointsToAssign).forEach(playerID => {
           if (playerData[playerID]) {
-            playerData[playerID].score += pointsToAssign[playerID];
+            let newScore = playerData[playerID].score + pointsToAssign[playerID];
+            console.log("POINTS: ", pointsToAssign[playerID]);
+            const refPlayer = firebase.database().ref(`games/${this.props.gameId}/players/${playerID}`);
+            refPlayer.update({score: newScore});
           }
         });
         this.setState({

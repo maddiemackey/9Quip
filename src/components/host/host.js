@@ -127,8 +127,11 @@ export default class Host extends React.Component {
     return (
       <div>
         <AudioIcon toggleAudio={this.toggleAudio} gameState={gamestate} muted={this.state.muted}/>
-        { gamestate !== null && (
-          <MusicPlayer muted={this.state.muted}/>
+        { gamestate !== null && gamestate !== GameState.quipping && (
+          <MusicPlayer src={"music/cropped-upbeat-music.m4a"} muted={this.state.muted}/>
+        )}
+        { gamestate === GameState.quipping && (
+          <MusicPlayer src={"music/background-music.mp3"} muted={this.state.muted}/>
         )}
         { gamestate === null &&
             <StartPage createGame={this.createGame}/>

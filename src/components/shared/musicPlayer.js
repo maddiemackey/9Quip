@@ -5,7 +5,7 @@ export default class MusicPlayer extends React.Component {
     render() {
         return (
             <ReactAudioPlayer
-                src="music/cropped-upbeat-music.m4a"
+                src={this.props.src}
                 autoPlay
                 loop
                 volume={0.2}
