@@ -1,6 +1,6 @@
 export const GameState = {
-    joining: "JOINING",
-    quipping: "QUIPPING",
-    voting: "VOTING",
-    scoreboard: "SCOREBOARD"
-  };
+  joining: "JOINING",
+  quipping: "QUIPPING",
+  voting: "VOTING",
+  scoreboard: "SCOREBOARD",
+};

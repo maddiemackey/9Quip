@@ -42,7 +42,6 @@ function Voting() {
   const [voted, setVoted] = useState(false);
   const [speech, updateSpeechBubble] = useState("Loading...");
 
-
   useEffect(() => {
     console.log("use effect");
     setVoted(false);
@@ -62,8 +61,8 @@ function Voting() {
     console.log("QUIPS:", resQ.length);
     if (resQ.length === 0) {
       return "Hahaha!";
-    } else if(!voted) {
-      return thing.voteState
+    } else if (!voted) {
+      return thing.voteState;
     }
     return "You're so funny you broke me!";
   }
@@ -75,11 +74,22 @@ function Voting() {
         <LegoSpeechBubble bubbleText={speech}></LegoSpeechBubble>
       </div>
       {!voted && (
-      <div className="voting-options-container">
-        {quips && quips.map((quip, i) => {
-          return <Option text={quip.quip} colour={getColour(i)} onClick={() => {thing.vote(quip.path); setVoted(true); updateSpeechBubble("Please wait while others vote.");}}/>;
-        })}
-      </div>
+        <div className="voting-options-container">
+          {quips &&
+            quips.map((quip, i) => {
+              return (
+                <Option
+                  text={quip.quip}
+                  colour={getColour(i)}
+                  onClick={() => {
+                    thing.vote(quip.path);
+                    setVoted(true);
+                    updateSpeechBubble("Please wait while others vote.");
+                  }}
+                />
+              );
+            })}
+        </div>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import '../../App.css';
+import "../../App.css";
 import baseball from "../../assets/lego-heads/baseball.png";
 import beanie from "../../assets/lego-heads/beanie.png";
 import captain from "../../assets/lego-heads/captain.png";
@@ -33,102 +33,107 @@ export default class PlayerLegoHead extends React.Component {
 
     this.state = {
       head: "",
-    }
+    };
   }
 
   componentDidMount() {
     let headContent;
 
-    switch(this.props.headName) {
-      case("baseball"):
+    switch (this.props.headName) {
+      case "baseball":
         headContent = baseball;
         break;
-      case("beanie"):
+      case "beanie":
         headContent = beanie;
         break;
-      case("captain"):
+      case "captain":
         headContent = captain;
         break;
-      case("chef"):
+      case "chef":
         headContent = chef;
         break;
-      case("cop"):
+      case "cop":
         headContent = cop;
         break;
-      case("cowboy"):
+      case "cowboy":
         headContent = cowboy;
         break;
-      case("drink"):
+      case "drink":
         headContent = drink;
         break;
-      case("firefighter"):
+      case "firefighter":
         headContent = firefighter;
         break;
-      case("flower"):
+      case "flower":
         headContent = flower;
         break;
-      case("glasses"):
+      case "glasses":
         headContent = glasses;
         break;
-      case("grad"):
+      case "grad":
         headContent = grad;
         break;
-      case("hard"):
+      case "hard":
         headContent = hard;
         break;
-      case("headphones"):
+      case "headphones":
         headContent = headphones;
         break;
-      case("jester"):
+      case "jester":
         headContent = jester;
         break;
-      case("lego"):
+      case "lego":
         headContent = lego;
         break;
-      case("paper"):
+      case "paper":
         headContent = paper;
-          break;
-      case("party"):
+        break;
+      case "party":
         headContent = party;
-          break;
-      case("penguin"):
+        break;
+      case "penguin":
         headContent = penguin;
-          break;
-      case("pirate"):
+        break;
+      case "pirate":
         headContent = pirate;
-          break;
-      case("straw"):
+        break;
+      case "straw":
         headContent = straw;
-          break;
-      case("top"):
+        break;
+      case "top":
         headContent = top;
-          break;
-      case("tp"):
+        break;
+      case "tp":
         headContent = tp;
-          break;
-      case("traffic"):
+        break;
+      case "traffic":
         headContent = traffic;
-          break;
-      case("viking"):
+        break;
+      case "viking":
         headContent = viking;
-          break;
-      case("wizard"):
+        break;
+      case "wizard":
         headContent = wizard;
-          break;
+        break;
       default:
         headContent = nohat;
         break;
     }
 
     this.setState({
-      head: headContent
+      head: headContent,
     });
   }
 
   render() {
-
     return (
-      <div className="playerLegoHead"><img className={this.props.classThing} src={this.state.head} alt={`${this.props.playerName} Head`}/></div>
+      <div className="playerLegoHead">
+        <img
+          className={this.props.classThing}
+          src={this.state.head}
+          alt={`${this.props.playerName} Head`}
+        />
+      </div>
     );
   }
 }

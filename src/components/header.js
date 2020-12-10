@@ -10,7 +10,7 @@ export default function Header() {
 
   return (
     <div className="App-header">
-      <Logo style={{paddingLeft: "10%"}}/>
+      <Logo style={{ paddingLeft: "10%" }} />
       <div className="App-header-playerhead-container">
         {context.playerHead &&
           context.mainGameState !== GameState.SCOREBOARD && (

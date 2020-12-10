@@ -1,6 +1,6 @@
 import React from "react";
 import firebase from "../../Firebase/firebase";
-import _ from 'lodash';
+import _ from "lodash";
 
 export const ClientGameContext = React.createContext();
 
@@ -65,7 +65,10 @@ export class ClientGameContextProvider extends React.Component {
           const gameId = Object.keys(snapshot.val())[0];
 
           // PLAYER LIMIT
-          if (snapshotValue[gameId].players && _.size(snapshotValue[gameId].players) >= 25) {
+          if (
+            snapshotValue[gameId].players &&
+            _.size(snapshotValue[gameId].players) >= 25
+          ) {
             return rej("Player limit of 25 has been reached for this game.");
           }
 
@@ -80,7 +83,9 @@ export class ClientGameContextProvider extends React.Component {
               console.log("Could not assign a custom legohead :(");
             }
 
-            const randomHeadIndex = Math.floor(Math.random() * _.size(snapshotValue));
+            const randomHeadIndex = Math.floor(
+              Math.random() * _.size(snapshotValue)
+            );
             let head = snapshotValue[randomHeadIndex];
             snapshotValue.splice(randomHeadIndex, 1);
 
@@ -97,7 +102,7 @@ export class ClientGameContextProvider extends React.Component {
               icon: head,
               allQuipsSubmitted: false,
             });
-            return res({newPlayer: newPlayer, gameId: gameId});
+            return res({ newPlayer: newPlayer, gameId: gameId });
           });
         });
     }).then((res) => {
@@ -135,7 +140,9 @@ export class ClientGameContextProvider extends React.Component {
       });
 
       return res("Removed player");
-    }).then(() => {window.location.reload();});
+    }).then(() => {
+      window.location.reload();
+    });
   }
 
   async getPrompts() {
@@ -193,10 +200,12 @@ export class ClientGameContextProvider extends React.Component {
     }).then((res) => {
       const quipRef = firebase.database().ref(res);
       quipRef.update({ quip: quip });
-      if (promptIndex >= 1){
+      if (promptIndex >= 1) {
         console.log("All quips submitted!");
-        const allQuipsSubmittedRef = firebase.database().ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
-        allQuipsSubmittedRef.update({allQuipsSubmitted: true});
+        const allQuipsSubmittedRef = firebase
+          .database()
+          .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
+        allQuipsSubmittedRef.update({ allQuipsSubmitted: true });
       }
     });
   }
@@ -205,11 +214,11 @@ export class ClientGameContextProvider extends React.Component {
     return new Promise((res, rej) => {
       // get round ID
       let roundRef = "";
-        roundRef = firebase
-          .database()
-          .ref(
-            `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
-          );
+      roundRef = firebase
+        .database()
+        .ref(
+          `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
+        );
       roundRef.once("value", (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
@@ -238,21 +247,21 @@ export class ClientGameContextProvider extends React.Component {
 
   vote(path) {
     return new Promise((res, rej) => {
-    const ref = firebase.database().ref(path);
-    ref.once("value", (snapshot) => {
-      const snapshotValue = snapshot.val();
-      if (!snapshotValue) {
-        return res(null);
-      }
-      let currentVotes = [];
-      if (snapshotValue.votes) {
-        currentVotes = snapshotValue.votes;
-      }
-      currentVotes.push(this.state.playerId);
-      const voteRef = firebase.database().ref(path+"/votes");
-      voteRef.update(currentVotes);
-      return res("yis");
-    });
+      const ref = firebase.database().ref(path);
+      ref.once("value", (snapshot) => {
+        const snapshotValue = snapshot.val();
+        if (!snapshotValue) {
+          return res(null);
+        }
+        let currentVotes = [];
+        if (snapshotValue.votes) {
+          currentVotes = snapshotValue.votes;
+        }
+        currentVotes.push(this.state.playerId);
+        const voteRef = firebase.database().ref(path + "/votes");
+        voteRef.update(currentVotes);
+        return res("yis");
+      });
     });
   }
 
@@ -268,37 +277,37 @@ export class ClientGameContextProvider extends React.Component {
 
   startWatchingGame(gameCode) {
     return new Promise((res, rej) => {
-    const ref = firebase.database().ref("games");
+      const ref = firebase.database().ref("games");
 
-    ref
-      .orderByChild("gamecode")
-      .equalTo(gameCode)
-      .on("value", (snapshot) => {
-        const snapshotValue = snapshot.val();
-        if (snapshotValue === null) {
-          alert("Game ended");
-          return rej("Game ended");
-        }
-        const gameId = Object.keys(snapshotValue)[0];
-        const { gamestate, players } = snapshotValue[gameId];
+      ref
+        .orderByChild("gamecode")
+        .equalTo(gameCode)
+        .on("value", (snapshot) => {
+          const snapshotValue = snapshot.val();
+          if (snapshotValue === null) {
+            alert("Game ended");
+            return rej("Game ended");
+          }
+          const gameId = Object.keys(snapshotValue)[0];
+          const { gamestate, players } = snapshotValue[gameId];
 
-        let playerScore = this.state.playerScore;
-        let playerPosition = this.state.playerPosition;
+          let playerScore = this.state.playerScore;
+          let playerPosition = this.state.playerPosition;
 
-        if (this.state.playerId) {
-          const player = players[this.state.playerId];
-          console.log("found player, setting score", player);
-          playerScore = player.score;
-          playerPosition = getPlayerPosition(players, this.state.playerId);
-        }
+          if (this.state.playerId) {
+            const player = players[this.state.playerId];
+            console.log("found player, setting score", player);
+            playerScore = player.score;
+            playerPosition = getPlayerPosition(players, this.state.playerId);
+          }
 
-        // watch and update any other relevant game state here!!
-        this.setState({
-          mainGameState: gamestate,
-          playerScore,
-          playerPosition,
+          // watch and update any other relevant game state here!!
+          this.setState({
+            mainGameState: gamestate,
+            playerScore,
+            playerPosition,
+          });
         });
-      });
     }).catch((rej) => {
       window.location.reload();
     });

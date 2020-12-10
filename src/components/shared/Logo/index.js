@@ -5,7 +5,14 @@ import logo from "../../../assets/logo-transparent.png";
 export default class Logo extends React.Component {
   render() {
     return (
-      <div className="logo-container"><img className="logo" src={logo} style={this.props.style} alt={"9Quip Logo Team Zoomer"}/></div>
+      <div className="logo-container">
+        <img
+          className="logo"
+          src={logo}
+          style={this.props.style}
+          alt={"9Quip Logo Team Zoomer"}
+        />
+      </div>
     );
   }
 }

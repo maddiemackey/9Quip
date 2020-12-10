@@ -15,7 +15,6 @@ function JoinGameScreen() {
     const nameInput = nameRef.current.value;
     const code = codeRef.current.value;
 
-
     if (!nameInput) {
       alert("A name is required.");
       return;
@@ -37,26 +36,32 @@ function JoinGameScreen() {
   return (
     <div className="join-game-container">
       <div className="join-game-item">
-        <LogoWOTeam/>
+        <LogoWOTeam />
       </div>
       <div>
         {searchingForGame ? (
           "Joining..."
         ) : (
           <>
-          <Form onSubmit={attemptJoinGame}>
-            <Label>Name</Label>
-            <Input innerRef={nameRef} placeholder="Alex" type="text" autoFocus={true}/>
-            <Label>Code</Label>
-            <Input
-              placeholder="1234"
-              type="text"
-              innerRef={codeRef}
-            />
-            <div style={{display: "flex", justifyContent: "center"}}>
-              <Button style={{marginTop: "10%", width: "100%"}} type="submit">Join</Button>
-            </div>
-          </Form>
+            <Form onSubmit={attemptJoinGame}>
+              <Label>Name</Label>
+              <Input
+                innerRef={nameRef}
+                placeholder="Alex"
+                type="text"
+                autoFocus={true}
+              />
+              <Label>Code</Label>
+              <Input placeholder="1234" type="text" innerRef={codeRef} />
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  style={{ marginTop: "10%", width: "100%" }}
+                  type="submit"
+                >
+                  Join
+                </Button>
+              </div>
+            </Form>
           </>
         )}
       </div>
