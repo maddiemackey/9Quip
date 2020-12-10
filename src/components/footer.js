@@ -24,7 +24,7 @@ export default class Footer extends React.Component {
           <p style={{ paddingLeft: "3%" }}>Developers: Maddie, Kory, Ben</p>
           <p style={{ paddingLeft: "5%" }}>Designer: Carlos</p>
           <p style={{ paddingLeft: "5%", paddingRight: "3%" }}>
-            Fed Maddie's cat: Josh
+            Music & fed cat: Josh
           </p>
         </div>
         {this.props.inGame && (
