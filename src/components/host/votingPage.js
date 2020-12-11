@@ -14,6 +14,7 @@ import "../../App.css";
 import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble";
 import PlayerLegoHead from "../shared/playerLegoHead";
 import firebase from "../../Firebase/firebase";
+import "firebase/database";
 import Timer from "../shared/timer";
 import calculatePoints from "../../utils/points";
 

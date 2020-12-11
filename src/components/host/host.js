@@ -8,6 +8,7 @@ import ScorePage from "./scorePage";
 import Footer from "../footer";
 import { GameState } from "../../utils/enum";
 import firebase from "../../Firebase/firebase";
+import "firebase/database";
 import assignQuips from "../../utils/assignQuips";
 import { legoHeads } from "../../utils/legoHeads";
 import MusicPlayer from "../shared/musicPlayer";

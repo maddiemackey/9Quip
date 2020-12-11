@@ -2,6 +2,7 @@ import React from "react";
 import "../../App.css";
 import { Button, Table } from "reactstrap";
 import firebase from "../../Firebase/firebase";
+import "firebase/database";
 
 export default class ScorePage extends React.Component {
   constructor(props) {

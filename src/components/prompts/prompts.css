@@ -1,0 +1,38 @@
+.prompt-row {
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  padding-left: 1%;
+  padding-right: 1%;
+  border: 1px solid grey;
+  width: 90vw;
+  display: flex;
+  position: relative;
+}
+
+.prompt-cell {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  width: 96%;
+  text-indent: 4vw;
+}
+
+.remove-prompt {
+  font-weight: bold;
+  color: #606060;
+  z-index: 10;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 4%;
+  height: 100%;
+  border-left: 1px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-indent: 0;
+}
+
+.remove-prompt:hover {
+  background-color: #ccc;
+}

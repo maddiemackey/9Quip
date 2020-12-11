@@ -1,6 +1,7 @@
 import React from "react";
 import "../../App.css";
 import firebase from "../../Firebase/firebase";
+import "firebase/database";
 import PlayerSquare from "./playerSquare";
 import _ from "lodash";
 

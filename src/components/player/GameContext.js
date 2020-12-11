@@ -1,5 +1,6 @@
 import React from "react";
 import firebase from "../../Firebase/firebase";
+import "firebase/database";
 import _ from "lodash";
 
 export const ClientGameContext = React.createContext();
