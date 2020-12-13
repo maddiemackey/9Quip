@@ -181,6 +181,7 @@ export default class Prompts extends React.Component {
           const iterations = _.size(promptPacks);
           while (!flag) {
             let i = 0;
+            // eslint-disable-next-line
             for (const [key, value] of Object.entries(promptPacks)) {
               if (value.code === promptPackCode) {
                 break;
