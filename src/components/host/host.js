@@ -13,6 +13,8 @@ import assignQuips from "../../utils/assignQuips";
 import { legoHeads } from "../../utils/legoHeads";
 import MusicPlayer from "../shared/musicPlayer";
 import AudioIcon from "../shared/audioIcon";
+import { generateGamecode } from "../../utils/generateGameCode";
+import _ from "lodash";
 
 export default class Host extends React.Component {
   constructor(props) {
@@ -22,24 +24,57 @@ export default class Host extends React.Component {
       gamecode: null,
       gameid: null,
       muted: false,
+      promptPack: "",
     };
   }
 
-  createGame = () => {
+  createGame = (currentPack) => {
     const ref = firebase.database().ref("games");
-    const gamecode = this.generateGamecode(4);
-    return new Promise((res, rej) => {
-      const newGameRef = ref.push({
-        gamecode: gamecode,
-        gamestate: GameState.joining,
-        headsAvailable: legoHeads,
-        players: "",
+    let gamecode = generateGamecode(4);
+    const gamesRef = firebase.database().ref("games");
+    gamesRef.once("value", (snapshot) => {
+      const games = snapshot.val();
+      console.log("games", games);
+      if (games) {
+        // Get game code that doesn't already exist
+        let flag = false;
+        const iterations = _.size(games);
+        console.log("iterations: ", iterations);
+        while (!flag) {
+          let i = 0;
+          for (const [key, value] of Object.entries(games)) {
+            console.log(`${key} with code ${value.gamecode}`);
+            if (value.gamecode === gamecode) {
+              break;
+            }
+            i++;
+            // If it makes it through all the games and none match, break out of while loop.
+            if (i === iterations) {
+              flag = true;
+            }
+          }
+          gamecode = generateGamecode(4);
+        }
+      }
+      return new Promise((res, rej) => {
+        const newGameRef = ref.push({
+          gamecode: gamecode,
+          gamestate: GameState.joining,
+          headsAvailable: legoHeads,
+          players: "",
+          promptPack: currentPack ? currentPack : "3410",
+        });
+        return res(newGameRef);
+      }).then((newGameRef) => {
+        const gameid = newGameRef.key;
+        this.setState({
+          gamestate: "JOINING",
+          gamecode,
+          gameid,
+          promptPack: currentPack,
+        });
+        window.localStorage.setItem("quipHostedGame", gameid);
       });
-      return res(newGameRef);
-    }).then((newGameRef) => {
-      const gameid = newGameRef.key;
-      this.setState({ gamestate: "JOINING", gamecode, gameid });
-      window.localStorage.setItem("quipHostedGame", gameid);
     });
   };
 
@@ -48,13 +83,14 @@ export default class Host extends React.Component {
     new Promise((res, rej) => {
       ref.on("value", (snapshot) => {
         let db = snapshot.val();
-        if (db.promptPacks.Party.prompts) {
+        console.log("HERE: ", db.promptPacks[this.state.promptPack].prompts);
+        if (db.promptPacks[this.state.promptPack].prompts) {
           if (db.games[this.state.gameid].players) {
             let players = db.games[this.state.gameid].players;
             if (Object.keys(players).length >= 4) {
               let [playersReturned, promptsReturned] = assignQuips(
                 Object.keys(players),
-                db.promptPacks.Party.prompts
+                db.promptPacks[this.state.promptPack].prompts
               );
               for (const p of Object.keys(players)) {
                 for (const q of Object.keys(playersReturned)) {
@@ -84,17 +120,6 @@ export default class Host extends React.Component {
       .catch((err) => {
         alert(err);
       });
-  };
-
-  /** https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript */
-  generateGamecode = (length) => {
-    var result = "";
-    var characters = "0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
   };
 
   startVoting = () => {

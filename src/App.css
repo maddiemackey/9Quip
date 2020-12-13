@@ -50,6 +50,17 @@
   overflow: hidden;
 }
 
+.prompts-body {
+  background-color: #030d21;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  overflow: hidden;
+  margin-top: -8vh;
+}
+
 .host-body {
   background-color: #030d21;
   min-height: 82vh;
@@ -73,14 +84,36 @@
 }
 
 .start-page {
-  background-color: #030d21;
-  min-height: 82vh;
   display: flex;
   flex-direction: column;
+  background-color: #030d21;
+  min-height: 82vh;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.startPrompt {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+}
+
+.startLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+}
+
+.startRight {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
 }
 
 .team {
@@ -104,18 +137,12 @@
 }
 
 .start-mr-lego {
-  width: 15%;
+  width: 10%;
+  min-width: 100px;
   height: auto;
 }
 
 .start-mr-lego-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.startPrompt {
   display: flex;
   flex-direction: column;
   justify-content: center;

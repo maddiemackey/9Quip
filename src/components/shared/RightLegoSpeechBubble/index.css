@@ -1,17 +1,17 @@
 /* Below is copied and modified from: https://codepen.io/status201/pen/VvwmoY */
 
-.lego-speech-bubble-container-maddie {
+.lego-speech-bubble-container-right {
   display: flex;
   margin-top: 2vh;
-  margin-right: 2vw;
+  margin-left: 2vw;
 }
 
-.lego-speech-bubble-mr-lego-maddie {
+.lego-speech-bubble-mr-lego-right {
   height: 12vh;
   width: 12vh;
 }
 
-.speech-bubble-maddie {
+.speech-bubble-right {
   background: #ccc;
   color: #1a1d22;
   display: flex;
@@ -20,18 +20,18 @@
   position: relative;
   text-align: center;
   padding: 20px;
-  width: 18vw;
+  width: 30vw;
   border-radius: 10px;
   margin-top: 2vh;
   margin-bottom: 3vh;
 }
 
-.speech-bubble-maddie:after {
+.speech-bubble-right:before {
   content: "";
   position: absolute;
   display: block;
   top: 50%;
-  right: 100%;
+  left: 100%;
   margin-top: -10px;
   width: 0;
   height: 0;
@@ -39,5 +39,5 @@
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #ccc;
+  border-left: 10px solid #ccc;
 }

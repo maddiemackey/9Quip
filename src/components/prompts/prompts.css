@@ -20,7 +20,6 @@
 .remove-prompt {
   font-weight: bold;
   color: #606060;
-  z-index: 10;
   position: absolute;
   right: 0;
   top: 0;
@@ -34,5 +33,24 @@
 }
 
 .remove-prompt:hover {
+  background-color: #ccc;
+}
+
+.prompt-pack-heading {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+.remove-prompt-pack {
+  font-weight: bold;
+  color: rgb(255, 56, 56);
+  position: absolute;
+  right: -3vh;
+  font-size: xx-large;
+  height: 80%;
+}
+
+.remove-prompt-pack:hover {
   background-color: #ccc;
 }

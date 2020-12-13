@@ -4,3 +4,9 @@ export const GameState = {
   voting: "VOTING",
   scoreboard: "SCOREBOARD",
 };
+
+export const MessageType = {
+  ERROR: "ERROR",
+  SUCCESS: "SUCCESS",
+  WARNING: "WARNING",
+};
