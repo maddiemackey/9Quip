@@ -6,6 +6,7 @@ import Player from "./components/player/player";
 import Header from "./components/header";
 import { ClientGameContextProvider } from "./components/player/GameContext";
 import Prompts from "./components/prompts/prompts";
+import NotFound from "./components/shared/PageNotFound";
 
 class App extends Component {
   render() {
@@ -20,6 +21,7 @@ class App extends Component {
               <Route exact path="/" component={Player} />
               <Route path="/host" component={Host} />
               <Route path="/prompts" component={Prompts} />
+              <Route component={NotFound} />
             </Switch>
           </main>
         </div>

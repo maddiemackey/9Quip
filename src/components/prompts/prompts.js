@@ -9,6 +9,7 @@ import { setFeedbackMessage } from "../shared/feedbackMessage";
 import { MessageType } from "../../utils/enum";
 import { generateGamecode } from "../../utils/generateGameCode";
 import _ from "lodash";
+import qs from "qs";
 
 export default class Prompts extends React.Component {
   constructor(props) {
@@ -24,6 +25,15 @@ export default class Prompts extends React.Component {
       promptPackMessage: null,
       lowerHeight: 0,
     };
+  }
+
+  componentDidMount() {
+    const codeParam = qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).code;
+    if (codeParam) {
+      this.findPackFromCode(codeParam);
+    }
   }
 
   submitPrompt = (e) => {
@@ -64,9 +74,13 @@ export default class Prompts extends React.Component {
       });
   };
 
-  findPackFromCode = (e) => {
+  onSearch = (e) => {
     e.preventDefault();
     const code = this.state.codeInput;
+    this.findPackFromCode(code);
+  };
+
+  findPackFromCode = (code) => {
     new Promise((res, rej) => {
       const ref = firebase.database().ref(`promptPacks`);
       ref
@@ -288,7 +302,7 @@ export default class Prompts extends React.Component {
                 width: "30%",
                 minWidth: "400px",
               }}
-              onSubmit={this.findPackFromCode}
+              onSubmit={this.onSearch}
             >
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <Input

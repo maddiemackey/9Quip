@@ -42,8 +42,23 @@ export default class StartPage extends React.Component {
 
           // Only allow selecting a pack if it is published (has >10 prompts)
           if (!promptPack[packName].published) {
+            const morePromptsMessage = (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <p>{packName} requires more prompts to be played.</p>
+                <p style={{ marginTop: "-3vh" }}>
+                  Go to the <a href={"/prompts?code=" + code}>prompts page</a>{" "}
+                  to add prompts.
+                </p>
+              </div>
+            );
             return rej({
-              message: `Prompt pack ${packName} (${code}) requires more prompts to be played.`,
+              message: morePromptsMessage,
               type: MessageType.WARNING,
             });
           }
