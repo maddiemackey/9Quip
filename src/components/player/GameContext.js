@@ -102,6 +102,7 @@ export class ClientGameContextProvider extends React.Component {
               score: 0,
               icon: head,
               allQuipsSubmitted: false,
+              active: true,
             });
             return res({ newPlayer: newPlayer, gameId: gameId });
           });
@@ -123,14 +124,15 @@ export class ClientGameContextProvider extends React.Component {
 
   async exitGame() {
     return new Promise((res, rej) => {
-      // Remove from DB
-      // const ref = firebase
-      //   .database()
-      //   .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
-      // ref.remove();
+      // Mark as INACTIVE in db
+      const ref = firebase
+        .database()
+        .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
+      ref.update({ active: false });
 
       // Remove from localStorage
-      window.localStorage.clear();
+      window.localStorage.removeItem("quipGameId");
+      window.localStorage.removeItem("quipPlayerId");
 
       // Remove from state
       this.setState({
@@ -202,7 +204,6 @@ export class ClientGameContextProvider extends React.Component {
       const quipRef = firebase.database().ref(res);
       quipRef.update({ quip: quip });
       if (promptIndex >= 1) {
-        console.log("All quips submitted!");
         const allQuipsSubmittedRef = firebase
           .database()
           .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
@@ -297,7 +298,7 @@ export class ClientGameContextProvider extends React.Component {
 
           if (this.state.playerId) {
             const player = players[this.state.playerId];
-            console.log("found player, setting score", player);
+            // console.log("found player, setting score", player);
             playerScore = player.score;
             playerPosition = getPlayerPosition(players, this.state.playerId);
           }

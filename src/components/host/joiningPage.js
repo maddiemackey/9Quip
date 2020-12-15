@@ -18,19 +18,20 @@ export default class JoiningPage extends React.Component {
           <div>
             <LogoWOTeam />
           </div>
-          <div style={{ width: "100%" }}>
+          <div>
             <MaddiesLegoSpeechBubble
+              style={{ width: "30vw" }}
               bubbleText={"Enter this code to join: " + this.props.gamecode}
             />
           </div>
           <Button
             style={{
-              justifySelf: "flex-end",
-              maxWidth: "30%",
+              maxWidth: "50%",
               fontSize: "100%",
-              marginTop: "3%",
+              marginTop: "1vh",
             }}
             onClick={this.props.startGame}
+            color="success"
           >
             Start Game
           </Button>
@@ -39,7 +40,7 @@ export default class JoiningPage extends React.Component {
           style={{
             display: "flex",
             flexDirection: "column",
-            width: "40%",
+            width: "40vw",
             height: "80vh",
           }}
         >

@@ -62,11 +62,18 @@ export default class Prompts extends React.Component {
           .database()
           .ref(`promptPacks/${this.state.currentPack}/prompts`);
         promptRef.update(existingPrompts);
+
+        // Publish pack if more than 10 prompts
+        if (existingPrompts.length >= 10) {
+          ref.update({ published: true });
+        }
         return res(`Prompt submitted: ${newPrompt}`);
       });
     })
       .catch((rej) => {
-        alert(rej);
+        this.setState({
+          publishedMessage: setFeedbackMessage(rej, MessageType.ERROR),
+        });
       })
       .then(() => {
         this.setState({ promptInput: "" });
@@ -148,6 +155,14 @@ export default class Prompts extends React.Component {
         this.setState({
           prompts: existingPrompts.reverse(),
         });
+
+        // Update published to FALSE if less than 10 prompts
+        if (existingPrompts.length < 10) {
+          const publishRef = firebase
+            .database()
+            .ref(`promptPacks/${this.state.currentPack}`);
+          publishRef.update({ published: false });
+        }
         return res(`Removed prompt: ${prompt}`);
       });
     });
@@ -267,7 +282,7 @@ export default class Prompts extends React.Component {
   getLowerHeight() {
     const upperHeight = document.getElementById("upper-container").clientHeight;
     const fullHeight = document.getElementById("main-container").clientHeight;
-    return fullHeight - upperHeight - 20;
+    return fullHeight - upperHeight;
   }
 
   render() {
@@ -282,14 +297,14 @@ export default class Prompts extends React.Component {
               alignItems: "center",
             }}
           >
-            <h1>Prompt Packs</h1>
-            <h4 style={{ marginTop: "-1vh" }}>Find pack by code</h4>
+            <h2>Prompt Packs</h2>
+            <h5 style={{ marginTop: "-1vh" }}>Find pack by code</h5>
             <div
               style={{
                 marginTop: "-1vh",
                 height: "3vh",
                 fontSize: "70%",
-                marginBottom: "0.5vh",
+                marginBottom: "0.75vh",
               }}
             >
               {this.state.promptPackMessage}
@@ -304,7 +319,7 @@ export default class Prompts extends React.Component {
             >
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <Input
-                  autoFocus
+                  autofocus
                   value={this.state.codeInput}
                   placeholder="code"
                   type="text"
@@ -333,7 +348,6 @@ export default class Prompts extends React.Component {
             >
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <Input
-                  autoFocus
                   value={this.state.nameInput}
                   placeholder="Prompt Pack Name"
                   type="text"
@@ -375,9 +389,9 @@ export default class Prompts extends React.Component {
                   height: "100%",
                 }}
               >
-                <h1 className="prompt-pack-heading">
+                <h2 className="prompt-pack-heading">
                   {`${this.state.currentPack} [${this.state.currentCode}]`}
-                </h1>
+                </h2>
                 <Button
                   close
                   className="remove-prompt-pack"
@@ -401,7 +415,7 @@ export default class Prompts extends React.Component {
               >
                 {this.state.publishedMessage}
               </div>
-              <h4>Submit a prompt to this pack</h4>
+              <h5>Submit a prompt to this pack</h5>
               <Form
                 style={{ width: "90%", maxWidth: "700px" }}
                 onSubmit={this.submitPrompt}
@@ -442,7 +456,7 @@ export default class Prompts extends React.Component {
               width: "100%",
             }}
           >
-            <h4 style={{ marginTop: "2vh" }}>Prompts in this pack:</h4>
+            <h5 style={{ marginTop: "1vh" }}>Prompts in this pack:</h5>
             <table
               style={{
                 overflow: "scroll",

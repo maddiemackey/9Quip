@@ -16,7 +16,10 @@ export default function Header() {
 
   return (
     <div className="App-header">
-      <Logo onClick={handleClick} style={{ paddingLeft: "10%" }} />
+      <Logo
+        onClick={handleClick}
+        style={{ paddingLeft: "10%", zIndex: "10" }}
+      />
       <div className="App-header-playerhead-container">
         {context.playerHead &&
           context.mainGameState !== GameState.SCOREBOARD && (

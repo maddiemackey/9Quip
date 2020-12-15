@@ -36,7 +36,7 @@ function Quipping() {
     }
 
     thing.submitQuip(prompts[promptIndex], answer, promptIndex).then((res) => {
-      console.log("PROMPT:", prompts[promptIndex]);
+      // console.log("PROMPT:", prompts[promptIndex]);
 
       // clear prompt
       setAnswer("");

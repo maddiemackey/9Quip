@@ -93,7 +93,10 @@ export default class StartPage extends React.Component {
         </div>
         <div className="startPrompt">
           <div className="startLeft">
-            <MaddiesLegoSpeechBubble bubbleText={"Find a Prompt Pack"} />
+            <MaddiesLegoSpeechBubble
+              style={{ width: "30vw" }}
+              bubbleText={"Find a Prompt Pack"}
+            />
             <Form
               onSubmit={this.findPackFromCode}
               style={{
@@ -130,6 +133,7 @@ export default class StartPage extends React.Component {
           </div>
           <div className="startRight">
             <RightLegoSpeechBubble
+              style={{ width: "37vw" }}
               bubbleText={"Or start with Party Mode as default"}
             />
             <div className="prompt">

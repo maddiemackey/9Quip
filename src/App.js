@@ -12,11 +12,11 @@ class App extends Component {
   render() {
     return (
       <ClientGameContextProvider>
-        <div>
-          <header>
+        <div className="background">
+          <header style={{ zIndex: "10" }}>
             <Header />
           </header>
-          <main>
+          <main className="main">
             <Switch>
               <Route exact path="/" component={Player} />
               <Route path="/host" component={Host} />

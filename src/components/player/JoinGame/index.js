@@ -24,6 +24,18 @@ function JoinGameScreen() {
       );
       return;
     }
+    if (nameInput.length > 22) {
+      setJoinMessage(
+        setFeedbackMessage(
+          <>
+            <div>Name must be less than </div>
+            <div>22 characters long.</div>
+          </>,
+          MessageType.ERROR
+        )
+      );
+      return;
+    }
 
     if (code.length === 0) {
       setJoinMessage(setFeedbackMessage("Code required.", MessageType.ERROR));
@@ -81,7 +93,7 @@ function JoinGameScreen() {
               />
               <div
                 style={{
-                  height: "1vh",
+                  height: "3vh",
                   fontSize: "80%",
                   textAlign: "center",
                   margin: "1%",

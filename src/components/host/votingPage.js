@@ -70,7 +70,7 @@ export default class VotingPage extends React.Component {
     refPlayers.once("value", (snapshot) => {
       let playerData = snapshot.val();
       if (playerData) {
-        console.log(playerData);
+        // console.log(playerData);
         const pointsToAssign = calculatePoints(
           playerData,
           roundData[0].promptsReturned[promptNumber]
@@ -79,7 +79,7 @@ export default class VotingPage extends React.Component {
           if (playerData[playerID]) {
             let newScore =
               playerData[playerID].score + pointsToAssign[playerID];
-            console.log("POINTS: ", pointsToAssign[playerID]);
+            // console.log("POINTS: ", pointsToAssign[playerID]);
             const refPlayer = firebase
               .database()
               .ref(`games/${this.props.gameId}/players/${playerID}`);
@@ -150,7 +150,7 @@ export default class VotingPage extends React.Component {
           <Col xs="4" key={player.id}>
             <Card
               className="voteCard"
-              style={{ border: "none", margin: "3% 0" }}
+              style={{ border: "none", margin: "2% 0" }}
             >
               <CardHeader
                 style={{ backgroundColor: colours[quipCount] }}
@@ -217,6 +217,7 @@ export default class VotingPage extends React.Component {
         <div className="voting-header">
           <div style={{ marginRight: "2%" }}>
             <MaddiesLegoSpeechBubble
+              style={{ width: "55vw" }}
               bubbleText={
                 roundData[0] &&
                 roundData[0].promptsReturned[promptNumber].prompt

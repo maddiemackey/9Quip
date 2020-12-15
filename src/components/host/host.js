@@ -24,8 +24,12 @@ export default class Host extends React.Component {
       gamecode: null,
       gameid: null,
       muted: false,
-      promptPack: "",
+      promptPack: "Party",
     };
+  }
+
+  componentDidMount() {
+    this.setState({ muted: window.localStorage.getItem("quipMuted") });
   }
 
   createGame = (currentPack) => {
@@ -34,16 +38,14 @@ export default class Host extends React.Component {
     const gamesRef = firebase.database().ref("games");
     gamesRef.once("value", (snapshot) => {
       const games = snapshot.val();
-      console.log("games", games);
       if (games) {
         // Get game code that doesn't already exist
         let flag = false;
         const iterations = _.size(games);
-        console.log("iterations: ", iterations);
         while (!flag) {
           let i = 0;
+          // eslint-disable-next-line
           for (const [key, value] of Object.entries(games)) {
-            console.log(`${key} with code ${value.gamecode}`);
             if (value.gamecode === gamecode) {
               break;
             }
@@ -71,7 +73,7 @@ export default class Host extends React.Component {
           gamestate: "JOINING",
           gamecode,
           gameid,
-          promptPack: currentPack,
+          promptPack: currentPack ? currentPack : "Party",
         });
         window.localStorage.setItem("quipHostedGame", gameid);
       });
@@ -83,7 +85,7 @@ export default class Host extends React.Component {
     new Promise((res, rej) => {
       ref.on("value", (snapshot) => {
         let db = snapshot.val();
-        console.log("HERE: ", db.promptPacks[this.state.promptPack].prompts);
+
         if (db.promptPacks[this.state.promptPack].prompts) {
           if (db.games[this.state.gameid].players) {
             let players = db.games[this.state.gameid].players;
@@ -141,7 +143,7 @@ export default class Host extends React.Component {
       ref.remove();
 
       // Remove from localStorage
-      window.localStorage.clear();
+      window.localStorage.removeItem("quipHostedGame");
 
       // Remove from state
       this.setState({
@@ -158,6 +160,7 @@ export default class Host extends React.Component {
 
   toggleAudio = () => {
     this.setState({ muted: !this.state.muted });
+    window.localStorage.setItem("quipMuted", this.state.muted);
   };
 
   render() {

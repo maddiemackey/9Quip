@@ -7,7 +7,16 @@ export default class Footer extends React.Component {
   render() {
     return (
       <div className="App-footer">
-        <Team />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Team />
+        </div>
         <div
           style={{
             display: "flex",
@@ -17,11 +26,11 @@ export default class Footer extends React.Component {
             fontSize: "50%",
           }}
         >
-          <p style={{ paddingLeft: "3%" }}>Developers: Maddie, Kory, Ben</p>
-          <p style={{ paddingLeft: "5%" }}>Designer: Carlos</p>
-          <p style={{ paddingLeft: "5%", paddingRight: "3%" }}>
+          <div style={{ paddingLeft: "3%" }}>Developers: Maddie, Kory, Ben</div>
+          <div style={{ paddingLeft: "5%" }}>Designer: Carlos</div>
+          <div style={{ paddingLeft: "5%", paddingRight: "3%" }}>
             Music & fed cat: Josh
-          </p>
+          </div>
         </div>
         {this.props.inGame && (
           <Button

@@ -98,9 +98,12 @@ export default class PlayerList extends React.Component {
                 marginTop: "25vh",
                 alignItems: "center",
                 justifyContent: "center",
+                width: "100%",
               }}
             >
-              <h2>Waiting for players to join...</h2>
+              <h2 style={{ textAlign: "center" }}>
+                Waiting for players to join...
+              </h2>
             </div>
           )}
         </div>

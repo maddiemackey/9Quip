@@ -43,7 +43,6 @@ function Voting() {
   const [speech, updateSpeechBubble] = useState("Loading...");
 
   useEffect(() => {
-    console.log("use effect");
     setVoted(false);
     thing.getQuipsForPrompt().then((resQ) => {
       if (resQ === null) {
@@ -51,14 +50,12 @@ function Voting() {
       } else {
         setQuips(resQ);
         updateSpeechBubble(whatToSay(resQ));
-        console.log("resQ:", resQ);
       }
     });
     // eslint-disable-next-line
   }, [thing.voteState]);
 
   function whatToSay(resQ) {
-    console.log("QUIPS:", resQ.length);
     if (resQ.length === 0) {
       return "Hahaha!";
     } else if (!voted) {

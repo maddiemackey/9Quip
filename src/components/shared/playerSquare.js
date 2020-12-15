@@ -11,7 +11,7 @@ export default class PlayerSquare extends React.Component {
           playerName={this.props.name}
           classThing={"playerLegoHeadImgmed"}
         />
-        <p style={{ fontSize: "15px" }}>{this.props.name}</p>
+        <div className="playerText">{this.props.name}</div>
       </div>
     );
   }

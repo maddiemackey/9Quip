@@ -6,7 +6,7 @@ export default class Logo extends React.Component {
   render() {
     return (
       <div className="logo-container">
-        <a style={{zIndex: "10"}} href="/">
+        <a style={{ zIndex: "10" }} href="/">
           <img
             className="logo"
             src={logo}

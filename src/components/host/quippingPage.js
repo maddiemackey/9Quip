@@ -15,6 +15,7 @@ export default class QuippingPage extends React.Component {
             </div>
             <div style={{ width: "100%" }}>
               <MaddiesLegoSpeechBubble
+                style={{ width: "40vw" }}
                 bubbleText={"Answer the prompts on your phone!"}
               />
             </div>
