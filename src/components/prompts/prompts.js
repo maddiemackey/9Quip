@@ -23,7 +23,6 @@ export default class Prompts extends React.Component {
       nameInput: "",
       publishedMessage: null,
       promptPackMessage: null,
-      lowerHeight: 0,
     };
   }
 
@@ -234,13 +233,6 @@ export default class Prompts extends React.Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.currentPack !== this.state.currentPack) {
-      const upperHeight = document.getElementById("upper-container")
-        .clientHeight;
-      const fullHeight = document.getElementById("main-container").clientHeight;
-      const lowerHeight = fullHeight - upperHeight - 20;
-      this.setState({ lowerHeight });
-    }
     if (prevState.prompts !== this.state.prompts) {
       if (this.state.prompts.length < 10) {
         this.setState({
@@ -271,6 +263,12 @@ export default class Prompts extends React.Component {
   updateNameInputValue = (event) => {
     this.setState({ nameInput: event.target.value });
   };
+
+  getLowerHeight() {
+    const upperHeight = document.getElementById("upper-container").clientHeight;
+    const fullHeight = document.getElementById("main-container").clientHeight;
+    return fullHeight - upperHeight - 20;
+  }
 
   render() {
     return (
@@ -437,7 +435,7 @@ export default class Prompts extends React.Component {
         {this.state.prompts.length !== 0 && (
           <div
             style={{
-              height: `${this.state.lowerHeight}px`,
+              height: `${this.getLowerHeight()}px`,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -482,7 +480,7 @@ export default class Prompts extends React.Component {
           <div style={{ display: "flex", justifyContent: "center" }}>
             <h2
               style={{
-                height: this.state.lowerHeight,
+                height: this.getLowerHeight(),
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
