@@ -7,6 +7,7 @@ import PlayerLegoHead from "../../shared/playerLegoHead";
 
 // "borrowed" from the internet, don't ask what it does, this is a hackathon for god sakes!
 function ordinal(n) {
+  n++; // because it's using the index
   const s = ["th", "st", "nd", "rd"];
   const v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
@@ -25,7 +26,9 @@ function Score() {
     <div className="score-container">
       <div className="score-position-container">
         <div className="score-bubble">
-          {context.playerPosition ? ordinal(context.playerPosition) : "?"}
+          {context.playerPosition || context.playerPosition === 0
+            ? ordinal(context.playerPosition)
+            : "?"}
         </div>
       </div>
       <div>

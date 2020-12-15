@@ -217,7 +217,7 @@ export default class VotingPage extends React.Component {
         <div className="voting-header">
           <div style={{ marginRight: "2%" }}>
             <MaddiesLegoSpeechBubble
-              style={{ width: "55vw" }}
+              style={{ maxWidth: "55vw" }}
               bubbleText={
                 roundData[0] &&
                 roundData[0].promptsReturned[promptNumber].prompt
