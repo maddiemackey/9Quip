@@ -15,7 +15,7 @@ export default function Header() {
   }
 
   return (
-    <div className="App-header">
+    <div className="App-header" id="header">
       <Logo
         onClick={handleClick}
         style={{ paddingLeft: "10%", zIndex: "10" }}

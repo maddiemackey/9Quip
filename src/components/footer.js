@@ -6,7 +6,7 @@ import Team from "./shared/team";
 export default class Footer extends React.Component {
   render() {
     return (
-      <div className="App-footer">
+      <div className="App-footer" id="footer">
         <div
           style={{
             display: "flex",

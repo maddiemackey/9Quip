@@ -10,6 +10,7 @@ import { MessageType } from "../../utils/enum";
 import { generateGamecode } from "../../utils/generateGameCode";
 import _ from "lodash";
 import qs from "qs";
+import ConfirmModal from "./confirmModal";
 
 export default class Prompts extends React.Component {
   constructor(props) {
@@ -22,7 +23,9 @@ export default class Prompts extends React.Component {
       codeInput: "",
       nameInput: "",
       publishedMessage: null,
-      promptPackMessage: null,
+      searchMessage: null,
+      createMessage: null,
+      deleteModalVisible: false,
     };
   }
 
@@ -38,6 +41,15 @@ export default class Prompts extends React.Component {
   submitPrompt = (e) => {
     e.preventDefault();
     const newPrompt = this.state.promptInput;
+    if (newPrompt.length > 120) {
+      this.setState({
+        publishedMessage: setFeedbackMessage(
+          "120 character limit on prompts, sorry.",
+          MessageType.WARNING
+        ),
+      });
+      return;
+    }
 
     return new Promise((res, rej) => {
       if (!newPrompt) {
@@ -76,7 +88,7 @@ export default class Prompts extends React.Component {
         });
       })
       .then(() => {
-        this.setState({ promptInput: "" });
+        this.setState({ promptInput: "", publishedMessage: null });
       });
   };
 
@@ -88,6 +100,9 @@ export default class Prompts extends React.Component {
 
   findPackFromCode = (code) => {
     new Promise((res, rej) => {
+      if (!code) {
+        return rej(`Please enter a code to search`);
+      }
       const ref = firebase.database().ref(`promptPacks`);
       ref
         .orderByChild("code")
@@ -101,17 +116,19 @@ export default class Prompts extends React.Component {
           this.setState({ currentPack: packName, currentCode: code });
           this.getPromptPackData(packName);
           this.setState({
-            promptPackMessage: "",
+            searchMessage: null,
+            createMessage: null,
           });
           return res("Found prompt pack");
         });
     })
       .catch((rej) => {
         this.setState({
-          promptPackMessage: setFeedbackMessage(rej, MessageType.ERROR),
-          currentPack: "",
-          currentCode: "",
-          prompts: [],
+          searchMessage: setFeedbackMessage(rej, MessageType.ERROR),
+          createMessage: null,
+          // currentPack: "",
+          // currentCode: "",
+          // prompts: [],
         });
       })
       .then(() => {
@@ -168,23 +185,28 @@ export default class Prompts extends React.Component {
     });
   };
 
+  onDelete = () => {
+    this.setState({ deleteModalVisible: true });
+  };
+
   removePromptPack = () => {
-    if (window.confirm("Are you sure to delete this Prompt Pack?")) {
-      return new Promise((res, rej) => {
-        const ref = firebase
-          .database()
-          .ref(`promptPacks/${this.state.currentPack}`);
-        ref.remove();
-        return res();
-      }).then(() => {
-        this.setState({
-          currentPack: "",
-          currentCode: "",
-          promptPackMessage: null,
-          nameInput: "",
-        });
+    this.setState({ deleteModalVisible: false });
+    return new Promise((res, rej) => {
+      const ref = firebase
+        .database()
+        .ref(`promptPacks/${this.state.currentPack}`);
+      ref.remove();
+      return res();
+    }).then(() => {
+      this.setState({
+        currentPack: "",
+        currentCode: "",
+        searchMessage: null,
+        createMessage: null,
+        nameInput: "",
+        prompts: [],
       });
-    }
+    });
   };
 
   addNewPromptPack = (e) => {
@@ -234,7 +256,8 @@ export default class Prompts extends React.Component {
         this.setState({
           currentPack: promptPackName,
           currentCode: promptPackCode,
-          promptPackMessage: null,
+          createMessage: null,
+          searchMessage: null,
           nameInput: "",
         });
 
@@ -242,7 +265,8 @@ export default class Prompts extends React.Component {
       });
     }).catch((rej) => {
       this.setState({
-        promptPackMessage: setFeedbackMessage(rej, MessageType.ERROR),
+        createMessage: setFeedbackMessage(rej, MessageType.ERROR),
+        searchMessage: null,
       });
     });
   };
@@ -279,250 +303,289 @@ export default class Prompts extends React.Component {
     this.setState({ nameInput: event.target.value });
   };
 
-  getLowerHeight() {
-    const upperHeight = document.getElementById("upper-container").clientHeight;
-    const fullHeight = document.getElementById("main-container").clientHeight;
-    return fullHeight - upperHeight;
-  }
-
   render() {
     return (
       <div className="prompts-body" id="main-container">
-        <div id="upper-container">
+        <div>
+          <h2>Prompt Packs</h2>
+        </div>
+        <div
+          className="row-body"
+          style={{ height: "100%", minHeight: "100%", marginTop: "1vh" }}
+        >
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifySelf: "flex-start",
-              alignItems: "center",
+              width: "40vw",
+              marginTop: "1%",
             }}
           >
-            <h2>Prompt Packs</h2>
-            <h5 style={{ marginTop: "-1vh" }}>Find pack by code</h5>
-            <div
-              style={{
-                marginTop: "-1vh",
-                height: "3vh",
-                fontSize: "70%",
-                marginBottom: "0.75vh",
-              }}
-            >
-              {this.state.promptPackMessage}
-            </div>
-
-            <Form
-              style={{
-                width: "30%",
-                minWidth: "400px",
-              }}
-              onSubmit={this.onSearch}
-            >
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <Input
-                  autofocus
-                  value={this.state.codeInput}
-                  placeholder="code"
-                  type="text"
-                  onChange={this.updateCodeInputValue}
-                  style={{
-                    maxWidth: "35%",
-                    fontSize: "70%",
-                    borderRadius: "4px 0px 0px 4px",
-                  }}
-                />
-                <Button
-                  style={{
-                    fontSize: "70%",
-                    border: "1px solid #636363",
-                    borderRadius: "0px 4px 4px 0px",
-                  }}
-                  type="submit"
-                >
-                  Search
-                </Button>
-              </div>
-            </Form>
-            <Form
-              style={{ width: "50%", minWidth: "400px", marginTop: "1.5vh" }}
-              onSubmit={this.addNewPromptPack}
-            >
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <Input
-                  value={this.state.nameInput}
-                  placeholder="Prompt Pack Name"
-                  type="text"
-                  onChange={this.updateNameInputValue}
-                  style={{
-                    maxWidth: "35%",
-                    fontSize: "70%",
-                    borderRadius: "4px 0px 0px 4px",
-                  }}
-                />
-                <Button
-                  style={{
-                    fontSize: "70%",
-                    border: "1px solid #2966d6",
-                    borderRadius: "0px 4px 4px 0px",
-                  }}
-                  color="primary"
-                  type="submit"
-                >
-                  Create New
-                </Button>
-              </div>
-            </Form>
-          </div>
-          {this.state.currentPack && (
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
+                justifySelf: "flex-start",
                 alignItems: "center",
               }}
             >
+              <h4 style={{ marginTop: "-1vh" }}>Find pack by code</h4>
+
+              <Form
+                style={{
+                  width: "50%",
+                  minWidth: "400px",
+                }}
+                onSubmit={this.onSearch}
+              >
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Input
+                    autoFocus
+                    value={this.state.codeInput}
+                    placeholder="Code"
+                    type="text"
+                    onChange={this.updateCodeInputValue}
+                    style={{
+                      maxWidth: "60%",
+                      fontSize: "60%",
+                      borderRadius: "4px 0px 0px 4px",
+                    }}
+                  />
+                  <Button
+                    style={{
+                      fontSize: "60%",
+                      border: "1px solid #636363",
+                      borderRadius: "0px 4px 4px 0px",
+                      width: "10vw",
+                    }}
+                    type="submit"
+                    color="secondary"
+                  >
+                    Search
+                  </Button>
+                </div>
+              </Form>
+              <div
+                style={{
+                  height: "3vh",
+                  fontSize: "60%",
+                  marginBottom: "0.75vh",
+                }}
+              >
+                {this.state.searchMessage}
+              </div>
+
+              <h4 style={{ marginTop: "1.5vh" }}>Or create a new pack!</h4>
+              <Form
+                style={{ width: "50%", minWidth: "400px" }}
+                onSubmit={this.addNewPromptPack}
+              >
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Input
+                    value={this.state.nameInput}
+                    placeholder="New Name"
+                    type="text"
+                    onChange={this.updateNameInputValue}
+                    style={{
+                      maxWidth: "60%",
+                      fontSize: "60%",
+                      borderRadius: "4px 0px 0px 4px",
+                    }}
+                  />
+                  <Button
+                    style={{
+                      fontSize: "60%",
+                      border: "1px solid #2966d6",
+                      borderRadius: "0px 4px 4px 0px",
+                      width: "10vw",
+                    }}
+                    color="primary"
+                    type="submit"
+                  >
+                    Create New
+                  </Button>
+                </div>
+              </Form>
+              <div
+                style={{
+                  height: "3vh",
+                  fontSize: "70%",
+                  marginBottom: "0.75vh",
+                }}
+              >
+                {this.state.createMessage}
+              </div>
+            </div>
+            {this.state.currentPack && (
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "row",
-                  position: "relative",
-                  marginTop: "2vh",
-                  height: "100%",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
-                <h2 className="prompt-pack-heading">
-                  {`${this.state.currentPack} [${this.state.currentCode}]`}
-                </h2>
-                <Button
-                  close
-                  className="remove-prompt-pack"
-                  onClick={this.removePromptPack}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    height: "100%",
+                  }}
                 >
+                  <h3 className="prompt-pack-heading">
+                    {`${this.state.currentPack} [${this.state.currentCode}]`}
+                  </h3>
                   <div
                     style={{
-                      height: "100%",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       textAlign: "center",
                     }}
                   >
-                    x
+                    <Button
+                      className="remove-prompt-pack"
+                      onClick={this.onDelete}
+                      color="danger"
+                    >
+                      <div
+                        style={{
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          textAlign: "center",
+                        }}
+                      >
+                        DELETE
+                      </div>
+                    </Button>
+                    <ConfirmModal
+                      text={`Are you sure you want to delete ${this.state.currentPack}?`}
+                      onConfirm={this.removePromptPack}
+                      modalVisible={this.state.deleteModalVisible}
+                      type="danger"
+                      close={() => {
+                        this.setState({ deleteModalVisible: false });
+                      }}
+                    />
                   </div>
-                </Button>
-              </div>
-              <div
-                style={{ marginTop: "-1vh", height: "3vh", fontSize: "70%" }}
-              >
-                {this.state.publishedMessage}
-              </div>
-              <h5>Submit a prompt to this pack</h5>
-              <Form
-                style={{ width: "90%", maxWidth: "700px" }}
-                onSubmit={this.submitPrompt}
-              >
-                <div style={{ display: "flex" }}>
-                  <Input
-                    value={this.state.promptInput}
-                    placeholder="Enter new prompt here"
-                    type="text"
-                    autoFocus={true}
-                    onChange={this.updatePromptInputValue}
-                    style={{
-                      fontSize: "70%",
-                      borderRadius: "4px 0px 0px 4px",
-                    }}
-                  />
-                  <Button
-                    style={{
-                      fontSize: "70%",
-                      borderRadius: "0px 4px 4px 0px",
-                    }}
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
                 </div>
-              </Form>
-            </div>
-          )}
-        </div>
-        {this.state.prompts.length !== 0 && (
-          <div
-            style={{
-              height: `${this.getLowerHeight()}px`,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <h5 style={{ marginTop: "1vh" }}>Prompts in this pack:</h5>
-            <table
+                <div
+                  style={{ marginTop: "-1vh", height: "3vh", fontSize: "70%" }}
+                >
+                  {this.state.publishedMessage}
+                </div>
+                <h5>Submit a prompt to this pack</h5>
+                <Form
+                  style={{ width: "90%", maxWidth: "700px" }}
+                  onSubmit={this.submitPrompt}
+                >
+                  <div style={{ display: "flex" }}>
+                    <Input
+                      value={this.state.promptInput}
+                      placeholder="Enter new prompt here"
+                      type="text"
+                      autoFocus={true}
+                      onChange={this.updatePromptInputValue}
+                      style={{
+                        fontSize: "70%",
+                        borderRadius: "4px 0px 0px 4px",
+                      }}
+                    />
+                    <Button
+                      style={{
+                        fontSize: "60%",
+                        borderRadius: "0px 4px 4px 0px",
+                        width: "45%",
+                      }}
+                      type="submit"
+                      color="primary"
+                    >
+                      Submit Prompt
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            )}
+          </div>
+          {this.state.prompts.length !== 0 && (
+            <div
               style={{
-                overflow: "scroll",
+                height: "85%",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                backgroundColor: "#FFFFFF",
-                color: "#000000",
-                fontSize: "70%",
-                width: "90vw",
+                border: "1px solid #636363",
+                width: "50vw",
               }}
             >
-              <tbody style={{ width: "90vw" }}>
-                {this.state.prompts.map((prompt, index) => (
-                  <tr className="prompt-row" key={index}>
-                    <td className="prompt-cell">
-                      {prompt}
-                      <Button
-                        close
-                        className="remove-prompt"
-                        onClick={() => {
-                          this.removePrompt(prompt, index);
-                        }}
-                      >
-                        x
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {this.state.currentPack && this.state.prompts.length === 0 && (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <h2
+              <h5 style={{ marginTop: "1vh" }}>Prompts in this pack:</h5>
+              <table
+                style={{
+                  overflow: "scroll",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  backgroundColor: "#FFFFFF",
+                  color: "#000000",
+                  fontSize: "70%",
+                }}
+              >
+                <tbody style={{ width: "50vw" }}>
+                  {this.state.prompts.map((prompt, index) => (
+                    <tr className="prompt-row" key={index}>
+                      <td className="prompt-cell">
+                        {prompt}
+                        <Button
+                          close
+                          className="remove-prompt"
+                          onClick={() => {
+                            this.removePrompt(prompt, index);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {this.state.currentPack && this.state.prompts.length === 0 && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <h2
+                style={{
+                  height: "85%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  border: "1px solid #636363",
+                  color: "#FFFFFF",
+                  width: "50vw",
+                  textAlign: "center",
+                }}
+              >
+                This pack is empty.
+                <br />
+                Submit some prompts to it!
+              </h2>
+            </div>
+          )}
+          {!this.state.currentPack && (
+            <div
               style={{
-                height: this.getLowerHeight(),
+                height: "85%",
                 display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "#FFFFFF",
-                color: "#000000",
-                width: "90vw",
-                marginTop: "2vh",
+                justifyContent: "center",
+                width: "50vw",
                 textAlign: "center",
+                border: "1px solid #636363",
+                color: "#FFFFFF",
               }}
             >
-              This pack is empty.
-              <br />
-              Submit some prompts to it!
-            </h2>
-          </div>
-        )}
-        {!this.state.currentPack && (
-          <div
-            style={{
-              height: "66.4vh",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "90vw",
-              textAlign: "center",
-            }}
-          ></div>
-        )}
+              Search/Create to see Prompts
+            </div>
+          )}
+        </div>
         <Footer exit={this.exitGame} inGame={!!this.state.gameid} />
       </div>
     );

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input } from "reactstrap";
+import { Button, Form, Input } from "reactstrap";
 import LegoSpeechBubble from "../LegoSpeechBubble";
 import "./index.css";
 import { ClientGameContext } from "../GameContext";
@@ -61,21 +61,20 @@ function Quipping() {
               />
             </div>
             <div className="quipping-answer-container">
-              <Input
-                className="quipping-answer-input"
-                placeholder="Enter quip here"
-                type="textarea"
-                value={answer}
-                onChange={handleInputOnChange}
-                innerRef={quipRef}
-                autoFocus={true}
-              ></Input>
-              <Button
-                onClick={handleQuipSubmit}
-                className="quipping-answer-button"
-              >
-                Submit Answer
-              </Button>
+              <Form onSubmit={handleQuipSubmit}>
+                <Input
+                  className="quipping-answer-input"
+                  placeholder="Enter quip here"
+                  type="textarea"
+                  value={answer}
+                  onChange={handleInputOnChange}
+                  innerRef={quipRef}
+                  autoFocus={true}
+                ></Input>
+                <Button type="submit" className="quipping-answer-button">
+                  Submit Answer
+                </Button>
+              </Form>
             </div>
           </div>
         )}

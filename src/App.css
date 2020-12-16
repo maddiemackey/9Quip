@@ -67,16 +67,6 @@
   overflow: hidden;
 }
 
-.prompts-body {
-  background-color: #030d21;
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  overflow: hidden;
-  margin-top: -10vh;
-}
-
 .host-body {
   background-color: #030d21;
   display: flex;
