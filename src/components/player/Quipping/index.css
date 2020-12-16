@@ -12,12 +12,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10vw;
-}
-
-.quipping-answer-input {
-  min-height: 20vw;
-  margin-bottom: 5vw;
 }
 
 .quipping-answer-button {

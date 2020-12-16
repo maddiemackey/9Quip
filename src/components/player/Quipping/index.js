@@ -3,6 +3,8 @@ import { Button, Form, Input } from "reactstrap";
 import LegoSpeechBubble from "../LegoSpeechBubble";
 import "./index.css";
 import { ClientGameContext } from "../GameContext";
+import { setFeedbackMessage } from "../../shared/feedbackMessage";
+import { MessageType } from "../../../utils/enum";
 
 function Quipping() {
   const thing = useContext(ClientGameContext);
@@ -11,6 +13,7 @@ function Quipping() {
   const [promptIndex, changePromptIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [answer, setAnswer] = useState("");
+  const [quipMessage, setQuipMessage] = useState(null);
 
   useEffect(() => {
     if (loading === true) {
@@ -29,9 +32,19 @@ function Quipping() {
     setAnswer(event.target.value);
   };
 
-  const handleQuipSubmit = () => {
+  const handleQuipSubmit = (e) => {
+    e.preventDefault();
+
     if (!answer) {
-      console.log("Must not submit blank quip!");
+      setQuipMessage(
+        setFeedbackMessage("Cannot submit a blank quip.", MessageType.ERROR)
+      );
+      return;
+    }
+    if (answer.length > 80) {
+      setQuipMessage(
+        setFeedbackMessage("Too long. 80 character limit.", MessageType.WARNING)
+      );
       return;
     }
 
@@ -40,11 +53,13 @@ function Quipping() {
 
       // clear prompt
       setAnswer("");
+      setQuipMessage(null);
 
       if (res === null) {
-        console.log("Failed to submit quip, sorry :(");
+        setQuipMessage(
+          setFeedbackMessage("Failed to submit quip.", MessageType.ERROR)
+        );
       } else {
-        console.log("Submitted quip");
         changePromptIndex(promptIndex + 1);
       }
     });
@@ -65,12 +80,22 @@ function Quipping() {
                 <Input
                   className="quipping-answer-input"
                   placeholder="Enter quip here"
-                  type="textarea"
+                  type="text"
                   value={answer}
                   onChange={handleInputOnChange}
                   innerRef={quipRef}
                   autoFocus={true}
                 ></Input>
+                <div
+                  style={{
+                    height: "3vh",
+                    fontSize: "80%",
+                    textAlign: "center",
+                    margin: "1%",
+                  }}
+                >
+                  {quipMessage}
+                </div>
                 <Button type="submit" className="quipping-answer-button">
                   Submit Answer
                 </Button>

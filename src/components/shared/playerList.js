@@ -101,9 +101,7 @@ export default class PlayerList extends React.Component {
                 width: "100%",
               }}
             >
-              <h2 style={{ textAlign: "center" }}>
-                Waiting for players to join...
-              </h2>
+              <h2 style={{ textAlign: "center" }}>Waiting for players...</h2>
             </div>
           )}
         </div>

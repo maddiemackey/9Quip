@@ -22,6 +22,7 @@ function JoinGameScreen() {
       setJoinMessage(
         setFeedbackMessage("A name is required.", MessageType.ERROR)
       );
+      document.getElementById("name-input").focus();
       return;
     }
     if (nameInput.length > 22) {
@@ -39,6 +40,7 @@ function JoinGameScreen() {
 
     if (code.length === 0) {
       setJoinMessage(setFeedbackMessage("Code required.", MessageType.ERROR));
+      document.getElementById("code-input").focus();
       return;
     }
     if (code.length < 4 || code.length > 4) {

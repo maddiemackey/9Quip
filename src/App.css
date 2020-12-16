@@ -260,20 +260,82 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .voting-footer {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  height: 2vh;
+  overflow: visible;
+  width: 100%;
+}
+
+.voting-body {
+  margin-top: -10vh;
+  width: 100%;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  position: relative;
+}
+
+.voting-triangle-left {
+  content: "";
+  position: absolute;
+  margin-top: 47%;
+  margin-left: 89%;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #ffffff;
+}
+
+.voting-triangle-right {
+  content: "";
+  position: absolute;
+  margin-top: 47%;
+  margin-left: -32px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #ffffff;
+}
+
+.voting-timer {
+  position: absolute;
+  top: 55%;
+}
+
+.quip-card-body {
+  font-size: 70%;
+  padding: 2%;
+  min-height: 4vh;
+}
+
+.quip-card-header {
+  font-size: 70%;
+  padding: 0%;
+  width: 100%;
+  min-height: 4vh;
+  text-align: center;
 }
 
 .playerLegoHeadImglrg {
-  width: 150%;
+  width: 10vw;
   height: auto;
 }
 
 .playerLegoHeadImgsml {
-  width: 40px;
+  width: 35px;
   height: auto;
 }
 

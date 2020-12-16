@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  CardText,
-  Col,
-  Container,
-  Row,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import "../../App.css";
 import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble";
 import PlayerLegoHead from "../shared/playerLegoHead";
@@ -33,8 +23,9 @@ export default class VotingPage extends React.Component {
       playerData: {},
       promptNumber: 0,
       votingMode: "VOTING",
-      seconds: 10,
+      seconds: 15,
       pointsToAssign: {},
+      viewingTimeout: null,
     };
   }
 
@@ -97,7 +88,18 @@ export default class VotingPage extends React.Component {
     });
     const ref = firebase.database().ref(`games/${this.props.gameId}`);
     ref.update({ currentVote: null });
+    this.setState({
+      viewingTimeout: setTimeout(() => {
+        this.handleNext();
+      }, 8000),
+    });
   };
+
+  componentWillUnmount() {
+    if (this.state.viewingTimeout) {
+      clearTimeout(this.state.viewingTimeout);
+    }
+  }
 
   handleNext = () => {
     let { roundData, promptNumber } = this.state;
@@ -132,19 +134,39 @@ export default class VotingPage extends React.Component {
       roundData[0].promptsReturned[promptNumber].players.forEach((player) => {
         row = [
           ...row,
-          <Col xs="1" key={Math.random()}>
+          <Col style={{ minHeight: "15vh" }} xs="1" key={Math.random()}>
             {rowCount === 0 &&
               playerData &&
               playerData[player.id] &&
               votingMode === "REVEAL" && (
-                <div>
-                  <PlayerLegoHead
-                    headName={playerData[player.id].icon}
-                    playerName={playerData[player.id].name}
-                    classThing={"playerLegoHeadImglrg"}
-                  />
-                  <h4>+{pointsToAssign[player.id]}</h4>
-                </div>
+                <>
+                  <div className="voting-triangle-left"></div>
+                  <div
+                    style={{
+                      width: "5vw",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignContent: "center",
+                      marginTop: "20%",
+                    }}
+                  >
+                    <PlayerLegoHead
+                      headName={playerData[player.id].icon}
+                      playerName={playerData[player.id].name}
+                      classThing={"playerLegoHeadImgmed"}
+                    />
+                    <h4
+                      style={{
+                        fontSize: "70%",
+                        textAlign: "center",
+                        textIndent: "-10%",
+                      }}
+                    >
+                      +{pointsToAssign[player.id]}
+                    </h4>
+                  </div>
+                </>
               )}
           </Col>,
           <Col xs="4" key={player.id}>
@@ -153,25 +175,59 @@ export default class VotingPage extends React.Component {
               style={{ border: "none", margin: "2% 0" }}
             >
               <CardHeader
+                className="quip-card-header"
                 style={{ backgroundColor: colours[quipCount] }}
-              ></CardHeader>
-              <CardBody>
-                <CardText>{player.quip}</CardText>
+              >
+                {playerData &&
+                  playerData[player.id] &&
+                  votingMode === "REVEAL" && (
+                    <div>{playerData[player.id].name}</div>
+                  )}
+              </CardHeader>
+              <CardBody className="quip-card-body">
+                {player.quip ? (
+                  player.quip
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      color: "grey",
+                    }}
+                  >
+                    no answer
+                  </div>
+                )}
               </CardBody>
-              <CardFooter>
+
+              <div>
                 <div className="voting-footer">
                   {votingMode === "REVEAL" &&
                     player.votes &&
-                    player.votes.map((vote) => (
-                      <PlayerLegoHead
-                        key={Math.random()}
-                        headName={playerData[vote].icon}
-                        playerName={playerData[vote].name}
-                        classThing={"playerLegoHeadImgsml"}
-                      />
-                    ))}
+                    player.votes.map((vote, index) => {
+                      if (index === 5) {
+                        return (
+                          <div style={{ color: "#f7bc4d", marginLeft: "2%" }}>
+                            +
+                          </div>
+                        );
+                      } else if (index < 5) {
+                        return (
+                          <div style={{ marginTop: "-1vh" }}>
+                            <PlayerLegoHead
+                              key={Math.random()}
+                              headName={playerData[vote].icon}
+                              playerName={playerData[vote].name}
+                              classThing={"playerLegoHeadImgsml"}
+                            />
+                          </div>
+                        );
+                      } else {
+                        return <div></div>;
+                      }
+                    })}
                 </div>
-              </CardFooter>
+              </div>
             </Card>
           </Col>,
           <Col xs="1" key={Math.random()}>
@@ -179,14 +235,34 @@ export default class VotingPage extends React.Component {
               playerData &&
               playerData[player.id] &&
               votingMode === "REVEAL" && (
-                <div>
-                  <PlayerLegoHead
-                    headName={playerData[player.id].icon}
-                    playerName={playerData[player.id].name}
-                    classThing={"playerLegoHeadImglrg"}
-                  />
-                  <h4>+{pointsToAssign[player.id]}</h4>
-                </div>
+                <>
+                  <div className="voting-triangle-right"></div>
+                  <div
+                    style={{
+                      width: "5vw",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignContent: "center",
+                      marginTop: "20%",
+                    }}
+                  >
+                    <PlayerLegoHead
+                      headName={playerData[player.id].icon}
+                      playerName={playerData[player.id].name}
+                      classThing={"playerLegoHeadImgmed"}
+                    />
+                    <h4
+                      style={{
+                        fontSize: "70%",
+                        textAlign: "center",
+                        textIndent: "-10%",
+                      }}
+                    >
+                      +{pointsToAssign[player.id]}
+                    </h4>
+                  </div>
+                </>
               )}
           </Col>,
         ];
@@ -213,11 +289,11 @@ export default class VotingPage extends React.Component {
   render() {
     const { roundData, promptNumber, votingMode } = this.state;
     return (
-      <div className="App-body">
+      <div className="voting-body">
         <div className="voting-header">
           <div style={{ marginRight: "2%" }}>
             <MaddiesLegoSpeechBubble
-              style={{ maxWidth: "55vw" }}
+              style={{ minWidth: "30vw" }}
               bubbleText={
                 roundData[0] &&
                 roundData[0].promptsReturned[promptNumber].prompt
@@ -227,22 +303,24 @@ export default class VotingPage extends React.Component {
             />
           </div>
           {votingMode === "VOTING" && (
-            <Timer
-              minutes={0}
-              seconds={this.state.seconds}
-              onTimerComplete={this.startVoting}
-            />
+            <div className="voting-timer">
+              <Timer
+                minutes={0}
+                seconds={this.state.seconds}
+                onTimerComplete={this.startVoting}
+              />
+            </div>
           )}
         </div>
         <Container>{this.makeQuipGrid()}</Container>
-        {votingMode === "REVEAL" && (
+        {/* {votingMode === "REVEAL" && (
           <Button
             onClick={this.handleNext}
             style={{ alignContent: "flex-end" }}
           >
             Next
           </Button>
-        )}
+        )} */}
       </div>
     );
   }

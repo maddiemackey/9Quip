@@ -3,16 +3,24 @@ import LegoSpeechBubble from "../LegoSpeechBubble";
 import "./index.css";
 import { ClientGameContext } from "../GameContext";
 
-function Option({ text, colour, onClick }) {
+function Option({ text, colour, onClick, disabled }) {
   return (
-    <div className="voting-option" onClick={onClick}>
+    <div
+      className="voting-option"
+      onClick={() => {
+        if (!disabled) {
+          onClick();
+        }
+      }}
+    >
       <div
         style={{
           backgroundColor: colour,
         }}
         className="voting-option-colour"
       ></div>
-      <div className="voting-option-text">{text}</div>
+      <div className="voting-option-text">{text ? text : "no answer"}</div>
+      {disabled && <div className="disabled-cover"></div>}
     </div>
   );
 }
@@ -77,6 +85,7 @@ function Voting() {
               return (
                 <Option
                   text={quip.quip}
+                  disabled={quip.quip === ""}
                   colour={getColour(i)}
                   onClick={() => {
                     thing.vote(quip.path);

@@ -25,7 +25,7 @@ export default function Timer({ seconds, onTimerComplete }) {
   }, [seconds, onTimerComplete]);
 
   if (secondsToDisplay === 0) {
-    return <div style={{ fontSize: "2em" }}>Time's Up!</div>;
+    return <div style={{ fontSize: "100%" }}>Time's Up!</div>;
   }
 
   return <div>{secondsToDisplay}</div>;
