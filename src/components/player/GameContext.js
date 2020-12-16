@@ -2,6 +2,7 @@ import React from "react";
 import firebase from "../../Firebase/firebase";
 import "firebase/database";
 import _ from "lodash";
+import { GameState } from "../../utils/enum";
 
 export const ClientGameContext = React.createContext();
 
@@ -61,18 +62,36 @@ export class ClientGameContextProvider extends React.Component {
         .once("value", (snapshot) => {
           const snapshotValue = snapshot.val();
           if (!snapshotValue) {
-            return rej("Game does not exist.");
+            return rej({
+              text: `Game with code ${gameCode} does not exist.`,
+              nameError: false,
+            });
           }
           const gameId = Object.keys(snapshot.val())[0];
 
+          const players = snapshotValue[gameId].players;
+
           // PLAYER LIMIT
-          if (
-            snapshotValue[gameId].players &&
-            _.size(snapshotValue[gameId].players) >= 25
-          ) {
-            return rej("Player limit of 25 has been reached for this game.");
+          if (players && _.size(players) >= 25) {
+            return rej({
+              text: "Player limit of 25 has been reached for this game.",
+              nameError: false,
+            });
           }
 
+          // CHECK DUPLICATE NAMES
+          if (players) {
+            for (const player of Object.values(players)) {
+              if (player.name === nameInput) {
+                return rej({
+                  text: `The name ${nameInput} is taken. Please enter a new one.`,
+                  nameError: true,
+                });
+              }
+            }
+          }
+
+          // SET LEGO HEAD
           const gameRef = firebase
             .database()
             .ref(`games/${gameId}/headsAvailable`);
@@ -124,11 +143,16 @@ export class ClientGameContextProvider extends React.Component {
 
   async exitGame() {
     return new Promise((res, rej) => {
-      // Mark as INACTIVE in db
-      const ref = firebase
+      const exitPlayerRef = firebase
         .database()
         .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
-      ref.update({ active: false });
+      if (this.state.mainGameState === GameState.joining) {
+        // If people are still joining the game, remove the player
+        exitPlayerRef.remove();
+      } else {
+        // If the game has already started, just mark as INACTIVE
+        exitPlayerRef.update({ active: false });
+      }
 
       // Remove from localStorage
       window.localStorage.removeItem("quipGameId");
@@ -189,7 +213,6 @@ export class ClientGameContextProvider extends React.Component {
             let p = 0;
             snap.players.forEach((player) => {
               if (player.id === this.state.playerId) {
-                // if (this.state)
                 return res(
                   `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}`
                 );

@@ -49,8 +49,14 @@ function JoinGameScreen() {
     setSearchingForGame(true);
 
     thing.joinGame(code, nameInput).catch((rej) => {
+      setJoinMessage(setFeedbackMessage(rej.text, MessageType.ERROR));
       setSearchingForGame(false);
-      setJoinMessage(setFeedbackMessage(rej, MessageType.ERROR));
+      if (!rej.nameError) {
+        document.getElementById("name-input").value = nameInput;
+        document.getElementById("code-input").focus();
+      } else {
+        document.getElementById("code-input").value = code;
+      }
     });
   }
 
@@ -74,10 +80,11 @@ function JoinGameScreen() {
             <Spinner style={{ height: "4rem", width: "4rem" }} />
           </div>
         ) : (
-          <div id="join-form">
+          <div id="join-form" className="join-form">
             <Form onSubmit={attemptJoinGame}>
               <Label style={{ marginBottom: "1vh" }}>Name</Label>
               <Input
+                id="name-input"
                 style={{ marginTop: "-1vh" }}
                 innerRef={nameRef}
                 placeholder="Alex"
@@ -87,6 +94,7 @@ function JoinGameScreen() {
               <Label style={{ marginBottom: "1vh" }}>Code</Label>
               <Input
                 style={{ marginTop: "-1vh" }}
+                id="code-input"
                 placeholder="1234"
                 type="text"
                 innerRef={codeRef}
