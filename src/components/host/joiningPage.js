@@ -1,9 +1,9 @@
-import React from 'react';
-import { Button } from 'reactstrap';
-import '../../App.css';
-import LogoWOTeam from '../shared/logowoteam';
-import PlayerList from '../shared/playerList';
-import MaddiesLegoSpeechBubble from '../shared/MaddiesLegoSpeechBubble/index';
+import React from "react";
+import { Button } from "reactstrap";
+import "../../App.css";
+import LogoWOTeam from "../shared/logowoteam";
+import PlayerList from "../shared/playerList";
+import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble/index";
 
 export default class JoiningPage extends React.Component {
   constructor(props) {
@@ -20,15 +20,15 @@ export default class JoiningPage extends React.Component {
           </div>
           <div>
             <MaddiesLegoSpeechBubble
-              style={{ width: '30vw' }}
-              bubbleText={'Enter this code to join: ' + this.props.gamecode}
+              style={{ width: "30vw" }}
+              bubbleText={"Enter this code to join: " + this.props.gamecode}
             />
           </div>
           <Button
             style={{
-              maxWidth: '50%',
-              fontSize: '100%',
-              marginTop: '1vh',
+              maxWidth: "50%",
+              fontSize: "100%",
+              marginTop: "1vh",
             }}
             onClick={this.props.startGame}
             color="success"
@@ -38,20 +38,20 @@ export default class JoiningPage extends React.Component {
         </div>
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '40vw',
-            height: '80vh',
-            marginLeft: '5vw',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "40vw",
+            height: "80vh",
+            marginLeft: "5vw",
           }}
         >
           <PlayerList gameid={this.props.gameid} />
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'flex-end',
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
             }}
           ></div>
         </div>
