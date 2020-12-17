@@ -1,32 +1,25 @@
-import React, { useEffect, useRef, useState } from "react";
-import "../../App.css";
+import React from 'react';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import '../../App.css';
 
 export default function Timer({ seconds, onTimerComplete }) {
-  const [secondsToDisplay, setSecondsToDisplay] = useState(seconds);
-  const secondsRef = useRef(seconds);
-  const interval = useRef();
-
-  useEffect(() => {
-    secondsRef.current = seconds;
-
-    interval.current = setInterval(() => {
-      if (secondsRef.current === 0) {
-        clearInterval(interval.current);
-        onTimerComplete();
-      } else {
-        secondsRef.current = secondsRef.current - 1;
-        setSecondsToDisplay(secondsRef.current);
-      }
-    }, 1000);
-
-    return () => {
-      clearInterval(interval.current);
-    };
-  }, [seconds, onTimerComplete]);
-
-  if (secondsToDisplay === 0) {
-    return <div style={{ fontSize: "100%" }}>Time's Up!</div>;
-  }
-
-  return <div>{secondsToDisplay}</div>;
+  return (
+    <div className="timer-wrapper">
+      <CountdownCircleTimer
+        isPlaying
+        duration={seconds}
+        colors={[
+          ['#0085CD', 0.33],
+          ['#1FC02C', 0.33],
+          ['#FFF200', 0.33],
+          ['#D22C25', 0.33],
+        ]}
+        trailColor="rgba(114, 114, 114, 0)"
+        size="120"
+        onComplete={onTimerComplete}
+      >
+        {({ remainingTime }) => remainingTime}
+      </CountdownCircleTimer>
+    </div>
+  );
 }
