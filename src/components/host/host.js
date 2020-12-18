@@ -25,6 +25,7 @@ export default class Host extends React.Component {
       gameid: null,
       muted: false,
       promptPack: 'Party',
+      round: 0,
     };
   }
 
@@ -67,6 +68,7 @@ export default class Host extends React.Component {
           headsAvailable: legoHeads,
           players: '',
           promptPack: currentPack ? currentPack : '3410',
+          round: 0,
         });
         return res(newGameRef);
       }).then((newGameRef) => {
@@ -85,7 +87,7 @@ export default class Host extends React.Component {
   startGame = () => {
     const ref = firebase.database().ref('/');
     new Promise((res, rej) => {
-      ref.on('value', (snapshot) => {
+      ref.once('value', (snapshot) => {
         let db = snapshot.val();
 
         if (db.promptPacks[this.state.promptPack].prompts) {
@@ -97,14 +99,19 @@ export default class Host extends React.Component {
                 db.promptPacks[this.state.promptPack].prompts
               );
               for (const p of Object.keys(players)) {
-                for (const q of Object.keys(playersReturned)) {
-                  if (p === q) {
-                    //console.log("specific prompts for player:", playersReturned[q]);
-                    db.games[this.state.gameid].players[q].prompts =
-                      playersReturned[q];
+                let roundData = [];
+                playersReturned.forEach((round) => {
+                  for (const q of Object.keys(round)) {
+                    if (p === q) {
+                      roundData = [...roundData, round[q]];
+                      db.games[this.state.gameid].players[
+                        p
+                      ].prompts = roundData;
+                    }
                   }
-                }
+                });
               }
+
               db.games[this.state.gameid].rounds = [{ promptsReturned }];
               db.games[this.state.gameid].gamestate = GameState.quipping;
               return res(db);
@@ -132,10 +139,19 @@ export default class Host extends React.Component {
     this.setState({ gamestate: 'VOTING' });
   };
 
+  nextRound = () => {
+    const ref = firebase.database().ref(`games/${this.state.gameid}`);
+    ref.update({ gamestate: GameState.quipping });
+    this.setState({ gamestate: 'QUIPPING' });
+  };
+
   startScoring = () => {
     const ref = firebase.database().ref(`games/${this.state.gameid}`);
-    ref.update({ gamestate: GameState.scoreboard });
-    this.setState({ gamestate: 'SCOREBOARD' });
+    ref.update({
+      gamestate: GameState.scoreboard,
+      round: this.state.round + 1,
+    });
+    this.setState({ round: this.state.round + 1, gamestate: 'SCOREBOARD' });
   };
 
   exitGame = () => {
@@ -204,16 +220,24 @@ export default class Host extends React.Component {
           <QuippingPage
             startVoting={this.startVoting}
             gameid={this.state.gameid}
+            round={this.state.round}
           />
         )}
         {gamestate === GameState.voting && (
           <VotingPage
             gameId={this.state.gameid}
+            round={this.state.round}
             startScoring={this.startScoring}
           />
         )}
         {gamestate === GameState.scoreboard && (
-          <ScorePage gameId={this.state.gameid} endGame={this.exitGame} />
+          <ScorePage
+            gameId={this.state.gameid}
+            endGame={this.exitGame}
+            nextRound={this.nextRound}
+            gameEnded={this.state.round === 2}
+            round={this.state.round}
+          />
         )}
         <Footer exit={this.exitGame} inGame={!!this.state.gameid} />
       </div>

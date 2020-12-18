@@ -32,6 +32,7 @@ export default class QuippingPage extends React.Component {
             <PlayerList
               gameid={this.props.gameid}
               showOnQuip={true}
+              round={this.props.round}
               onAllQuipsSubmitted={this.props.startVoting}
             />
           </div>

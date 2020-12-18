@@ -9,7 +9,7 @@ import { ordinal } from '../../utils/ordinal';
 export default class ScorePage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { playerList: [] };
+    this.state = { playerList: [], viewingTimeout: null };
   }
 
   componentDidMount() {
@@ -28,16 +28,27 @@ export default class ScorePage extends React.Component {
         });
       }
     });
+    if (!this.props.gameEnded) {
+      this.setState({
+        viewingTimeout: setTimeout(() => {
+          this.props.nextRound();
+        }, 10000),
+      });
+    }
   }
 
   componentWillUnmount() {
-    this.props.endGame();
+    if (this.state.viewingTimeout) {
+      clearTimeout(this.state.viewingTimeout);
+    }
   }
 
   render() {
     const { playerList } = this.state;
     return (
       <div className="scoreboard-body">
+        {!this.props.gameEnded && <h3>Points so far...</h3>}
+        {this.props.gameEnded && <h3>Game Over</h3>}
         <Table id="table" className="scoreboard-table">
           <thead>
             <tr className="scoreboard-top-five">
@@ -116,13 +127,18 @@ export default class ScorePage extends React.Component {
             </tbody>
           )}
         </Table>
-        <Button
-          onClick={this.props.endGame}
-          style={{ maxHeight: '9vh', fontSize: '50%' }}
-          color="primary"
-        >
-          END GAME
-        </Button>
+        {!this.props.gameEnded && (
+          <h4>Get ready for round {this.props.round + 1}</h4>
+        )}
+        {this.props.gameEnded && (
+          <Button
+            onClick={this.props.endGame}
+            style={{ maxHeight: '9vh', fontSize: '50%' }}
+            color="primary"
+          >
+            END GAME
+          </Button>
+        )}
       </div>
     );
   }

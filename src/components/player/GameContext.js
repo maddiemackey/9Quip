@@ -38,7 +38,7 @@ export class ClientGameContextProvider extends React.Component {
       playerHead: null,
       playerPosition: null,
       voteState: null,
-      allQuipsSubmitted: false,
+      allQuipsSubmitted: [false, false], //TODO: also hardcoded coz its 2am yeet
     };
 
     this.joinGame = this.joinGame.bind(this);
@@ -120,8 +120,9 @@ export class ClientGameContextProvider extends React.Component {
               name: nameInput,
               score: 0,
               icon: head,
-              allQuipsSubmitted: false,
+              allQuipsSubmitted: [false, false],
               active: true,
+              prompts: [[''], ['']], // TODO: this is hardcoded to match the round number (2)... should probs fix this in future
             });
             return res({ newPlayer: newPlayer, gameId: gameId });
           });
@@ -177,7 +178,7 @@ export class ClientGameContextProvider extends React.Component {
       const ref = firebase
         .database()
         .ref(
-          `games/${this.state.gameId}/players/${this.state.playerId}/prompts`
+          `games/${this.state.gameId}/players/${this.state.playerId}/prompts/${this.state.round}`
         );
       ref.once('value', (snapshot) => {
         const prompts = snapshot.val();
@@ -192,14 +193,11 @@ export class ClientGameContextProvider extends React.Component {
   async submitQuip(prompt, quip, promptIndex) {
     return new Promise((res, rej) => {
       // get round ID
-      let roundRef = '';
-      if (this.state.round === 0) {
-        roundRef = firebase
-          .database()
-          .ref(
-            `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
-          );
-      }
+      let roundRef = firebase
+        .database()
+        .ref(
+          `games/${this.state.gameId}/rounds/0/promptsReturned/${this.state.round}`
+        );
       roundRef.once('value', (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
@@ -214,7 +212,7 @@ export class ClientGameContextProvider extends React.Component {
             snap.players.forEach((player) => {
               if (player.id === this.state.playerId) {
                 return res(
-                  `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}`
+                  `games/${this.state.gameId}/rounds/0/promptsReturned/${this.state.round}/${i}/players/${p}`
                 );
               }
               p++;
@@ -229,8 +227,10 @@ export class ClientGameContextProvider extends React.Component {
       if (promptIndex >= 1) {
         const allQuipsSubmittedRef = firebase
           .database()
-          .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
-        allQuipsSubmittedRef.update({ allQuipsSubmitted: true });
+          .ref(
+            `games/${this.state.gameId}/players/${this.state.playerId}/allQuipsSubmitted/${this.state.round}`
+          );
+        allQuipsSubmittedRef.set(true);
       }
     });
   }
@@ -242,7 +242,7 @@ export class ClientGameContextProvider extends React.Component {
       roundRef = firebase
         .database()
         .ref(
-          `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
+          `games/${this.state.gameId}/rounds/0/promptsReturned/${this.state.round}`
         );
       roundRef.once('value', (snapshot) => {
         const snapshotValue = snapshot.val();
@@ -258,7 +258,7 @@ export class ClientGameContextProvider extends React.Component {
             prompt.players.forEach((player) => {
               quips.push({
                 quip: player.quip,
-                path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}`,
+                path: `games/${this.state.gameId}/rounds/0/promptsReturned/${this.state.round}/${i}/players/${p}`,
               });
               canVote = canVote && player.id !== this.state.playerId;
               p++;
@@ -315,7 +315,7 @@ export class ClientGameContextProvider extends React.Component {
             return rej('Game ended');
           }
           const gameId = Object.keys(snapshotValue)[0];
-          const { gamestate, players } = snapshotValue[gameId];
+          const { gamestate, players, round } = snapshotValue[gameId];
 
           let playerScore = this.state.playerScore;
           let playerPosition = this.state.playerPosition;
@@ -332,6 +332,7 @@ export class ClientGameContextProvider extends React.Component {
             mainGameState: gamestate,
             playerScore,
             playerPosition,
+            round,
           });
         });
     }).catch((rej) => {

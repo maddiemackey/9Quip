@@ -39,12 +39,14 @@ function Quipping() {
       setQuipMessage(
         setFeedbackMessage('Cannot submit a blank quip.', MessageType.ERROR)
       );
+      document.getElementById('quip-input').focus();
       return;
     }
     if (answer.length > 80) {
       setQuipMessage(
         setFeedbackMessage('Too long. 80 character limit.', MessageType.WARNING)
       );
+      document.getElementById('quip-input').focus();
       return;
     }
 
@@ -61,6 +63,10 @@ function Quipping() {
         );
       } else {
         changePromptIndex(promptIndex + 1);
+        if (promptIndex <= 2) {
+          document.getElementById('quip-input') &&
+            document.getElementById('quip-input').focus();
+        }
       }
     });
   };
@@ -68,7 +74,7 @@ function Quipping() {
   return (
     <div className="quipping-container">
       <div>
-        {promptIndex < 2 && (
+        {promptIndex < 2 && ( // TODO: hardcoded for 2 prompts per player, should fix that
           <div>
             <div className="quipping-question-container">
               <LegoSpeechBubble
@@ -78,6 +84,7 @@ function Quipping() {
             <div className="quipping-answer-container">
               <Form onSubmit={handleQuipSubmit}>
                 <Input
+                  id="quip-input"
                   className="quipping-answer-input"
                   placeholder="Enter quip here"
                   type="textarea"
