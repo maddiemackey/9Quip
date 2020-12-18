@@ -1,9 +1,9 @@
-import React from "react";
-import "../../App.css";
-import firebase from "../../Firebase/firebase";
-import "firebase/database";
-import PlayerSquare from "./playerSquare";
-import _ from "lodash";
+import React from 'react';
+import '../../App.css';
+import firebase from '../../Firebase/firebase';
+import 'firebase/database';
+import PlayerSquare from './playerSquare';
+import _ from 'lodash';
 
 export default class PlayerList extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ export default class PlayerList extends React.Component {
     const refPlayers = firebase
       .database()
       .ref(`/games/${this.props.gameid}/players`);
-    refPlayers.on("value", (snapshot) => {
+    refPlayers.on('value', (snapshot) => {
       let playersArr = [];
       let players = snapshot.val();
       if (players) {
@@ -67,25 +67,27 @@ export default class PlayerList extends React.Component {
             <div>
               <div
                 className="playersHeader"
-                style={{ display: "flex", alignItems: "center" }}
+                style={{ display: 'flex', alignItems: 'center' }}
               >
                 Players:
               </div>
               <div className="playersBox">
                 <table>
-                  {this.state.formattedPlayers.map((row, index) => (
-                    <tr key={row[index]}>
-                      {row.map((player, i) => (
-                        <th key={i}>
-                          <PlayerSquare
-                            key={i}
-                            icon={player.icon}
-                            name={player.name}
-                          />
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
+                  <tbody>
+                    {this.state.formattedPlayers.map((row, index) => (
+                      <tr key={row[index]}>
+                        {row.map((player, i) => (
+                          <th key={`head-${i}`}>
+                            <PlayerSquare
+                              key={`player-${i}`}
+                              icon={player.icon}
+                              name={player.name}
+                            />
+                          </th>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             </div>
@@ -93,15 +95,15 @@ export default class PlayerList extends React.Component {
           {this.state.players.length === 0 && (
             <div
               style={{
-                display: "flex",
-                height: "100%",
-                marginTop: "25vh",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
+                display: 'flex',
+                height: '100%',
+                marginTop: '25vh',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
               }}
             >
-              <h2 style={{ textAlign: "center" }}>Waiting for players...</h2>
+              <h2 style={{ textAlign: 'center' }}>Waiting for players...</h2>
             </div>
           )}
         </div>

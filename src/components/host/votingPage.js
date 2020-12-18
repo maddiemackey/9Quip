@@ -1,19 +1,19 @@
-import React from "react";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
-import "../../App.css";
-import MaddiesLegoSpeechBubble from "../shared/MaddiesLegoSpeechBubble";
-import PlayerLegoHead from "../shared/playerLegoHead";
-import firebase from "../../Firebase/firebase";
-import "firebase/database";
-import Timer from "../shared/timer";
-import calculatePoints from "../../utils/points";
+import React from 'react';
+import { Card, CardBody, CardHeader, Col, Container, Row } from 'reactstrap';
+import '../../App.css';
+import MaddiesLegoSpeechBubble from '../shared/MaddiesLegoSpeechBubble';
+import PlayerLegoHead from '../shared/playerLegoHead';
+import firebase from '../../Firebase/firebase';
+import 'firebase/database';
+import Timer from '../shared/timer';
+import calculatePoints from '../../utils/points';
 
 let colours = {
-  0: "#D22C25",
-  1: "#0085CD",
-  2: "#1FC02C",
-  3: "#FFF200",
-  4: "#BD008B",
+  0: '#D22C25',
+  1: '#0085CD',
+  2: '#1FC02C',
+  3: '#FFF200',
+  4: '#BD008B',
 };
 export default class VotingPage extends React.Component {
   constructor(props) {
@@ -22,7 +22,7 @@ export default class VotingPage extends React.Component {
       roundData: {},
       playerData: {},
       promptNumber: 0,
-      votingMode: "VOTING",
+      votingMode: 'VOTING',
       seconds: 15,
       pointsToAssign: {},
       viewingTimeout: null,
@@ -38,7 +38,7 @@ export default class VotingPage extends React.Component {
       const refRounds = firebase
         .database()
         .ref(`games/${this.props.gameId}/rounds`);
-      refRounds.on("value", (snapshot) => {
+      refRounds.on('value', (snapshot) => {
         let roundData = snapshot.val();
         if (roundData) {
           this.setState({
@@ -58,7 +58,7 @@ export default class VotingPage extends React.Component {
     const refPlayers = firebase
       .database()
       .ref(`games/${this.props.gameId}/players`);
-    refPlayers.once("value", (snapshot) => {
+    refPlayers.once('value', (snapshot) => {
       let playerData = snapshot.val();
       if (playerData) {
         // console.log(playerData);
@@ -80,7 +80,7 @@ export default class VotingPage extends React.Component {
         this.setState({
           pointsToAssign: pointsToAssign,
           playerData: playerData,
-          votingMode: "REVEAL",
+          votingMode: 'REVEAL',
         });
         let updates = {};
         updates[`games/${this.props.gameId}/players`] = playerData;
@@ -113,7 +113,7 @@ export default class VotingPage extends React.Component {
 
     this.setState({
       promptNumber,
-      votingMode: "VOTING",
+      votingMode: 'VOTING',
       seconds: this.state.seconds + 1,
     });
   };
@@ -131,158 +131,173 @@ export default class VotingPage extends React.Component {
       grid = [],
       row = [];
     roundData[0] &&
-      roundData[0].promptsReturned[promptNumber].players.forEach((player) => {
-        row = [
-          ...row,
-          <Col style={{ minHeight: "15vh" }} xs="1" key={Math.random()}>
-            {rowCount === 0 &&
-              playerData &&
-              playerData[player.id] &&
-              votingMode === "REVEAL" && (
-                <>
-                  <div className="voting-triangle-left"></div>
-                  <div
-                    style={{
-                      width: "5vw",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignContent: "center",
-                      marginTop: "20%",
-                    }}
-                  >
-                    <PlayerLegoHead
-                      headName={playerData[player.id].icon}
-                      playerName={playerData[player.id].name}
-                      classThing={"playerLegoHeadImgmed"}
-                    />
-                    <h4
+      roundData[0].promptsReturned[promptNumber].players.forEach(
+        (player, playerIndex) => {
+          row = [
+            ...row,
+            <Col
+              style={{ minHeight: '15vh' }}
+              xs="1"
+              key={`col-player-${playerIndex}-row-${rowCount}`}
+            >
+              {rowCount === 0 &&
+                playerData &&
+                playerData[player.id] &&
+                votingMode === 'REVEAL' && (
+                  <div>
+                    <div className="voting-triangle-left"></div>
+                    <div
                       style={{
-                        fontSize: "70%",
-                        textAlign: "center",
-                        textIndent: "-10%",
+                        width: '5vw',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        marginTop: '20%',
                       }}
                     >
-                      +{pointsToAssign[player.id]}
-                    </h4>
-                  </div>
-                </>
-              )}
-          </Col>,
-          <Col xs="4" key={player.id}>
-            <Card
-              className="voteCard"
-              style={{ border: "none", margin: "2% 0" }}
-            >
-              <CardHeader
-                className="quip-card-header"
-                style={{ backgroundColor: colours[quipCount] }}
-              >
-                {playerData &&
-                  playerData[player.id] &&
-                  votingMode === "REVEAL" && (
-                    <div>{playerData[player.id].name}</div>
-                  )}
-              </CardHeader>
-              <CardBody className="quip-card-body">
-                {player.quip ? (
-                  player.quip
-                ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      textAlign: "center",
-                      color: "grey",
-                    }}
-                  >
-                    no answer
+                      <PlayerLegoHead
+                        headName={playerData[player.id].icon}
+                        playerName={playerData[player.id].name}
+                        classThing={'playerLegoHeadImgmed'}
+                      />
+                      <h4
+                        style={{
+                          fontSize: '70%',
+                          textAlign: 'center',
+                          textIndent: '-10%',
+                        }}
+                      >
+                        +{pointsToAssign[player.id]}
+                      </h4>
+                    </div>
                   </div>
                 )}
-              </CardBody>
-
-              <div>
-                <div className="voting-footer">
-                  {votingMode === "REVEAL" &&
-                    player.votes &&
-                    player.votes.map((vote, index) => {
-                      if (index === 5) {
-                        return (
-                          <div style={{ color: "#f7bc4d", marginLeft: "2%" }}>
-                            +
-                          </div>
-                        );
-                      } else if (index < 5) {
-                        return (
-                          <div style={{ marginTop: "-1vh" }}>
-                            <PlayerLegoHead
-                              key={Math.random()}
-                              headName={playerData[vote].icon}
-                              playerName={playerData[vote].name}
-                              classThing={"playerLegoHeadImgsml"}
-                            />
-                          </div>
-                        );
-                      } else {
-                        return <div></div>;
-                      }
-                    })}
-                </div>
-              </div>
-            </Card>
-          </Col>,
-          <Col xs="1" key={Math.random()}>
-            {rowCount === 1 &&
-              playerData &&
-              playerData[player.id] &&
-              votingMode === "REVEAL" && (
-                <>
-                  <div className="voting-triangle-right"></div>
-                  <div
-                    style={{
-                      width: "5vw",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignContent: "center",
-                      marginTop: "20%",
-                    }}
-                  >
-                    <PlayerLegoHead
-                      headName={playerData[player.id].icon}
-                      playerName={playerData[player.id].name}
-                      classThing={"playerLegoHeadImgmed"}
-                    />
-                    <h4
+            </Col>,
+            <Col xs="4" key={player.id}>
+              <Card
+                className="voteCard"
+                style={{ border: 'none', margin: '2% 0' }}
+              >
+                <CardHeader
+                  className="quip-card-header"
+                  style={{ backgroundColor: colours[quipCount] }}
+                >
+                  {playerData &&
+                    playerData[player.id] &&
+                    votingMode === 'REVEAL' && (
+                      <div>{playerData[player.id].name}</div>
+                    )}
+                </CardHeader>
+                <CardBody className="quip-card-body">
+                  {player.quip ? (
+                    player.quip
+                  ) : (
+                    <div
                       style={{
-                        fontSize: "70%",
-                        textAlign: "center",
-                        textIndent: "-10%",
+                        width: '100%',
+                        textAlign: 'center',
+                        color: 'grey',
                       }}
                     >
-                      +{pointsToAssign[player.id]}
-                    </h4>
+                      - no answer -
+                    </div>
+                  )}
+                </CardBody>
+
+                <div>
+                  <div className="voting-footer">
+                    {votingMode === 'REVEAL' &&
+                      player.votes &&
+                      player.votes.map((vote, index) => {
+                        if (index === 5) {
+                          return (
+                            <div
+                              key={`+${index}`}
+                              style={{ color: '#f7bc4d', marginLeft: '2%' }}
+                            >
+                              +
+                            </div>
+                          );
+                        } else if (index < 5) {
+                          return (
+                            <div
+                              key={`head${index}`}
+                              style={{ marginTop: '-1vh' }}
+                            >
+                              <PlayerLegoHead
+                                key={`legohead-${index}`}
+                                headName={playerData[vote].icon}
+                                playerName={playerData[vote].name}
+                                classThing={'playerLegoHeadImgxsml'}
+                              />
+                            </div>
+                          );
+                        } else {
+                          return <div></div>;
+                        }
+                      })}
                   </div>
-                </>
-              )}
-          </Col>,
-        ];
-        rowCount++;
-        quipCount++;
-        if (
-          rowCount >= 2 ||
-          quipCount ===
-            roundData[0].promptsReturned[promptNumber].players.length
-        ) {
-          rowCount = 0;
-          grid = [
-            ...grid,
-            <Row key={Math.random()} style={{ justifyContent: "center" }}>
-              {row}
-            </Row>,
+                </div>
+              </Card>
+            </Col>,
+            <Col xs="1" key={`col-player-${playerIndex + 1}`}>
+              {rowCount === 1 &&
+                playerData &&
+                playerData[player.id] &&
+                votingMode === 'REVEAL' && (
+                  <div>
+                    <div className="voting-triangle-right"></div>
+                    <div
+                      style={{
+                        width: '5vw',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        marginTop: '20%',
+                      }}
+                    >
+                      <PlayerLegoHead
+                        headName={playerData[player.id].icon}
+                        playerName={playerData[player.id].name}
+                        classThing={'playerLegoHeadImgmed'}
+                      />
+                      <h4
+                        style={{
+                          fontSize: '70%',
+                          textAlign: 'center',
+                          textIndent: '-10%',
+                        }}
+                      >
+                        +{pointsToAssign[player.id]}
+                      </h4>
+                    </div>
+                  </div>
+                )}
+            </Col>,
           ];
-          row = [];
+          rowCount++;
+          quipCount++;
+          if (
+            rowCount >= 2 ||
+            quipCount ===
+              roundData[0].promptsReturned[promptNumber].players.length
+          ) {
+            rowCount = 0;
+            grid = [
+              ...grid,
+              <Row
+                key={`row-${rowCount}-${playerIndex}`}
+                style={{ justifyContent: 'center' }}
+              >
+                {row}
+              </Row>,
+            ];
+            row = [];
+          }
         }
-      });
+      );
     return grid;
   };
 
@@ -291,18 +306,18 @@ export default class VotingPage extends React.Component {
     return (
       <div className="voting-body">
         <div className="voting-header">
-          <div style={{ marginRight: "2%" }}>
+          <div style={{ marginRight: '2%' }}>
             <MaddiesLegoSpeechBubble
-              style={{ minWidth: "30vw" }}
+              style={{ minWidth: '30vw' }}
               bubbleText={
                 roundData[0] &&
                 roundData[0].promptsReturned[promptNumber].prompt
                   ? roundData[0].promptsReturned[promptNumber].prompt
-                  : "Loading data"
+                  : 'Loading data'
               }
             />
           </div>
-          {votingMode === "VOTING" && (
+          {votingMode === 'VOTING' && (
             <div className="voting-timer">
               <Timer
                 minutes={0}
@@ -313,14 +328,6 @@ export default class VotingPage extends React.Component {
           )}
         </div>
         <Container>{this.makeQuipGrid()}</Container>
-        {/* {votingMode === "REVEAL" && (
-          <Button
-            onClick={this.handleNext}
-            style={{ alignContent: "flex-end" }}
-          >
-            Next
-          </Button>
-        )} */}
       </div>
     );
   }

@@ -1,10 +1,10 @@
-import React, { useContext, useRef, useState } from "react";
-import { Button, Form, Input, Label, Spinner } from "reactstrap";
-import "./index.css";
-import { ClientGameContext } from "../GameContext";
-import LogoWOTeam from "../../shared/logowoteam";
-import { setFeedbackMessage } from "../../shared/feedbackMessage";
-import { MessageType } from "../../../utils/enum";
+import React, { useContext, useRef, useState } from 'react';
+import { Button, Form, Input, Label, Spinner } from 'reactstrap';
+import './index.css';
+import { ClientGameContext } from '../GameContext';
+import LogoWOTeam from '../../shared/logowoteam';
+import { setFeedbackMessage } from '../../shared/feedbackMessage';
+import { MessageType } from '../../../utils/enum';
 
 function JoinGameScreen() {
   const thing = useContext(ClientGameContext);
@@ -20,18 +20,18 @@ function JoinGameScreen() {
 
     if (!nameInput) {
       setJoinMessage(
-        setFeedbackMessage("A name is required.", MessageType.ERROR)
+        setFeedbackMessage('A name is required.', MessageType.ERROR)
       );
-      document.getElementById("name-input").focus();
+      document.getElementById('name-input').focus();
       return;
     }
     if (nameInput.length > 22) {
       setJoinMessage(
         setFeedbackMessage(
-          <>
+          <div>
             <div>Name must be less than </div>
             <div>22 characters long.</div>
-          </>,
+          </div>,
           MessageType.ERROR
         )
       );
@@ -39,12 +39,12 @@ function JoinGameScreen() {
     }
 
     if (code.length === 0) {
-      setJoinMessage(setFeedbackMessage("Code required.", MessageType.ERROR));
-      document.getElementById("code-input").focus();
+      setJoinMessage(setFeedbackMessage('Code required.', MessageType.ERROR));
+      document.getElementById('code-input').focus();
       return;
     }
     if (code.length < 4 || code.length > 4) {
-      setJoinMessage(setFeedbackMessage("Incorrect code.", MessageType.ERROR));
+      setJoinMessage(setFeedbackMessage('Incorrect code.', MessageType.ERROR));
       return;
     }
 
@@ -54,10 +54,10 @@ function JoinGameScreen() {
       setJoinMessage(setFeedbackMessage(rej.text, MessageType.ERROR));
       setSearchingForGame(false);
       if (!rej.nameError) {
-        document.getElementById("name-input").value = nameInput;
-        document.getElementById("code-input").focus();
+        document.getElementById('name-input').value = nameInput;
+        document.getElementById('code-input').focus();
       } else {
-        document.getElementById("code-input").value = code;
+        document.getElementById('code-input').value = code;
       }
     });
   }
@@ -71,31 +71,31 @@ function JoinGameScreen() {
         {searchingForGame ? (
           <div
             style={{
-              height: document.getElementById("join-form")
-                ? document.getElementById("join-form").clientHeight
-                : "30vh",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
+              height: document.getElementById('join-form')
+                ? document.getElementById('join-form').clientHeight
+                : '30vh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
             }}
           >
-            <Spinner style={{ height: "4rem", width: "4rem" }} />
+            <Spinner style={{ height: '4rem', width: '4rem' }} />
           </div>
         ) : (
           <div id="join-form" className="join-form">
             <Form onSubmit={attemptJoinGame}>
-              <Label style={{ marginBottom: "1vh" }}>Name</Label>
+              <Label style={{ marginBottom: '1vh' }}>Name</Label>
               <Input
                 id="name-input"
-                style={{ marginTop: "-1vh" }}
+                style={{ marginTop: '-1vh' }}
                 innerRef={nameRef}
                 placeholder="Alex"
                 type="text"
                 autoFocus={true}
               />
-              <Label style={{ marginBottom: "1vh" }}>Code</Label>
+              <Label style={{ marginBottom: '1vh' }}>Code</Label>
               <Input
-                style={{ marginTop: "-1vh" }}
+                style={{ marginTop: '-1vh' }}
                 id="code-input"
                 placeholder="1234"
                 type="text"
@@ -103,18 +103,19 @@ function JoinGameScreen() {
               />
               <div
                 style={{
-                  height: "3vh",
-                  fontSize: "80%",
-                  textAlign: "center",
-                  margin: "1%",
+                  height: '3vh',
+                  fontSize: '80%',
+                  textAlign: 'center',
+                  margin: '1%',
                 }}
               >
                 {joinMessage}
               </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
-                  style={{ marginTop: "10%", width: "100%" }}
+                  style={{ marginTop: '10%', width: '100%' }}
                   type="submit"
+                  color="primary"
                 >
                   Join
                 </Button>

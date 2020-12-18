@@ -1,13 +1,13 @@
-import React from "react";
-import "../../App.css";
-import { GameState } from "../../utils/enum";
-import Footer from "../footer";
-import { ClientGameContext } from "./GameContext";
-import JoinGame from "./JoinGame";
-import Loading from "./Loading";
-import Quipping from "./Quipping";
-import Score from "./Score";
-import Voting from "./Voting";
+import React from 'react';
+import '../../App.css';
+import { GameState } from '../../utils/enum';
+import Footer from '../footer';
+import { ClientGameContext } from './GameContext';
+import JoinGame from './JoinGame';
+import Loading from './Loading';
+import Quipping from './Quipping';
+import Score from './Score';
+import Voting from './Voting';
 
 export default class Player extends React.Component {
   static contextType = ClientGameContext;
@@ -33,7 +33,6 @@ export default class Player extends React.Component {
         alert(
           "Booo, you got into an unknown state, just because it's a hackathon doesn't mean you can hack my project. Shame on you!"
         );
-        console.log("shit!");
       }
     }
   }

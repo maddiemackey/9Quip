@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, Form, Input } from "reactstrap";
-import LegoSpeechBubble from "../LegoSpeechBubble";
-import "./index.css";
-import { ClientGameContext } from "../GameContext";
-import { setFeedbackMessage } from "../../shared/feedbackMessage";
-import { MessageType } from "../../../utils/enum";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Button, Form, Input } from 'reactstrap';
+import LegoSpeechBubble from '../LegoSpeechBubble';
+import './index.css';
+import { ClientGameContext } from '../GameContext';
+import { setFeedbackMessage } from '../../shared/feedbackMessage';
+import { MessageType } from '../../../utils/enum';
 
 function Quipping() {
   const thing = useContext(ClientGameContext);
@@ -12,14 +12,14 @@ function Quipping() {
   const [prompts, setPrompts] = useState([]);
   const [promptIndex, changePromptIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState('');
   const [quipMessage, setQuipMessage] = useState(null);
 
   useEffect(() => {
     if (loading === true) {
       thing.getPrompts().then((res) => {
         if (res === null) {
-          alert("Failed to get prompts, sorry :(");
+          alert('Failed to get prompts, sorry :(');
         } else {
           setPrompts(res);
           setLoading(false);
@@ -37,13 +37,13 @@ function Quipping() {
 
     if (!answer) {
       setQuipMessage(
-        setFeedbackMessage("Cannot submit a blank quip.", MessageType.ERROR)
+        setFeedbackMessage('Cannot submit a blank quip.', MessageType.ERROR)
       );
       return;
     }
     if (answer.length > 80) {
       setQuipMessage(
-        setFeedbackMessage("Too long. 80 character limit.", MessageType.WARNING)
+        setFeedbackMessage('Too long. 80 character limit.', MessageType.WARNING)
       );
       return;
     }
@@ -52,12 +52,12 @@ function Quipping() {
       // console.log("PROMPT:", prompts[promptIndex]);
 
       // clear prompt
-      setAnswer("");
+      setAnswer('');
       setQuipMessage(null);
 
       if (res === null) {
         setQuipMessage(
-          setFeedbackMessage("Failed to submit quip.", MessageType.ERROR)
+          setFeedbackMessage('Failed to submit quip.', MessageType.ERROR)
         );
       } else {
         changePromptIndex(promptIndex + 1);
@@ -72,7 +72,7 @@ function Quipping() {
           <div>
             <div className="quipping-question-container">
               <LegoSpeechBubble
-                bubbleText={!loading ? prompts[promptIndex] : "Loading..."}
+                bubbleText={!loading ? prompts[promptIndex] : 'Loading...'}
               />
             </div>
             <div className="quipping-answer-container">
@@ -80,7 +80,7 @@ function Quipping() {
                 <Input
                   className="quipping-answer-input"
                   placeholder="Enter quip here"
-                  type="text"
+                  type="textarea"
                   value={answer}
                   onChange={handleInputOnChange}
                   innerRef={quipRef}
@@ -88,15 +88,19 @@ function Quipping() {
                 ></Input>
                 <div
                   style={{
-                    height: "3vh",
-                    fontSize: "80%",
-                    textAlign: "center",
-                    margin: "1%",
+                    height: '3vh',
+                    fontSize: '80%',
+                    textAlign: 'center',
+                    margin: '1%',
                   }}
                 >
                   {quipMessage}
                 </div>
-                <Button type="submit" className="quipping-answer-button">
+                <Button
+                  type="submit"
+                  className="quipping-answer-button"
+                  color="primary"
+                >
                   Submit Answer
                 </Button>
               </Form>
@@ -107,7 +111,7 @@ function Quipping() {
           <div>
             <div className="quipping-question-container">
               <LegoSpeechBubble
-                bubbleText={"Please wait while others finish quipping."}
+                bubbleText={'Please wait while others finish quipping.'}
               />
             </div>
           </div>

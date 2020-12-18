@@ -1,8 +1,8 @@
-import React from "react";
-import firebase from "../../Firebase/firebase";
-import "firebase/database";
-import _ from "lodash";
-import { GameState } from "../../utils/enum";
+import React from 'react';
+import firebase from '../../Firebase/firebase';
+import 'firebase/database';
+import _ from 'lodash';
+import { GameState } from '../../utils/enum';
 
 export const ClientGameContext = React.createContext();
 
@@ -55,11 +55,11 @@ export class ClientGameContextProvider extends React.Component {
 
   async joinGame(gameCode, nameInput) {
     return new Promise((res, rej) => {
-      const ref = firebase.database().ref("games");
+      const ref = firebase.database().ref('games');
       ref
-        .orderByChild("gamecode")
+        .orderByChild('gamecode')
         .equalTo(gameCode)
-        .once("value", (snapshot) => {
+        .once('value', (snapshot) => {
           const snapshotValue = snapshot.val();
           if (!snapshotValue) {
             return rej({
@@ -74,7 +74,7 @@ export class ClientGameContextProvider extends React.Component {
           // PLAYER LIMIT
           if (players && _.size(players) >= 25) {
             return rej({
-              text: "Player limit of 25 has been reached for this game.",
+              text: 'Player limit of 25 has been reached for this game.',
               nameError: false,
             });
           }
@@ -96,11 +96,11 @@ export class ClientGameContextProvider extends React.Component {
             .database()
             .ref(`games/${gameId}/headsAvailable`);
 
-          gameRef.once("value", (snapshot) => {
+          gameRef.once('value', (snapshot) => {
             const snapshotValue = snapshot.val();
 
             if (!snapshotValue) {
-              console.log("Could not assign a custom legohead :(");
+              console.log('Could not assign a custom legohead :(');
             }
 
             const randomHeadIndex = Math.floor(
@@ -128,8 +128,8 @@ export class ClientGameContextProvider extends React.Component {
         });
     }).then((res) => {
       // Store player in local storage to maintain session
-      window.localStorage.setItem("quipGameId", res.gameId);
-      window.localStorage.setItem("quipPlayerId", res.newPlayer.key);
+      window.localStorage.setItem('quipGameId', res.gameId);
+      window.localStorage.setItem('quipPlayerId', res.newPlayer.key);
       // Set in state
       this.setState({
         gameId: res.gameId,
@@ -155,8 +155,8 @@ export class ClientGameContextProvider extends React.Component {
       }
 
       // Remove from localStorage
-      window.localStorage.removeItem("quipGameId");
-      window.localStorage.removeItem("quipPlayerId");
+      window.localStorage.removeItem('quipGameId');
+      window.localStorage.removeItem('quipPlayerId');
 
       // Remove from state
       this.setState({
@@ -166,7 +166,7 @@ export class ClientGameContextProvider extends React.Component {
         round: null,
       });
 
-      return res("Removed player");
+      return res('Removed player');
     }).then(() => {
       window.location.reload();
     });
@@ -179,7 +179,7 @@ export class ClientGameContextProvider extends React.Component {
         .ref(
           `games/${this.state.gameId}/players/${this.state.playerId}/prompts`
         );
-      ref.once("value", (snapshot) => {
+      ref.once('value', (snapshot) => {
         const prompts = snapshot.val();
         this.setState({
           prompts: prompts,
@@ -192,7 +192,7 @@ export class ClientGameContextProvider extends React.Component {
   async submitQuip(prompt, quip, promptIndex) {
     return new Promise((res, rej) => {
       // get round ID
-      let roundRef = "";
+      let roundRef = '';
       if (this.state.round === 0) {
         roundRef = firebase
           .database()
@@ -200,7 +200,7 @@ export class ClientGameContextProvider extends React.Component {
             `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
           );
       }
-      roundRef.once("value", (snapshot) => {
+      roundRef.once('value', (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
           return res(null);
@@ -238,13 +238,13 @@ export class ClientGameContextProvider extends React.Component {
   async getQuipsForPrompt() {
     return new Promise((res, rej) => {
       // get round ID
-      let roundRef = "";
+      let roundRef = '';
       roundRef = firebase
         .database()
         .ref(
           `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned`
         );
-      roundRef.once("value", (snapshot) => {
+      roundRef.once('value', (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
           return res(null);
@@ -273,7 +273,7 @@ export class ClientGameContextProvider extends React.Component {
   vote(path) {
     return new Promise((res, rej) => {
       const ref = firebase.database().ref(path);
-      ref.once("value", (snapshot) => {
+      ref.once('value', (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
           return res(null);
@@ -283,16 +283,16 @@ export class ClientGameContextProvider extends React.Component {
           currentVotes = snapshotValue.votes;
         }
         currentVotes.push(this.state.playerId);
-        const voteRef = firebase.database().ref(path + "/votes");
+        const voteRef = firebase.database().ref(path + '/votes');
         voteRef.update(currentVotes);
-        return res("yis");
+        return res('yis');
       });
     });
   }
 
   startWatchingVoting(gameId) {
     const ref = firebase.database().ref(`games/${gameId}/currentVote`);
-    ref.on("value", (snapshot) => {
+    ref.on('value', (snapshot) => {
       const voteState = snapshot.val();
       this.setState({
         voteState: voteState,
@@ -302,16 +302,15 @@ export class ClientGameContextProvider extends React.Component {
 
   startWatchingGame(gameCode) {
     return new Promise((res, rej) => {
-      const ref = firebase.database().ref("games");
+      const ref = firebase.database().ref('games');
 
       ref
-        .orderByChild("gamecode")
+        .orderByChild('gamecode')
         .equalTo(gameCode)
-        .on("value", (snapshot) => {
+        .on('value', (snapshot) => {
           const snapshotValue = snapshot.val();
           if (snapshotValue === null) {
-            alert("Game ended");
-            return rej("Game ended");
+            return rej('Game ended');
           }
           const gameId = Object.keys(snapshotValue)[0];
           const { gamestate, players } = snapshotValue[gameId];

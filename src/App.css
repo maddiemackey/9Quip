@@ -269,7 +269,7 @@
   flex-direction: row;
   align-items: center;
   padding: 0px;
-  height: 2vh;
+  height: 3vh;
   overflow: visible;
   width: 100%;
 }
@@ -282,13 +282,14 @@
   flex-direction: column;
   color: #ffffff;
   align-items: center;
+  justify-content: center;
   font-size: calc(10px + 2vmin);
   position: relative;
   min-height: 72vh;
 }
 
 .voting-triangle-left {
-  content: "";
+  content: '';
   position: absolute;
   margin-top: 47%;
   margin-left: 89%;
@@ -300,7 +301,7 @@
 }
 
 .voting-triangle-right {
-  content: "";
+  content: '';
   position: absolute;
   margin-top: 47%;
   margin-left: -32px;
@@ -313,7 +314,7 @@
 
 .voting-timer {
   position: absolute;
-  top: 41%;
+  top: 45%;
   z-index: 500;
 }
 
@@ -338,6 +339,11 @@
 
 .playerLegoHeadImgsml {
   width: 35px;
+  height: auto;
+}
+
+.playerLegoHeadImgxsml {
+  width: 25px;
   height: auto;
 }
 
@@ -382,6 +388,76 @@
 .time-wrapper .time.down {
   opacity: 0;
   transform: translateY(100%);
+}
+
+.scoreboard-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  overflow: hidden;
+}
+
+.scoreboard-top-five {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scoreboard-everyone-else-row {
+  color: white;
+  display: flex;
+}
+
+.scoreboard-everyone-else {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-left: 0.25%;
+  margin-right: 0.25%;
+  font-size: 60%;
+}
+
+.scoreboard-player-top-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  min-height: 35vh;
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
+
+.scoreboard-player-first {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  min-height: 35vh;
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
+
+.name {
+  margin-top: 5%;
+  font-size: 60%;
+}
+
+.score {
+  margin-top: -0.5vh;
+  font-size: 100%;
+}
+
+.table td,
+.table th {
+  border-top: 0px solid;
+}
+
+.table thead th {
+  border-bottom: 0px solid;
 }
 
 @keyframes App-logo-spin {

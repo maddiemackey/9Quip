@@ -1,27 +1,27 @@
-import React from "react";
-import { Button, Form, Input } from "reactstrap";
-import "../../App.css";
-import Footer from "../footer";
-import firebase from "../../Firebase/firebase";
-import "firebase/database";
-import "./prompts.css";
-import { setFeedbackMessage } from "../shared/feedbackMessage";
-import { MessageType } from "../../utils/enum";
-import { generateGamecode } from "../../utils/generateGameCode";
-import _ from "lodash";
-import qs from "qs";
-import ConfirmModal from "./confirmModal";
+import React from 'react';
+import { Button, Form, Input } from 'reactstrap';
+import '../../App.css';
+import Footer from '../footer';
+import firebase from '../../Firebase/firebase';
+import 'firebase/database';
+import './prompts.css';
+import { setFeedbackMessage } from '../shared/feedbackMessage';
+import { MessageType } from '../../utils/enum';
+import { generateGamecode } from '../../utils/generateGameCode';
+import _ from 'lodash';
+import qs from 'qs';
+import ConfirmModal from './confirmModal';
 
 export default class Prompts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPack: "",
-      currentCode: "",
+      currentPack: '',
+      currentCode: '',
       prompts: [],
-      promptInput: "",
-      codeInput: "",
-      nameInput: "",
+      promptInput: '',
+      codeInput: '',
+      nameInput: '',
       publishedMessage: null,
       searchMessage: null,
       createMessage: null,
@@ -41,10 +41,10 @@ export default class Prompts extends React.Component {
   submitPrompt = (e) => {
     e.preventDefault();
     const newPrompt = this.state.promptInput;
-    if (newPrompt.length > 120) {
+    if (newPrompt.length > 150) {
       this.setState({
         publishedMessage: setFeedbackMessage(
-          "120 character limit on prompts, sorry.",
+          '150 character limit on prompts, sorry.',
           MessageType.WARNING
         ),
       });
@@ -53,12 +53,12 @@ export default class Prompts extends React.Component {
 
     return new Promise((res, rej) => {
       if (!newPrompt) {
-        return rej("Please enter prompt");
+        return rej('Please enter prompt');
       }
       const ref = firebase
         .database()
         .ref(`promptPacks/${this.state.currentPack}`);
-      ref.once("value", (snapshot) => {
+      ref.once('value', (snapshot) => {
         const snapshotValue = snapshot.val().prompts;
         if (!snapshotValue) {
           ref.set({
@@ -88,7 +88,7 @@ export default class Prompts extends React.Component {
         });
       })
       .then(() => {
-        this.setState({ promptInput: "", publishedMessage: null });
+        this.setState({ promptInput: '', publishedMessage: null });
       });
   };
 
@@ -105,9 +105,9 @@ export default class Prompts extends React.Component {
       }
       const ref = firebase.database().ref(`promptPacks`);
       ref
-        .orderByChild("code")
+        .orderByChild('code')
         .equalTo(code)
-        .once("value", (snapshot) => {
+        .once('value', (snapshot) => {
           const promptPack = snapshot.val();
           if (!promptPack) {
             return rej(`Could not find prompt pack with code ${code}`);
@@ -119,7 +119,7 @@ export default class Prompts extends React.Component {
             searchMessage: null,
             createMessage: null,
           });
-          return res("Found prompt pack");
+          return res('Found prompt pack');
         });
     })
       .catch((rej) => {
@@ -132,17 +132,17 @@ export default class Prompts extends React.Component {
         });
       })
       .then(() => {
-        this.setState({ codeInput: "" });
+        this.setState({ codeInput: '' });
       });
   };
 
   getPromptPackData = (selectedPack) => {
     const ref = firebase.database().ref(`promptPacks/${selectedPack}/prompts`);
     new Promise((res, rej) => {
-      ref.on("value", (snapshot) => {
+      ref.on('value', (snapshot) => {
         const prompts = snapshot.val();
         if (!prompts) {
-          return rej("No prompts available.");
+          return rej('No prompts available.');
         }
         this.setState({
           prompts: prompts.reverse(),
@@ -159,7 +159,7 @@ export default class Prompts extends React.Component {
       const ref = firebase
         .database()
         .ref(`promptPacks/${this.state.currentPack}/prompts`);
-      ref.once("value", (snapshot) => {
+      ref.once('value', (snapshot) => {
         const snapshotValue = snapshot.val();
         if (!snapshotValue) {
           return rej(null);
@@ -199,11 +199,11 @@ export default class Prompts extends React.Component {
       return res();
     }).then(() => {
       this.setState({
-        currentPack: "",
-        currentCode: "",
+        currentPack: '',
+        currentCode: '',
         searchMessage: null,
         createMessage: null,
-        nameInput: "",
+        nameInput: '',
         prompts: [],
       });
     });
@@ -215,10 +215,10 @@ export default class Prompts extends React.Component {
 
     return new Promise((res, rej) => {
       if (!promptPackName) {
-        return rej("Please enter new Prompt Pack name");
+        return rej('Please enter new Prompt Pack name');
       }
       const ref = firebase.database().ref(`promptPacks`);
-      ref.once("value", (snapshot) => {
+      ref.once('value', (snapshot) => {
         const promptPacks = snapshot.val();
         if (promptPacks[promptPackName]) {
           return rej(`Prompt Pack with name ${promptPackName} already exists`);
@@ -258,7 +258,7 @@ export default class Prompts extends React.Component {
           currentCode: promptPackCode,
           createMessage: null,
           searchMessage: null,
-          nameInput: "",
+          nameInput: '',
         });
 
         return res(`${promptPackName} Prompt Pack submitted`);
@@ -276,14 +276,14 @@ export default class Prompts extends React.Component {
       if (this.state.prompts.length < 10) {
         this.setState({
           publishedMessage: setFeedbackMessage(
-            "Warning: 10 prompts minimum required to play",
+            'Warning: 10 prompts minimum required to play',
             MessageType.WARNING
           ),
         });
       } else {
         this.setState({
           publishedMessage: setFeedbackMessage(
-            "Ready to play",
+            'Ready to play',
             MessageType.SUCCESS
           ),
         });
@@ -311,32 +311,32 @@ export default class Prompts extends React.Component {
         </div>
         <div
           className="row-body"
-          style={{ height: "100%", minHeight: "100%", marginTop: "1vh" }}
+          style={{ height: '100%', minHeight: '100%', marginTop: '1vh' }}
         >
           <div
             style={{
-              width: "40vw",
-              marginTop: "1%",
+              width: '40vw',
+              marginTop: '1%',
             }}
           >
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                justifySelf: "flex-start",
-                alignItems: "center",
+                display: 'flex',
+                flexDirection: 'column',
+                justifySelf: 'flex-start',
+                alignItems: 'center',
               }}
             >
-              <h4 style={{ marginTop: "-1vh" }}>Find pack by code</h4>
+              <h4 style={{ marginTop: '-1vh' }}>Find pack by code</h4>
 
               <Form
                 style={{
-                  width: "50%",
-                  minWidth: "400px",
+                  width: '50%',
+                  minWidth: '400px',
                 }}
                 onSubmit={this.onSearch}
               >
-                <div style={{ display: "flex", justifyContent: "center" }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <Input
                     autoFocus
                     value={this.state.codeInput}
@@ -344,17 +344,17 @@ export default class Prompts extends React.Component {
                     type="text"
                     onChange={this.updateCodeInputValue}
                     style={{
-                      maxWidth: "60%",
-                      fontSize: "60%",
-                      borderRadius: "4px 0px 0px 4px",
+                      maxWidth: '60%',
+                      fontSize: '60%',
+                      borderRadius: '4px 0px 0px 4px',
                     }}
                   />
                   <Button
                     style={{
-                      fontSize: "60%",
-                      border: "1px solid #636363",
-                      borderRadius: "0px 4px 4px 0px",
-                      width: "10vw",
+                      fontSize: '60%',
+                      border: '1px solid #636363',
+                      borderRadius: '0px 4px 4px 0px',
+                      width: '10vw',
                     }}
                     type="submit"
                     color="secondary"
@@ -365,37 +365,37 @@ export default class Prompts extends React.Component {
               </Form>
               <div
                 style={{
-                  height: "3vh",
-                  fontSize: "60%",
-                  marginBottom: "0.75vh",
+                  height: '3vh',
+                  fontSize: '60%',
+                  marginBottom: '0.75vh',
                 }}
               >
                 {this.state.searchMessage}
               </div>
 
-              <h4 style={{ marginTop: "1.5vh" }}>Or create a new pack!</h4>
+              <h4 style={{ marginTop: '1.5vh' }}>Or create a new pack!</h4>
               <Form
-                style={{ width: "50%", minWidth: "400px" }}
+                style={{ width: '50%', minWidth: '400px' }}
                 onSubmit={this.addNewPromptPack}
               >
-                <div style={{ display: "flex", justifyContent: "center" }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <Input
                     value={this.state.nameInput}
                     placeholder="New Name"
                     type="text"
                     onChange={this.updateNameInputValue}
                     style={{
-                      maxWidth: "60%",
-                      fontSize: "60%",
-                      borderRadius: "4px 0px 0px 4px",
+                      maxWidth: '60%',
+                      fontSize: '60%',
+                      borderRadius: '4px 0px 0px 4px',
                     }}
                   />
                   <Button
                     style={{
-                      fontSize: "60%",
-                      border: "1px solid #2966d6",
-                      borderRadius: "0px 4px 4px 0px",
-                      width: "10vw",
+                      fontSize: '60%',
+                      border: '1px solid #2966d6',
+                      borderRadius: '0px 4px 4px 0px',
+                      width: '10vw',
                     }}
                     color="primary"
                     type="submit"
@@ -406,9 +406,9 @@ export default class Prompts extends React.Component {
               </Form>
               <div
                 style={{
-                  height: "3vh",
-                  fontSize: "70%",
-                  marginBottom: "0.75vh",
+                  height: '3vh',
+                  fontSize: '70%',
+                  marginBottom: '0.75vh',
                 }}
               >
                 {this.state.createMessage}
@@ -417,17 +417,17 @@ export default class Prompts extends React.Component {
             {this.state.currentPack && (
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                 }}
               >
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    position: "relative",
-                    height: "100%",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    position: 'relative',
+                    height: '100%',
                   }}
                 >
                   <h3 className="prompt-pack-heading">
@@ -435,10 +435,10 @@ export default class Prompts extends React.Component {
                   </h3>
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      textAlign: 'center',
                     }}
                   >
                     <Button
@@ -448,11 +448,11 @@ export default class Prompts extends React.Component {
                     >
                       <div
                         style={{
-                          height: "100%",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          textAlign: "center",
+                          height: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          textAlign: 'center',
                         }}
                       >
                         DELETE
@@ -470,16 +470,16 @@ export default class Prompts extends React.Component {
                   </div>
                 </div>
                 <div
-                  style={{ marginTop: "-1vh", height: "3vh", fontSize: "70%" }}
+                  style={{ marginTop: '-1vh', height: '3vh', fontSize: '70%' }}
                 >
                   {this.state.publishedMessage}
                 </div>
                 <h5>Submit a prompt to this pack</h5>
                 <Form
-                  style={{ width: "90%", maxWidth: "700px" }}
+                  style={{ width: '90%', maxWidth: '700px' }}
                   onSubmit={this.submitPrompt}
                 >
-                  <div style={{ display: "flex" }}>
+                  <div style={{ display: 'flex' }}>
                     <Input
                       value={this.state.promptInput}
                       placeholder="Enter new prompt here"
@@ -487,15 +487,15 @@ export default class Prompts extends React.Component {
                       autoFocus={true}
                       onChange={this.updatePromptInputValue}
                       style={{
-                        fontSize: "70%",
-                        borderRadius: "4px 0px 0px 4px",
+                        fontSize: '70%',
+                        borderRadius: '4px 0px 0px 4px',
                       }}
                     />
                     <Button
                       style={{
-                        fontSize: "60%",
-                        borderRadius: "0px 4px 4px 0px",
-                        width: "45%",
+                        fontSize: '60%',
+                        borderRadius: '0px 4px 4px 0px',
+                        width: '45%',
                       }}
                       type="submit"
                       color="primary"
@@ -510,27 +510,27 @@ export default class Prompts extends React.Component {
           {this.state.prompts.length !== 0 && (
             <div
               style={{
-                height: "85%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                border: "1px solid #636363",
-                width: "50vw",
+                height: '85%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                border: '1px solid #636363',
+                width: '50vw',
               }}
             >
-              <h5 style={{ marginTop: "1vh" }}>Prompts in this pack:</h5>
+              <h5 style={{ marginTop: '1vh' }}>Prompts in this pack:</h5>
               <table
                 style={{
-                  overflow: "scroll",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  backgroundColor: "#FFFFFF",
-                  color: "#000000",
-                  fontSize: "70%",
+                  overflow: 'scroll',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: '#FFFFFF',
+                  color: '#000000',
+                  fontSize: '70%',
                 }}
               >
-                <tbody style={{ width: "50vw" }}>
+                <tbody style={{ width: '50vw' }}>
                   {this.state.prompts.map((prompt, index) => (
                     <tr className="prompt-row" key={index}>
                       <td className="prompt-cell">
@@ -550,17 +550,17 @@ export default class Prompts extends React.Component {
             </div>
           )}
           {this.state.currentPack && this.state.prompts.length === 0 && (
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
               <h2
                 style={{
-                  height: "85%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  border: "1px solid #636363",
-                  color: "#FFFFFF",
-                  width: "50vw",
-                  textAlign: "center",
+                  height: '85%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  border: '1px solid #636363',
+                  color: '#FFFFFF',
+                  width: '50vw',
+                  textAlign: 'center',
                 }}
               >
                 This pack is empty.
@@ -572,14 +572,14 @@ export default class Prompts extends React.Component {
           {!this.state.currentPack && (
             <div
               style={{
-                height: "85%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "50vw",
-                textAlign: "center",
-                border: "1px solid #636363",
-                color: "#FFFFFF",
+                height: '85%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '50vw',
+                textAlign: 'center',
+                border: '1px solid #636363',
+                color: '#FFFFFF',
               }}
             >
               Search/Create to see Prompts

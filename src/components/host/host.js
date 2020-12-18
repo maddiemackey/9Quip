@@ -1,20 +1,20 @@
-import React from "react";
-import "../../App.css";
-import StartPage from "./startPage";
-import JoiningPage from "./joiningPage";
-import QuippingPage from "./quippingPage";
-import VotingPage from "./votingPage";
-import ScorePage from "./scorePage";
-import Footer from "../footer";
-import { GameState } from "../../utils/enum";
-import firebase from "../../Firebase/firebase";
-import "firebase/database";
-import assignQuips from "../../utils/assignQuips";
-import { legoHeads } from "../../utils/legoHeads";
-import MusicPlayer from "../shared/musicPlayer";
-import AudioIcon from "../shared/audioIcon";
-import { generateGamecode } from "../../utils/generateGameCode";
-import _ from "lodash";
+import React from 'react';
+import '../../App.css';
+import StartPage from './startPage';
+import JoiningPage from './joiningPage';
+import QuippingPage from './quippingPage';
+import VotingPage from './votingPage';
+import ScorePage from './scorePage';
+import Footer from '../footer';
+import { GameState } from '../../utils/enum';
+import firebase from '../../Firebase/firebase';
+import 'firebase/database';
+import assignQuips from '../../utils/assignQuips';
+import { legoHeads } from '../../utils/legoHeads';
+import MusicPlayer from '../shared/musicPlayer';
+import AudioIcon from '../shared/audioIcon';
+import { generateGamecode } from '../../utils/generateGameCode';
+import _ from 'lodash';
 
 export default class Host extends React.Component {
   constructor(props) {
@@ -24,19 +24,21 @@ export default class Host extends React.Component {
       gamecode: null,
       gameid: null,
       muted: false,
-      promptPack: "Party",
+      promptPack: 'Party',
     };
   }
 
   componentDidMount() {
-    this.setState({ muted: window.localStorage.getItem("quipMuted") });
+    this.setState({
+      muted: window.localStorage.getItem('quipMuted') === 'true',
+    });
   }
 
   createGame = (currentPack) => {
-    const ref = firebase.database().ref("games");
+    const ref = firebase.database().ref('games');
     let gamecode = generateGamecode(4);
-    const gamesRef = firebase.database().ref("games");
-    gamesRef.once("value", (snapshot) => {
+    const gamesRef = firebase.database().ref('games');
+    gamesRef.once('value', (snapshot) => {
       const games = snapshot.val();
       if (games) {
         // Get game code that doesn't already exist
@@ -63,27 +65,27 @@ export default class Host extends React.Component {
           gamecode: gamecode,
           gamestate: GameState.joining,
           headsAvailable: legoHeads,
-          players: "",
-          promptPack: currentPack ? currentPack : "3410",
+          players: '',
+          promptPack: currentPack ? currentPack : '3410',
         });
         return res(newGameRef);
       }).then((newGameRef) => {
         const gameid = newGameRef.key;
         this.setState({
-          gamestate: "JOINING",
+          gamestate: 'JOINING',
           gamecode,
           gameid,
-          promptPack: currentPack ? currentPack : "Party",
+          promptPack: currentPack ? currentPack : 'Party',
         });
-        window.localStorage.setItem("quipHostedGame", gameid);
+        window.localStorage.setItem('quipHostedGame', gameid);
       });
     });
   };
 
   startGame = () => {
-    const ref = firebase.database().ref("/");
+    const ref = firebase.database().ref('/');
     new Promise((res, rej) => {
-      ref.on("value", (snapshot) => {
+      ref.on('value', (snapshot) => {
         let db = snapshot.val();
 
         if (db.promptPacks[this.state.promptPack].prompts) {
@@ -107,17 +109,17 @@ export default class Host extends React.Component {
               db.games[this.state.gameid].gamestate = GameState.quipping;
               return res(db);
             } else {
-              return rej("Need more players to start");
+              return rej('Need more players to start');
             }
           } else {
-            return rej("Need more players to start");
+            return rej('Need more players to start');
           }
         }
       });
     })
       .then((res) => {
         ref.update(res);
-        this.setState({ gamestate: "QUIPPING" });
+        this.setState({ gamestate: 'QUIPPING' });
       })
       .catch((err) => {
         alert(err);
@@ -127,13 +129,13 @@ export default class Host extends React.Component {
   startVoting = () => {
     const ref = firebase.database().ref(`games/${this.state.gameid}`);
     ref.update({ gamestate: GameState.voting });
-    this.setState({ gamestate: "VOTING" });
+    this.setState({ gamestate: 'VOTING' });
   };
 
   startScoring = () => {
     const ref = firebase.database().ref(`games/${this.state.gameid}`);
     ref.update({ gamestate: GameState.scoreboard });
-    this.setState({ gamestate: "SCOREBOARD" });
+    this.setState({ gamestate: 'SCOREBOARD' });
   };
 
   exitGame = () => {
@@ -143,7 +145,7 @@ export default class Host extends React.Component {
       ref.remove();
 
       // Remove from localStorage
-      window.localStorage.removeItem("quipHostedGame");
+      window.localStorage.removeItem('quipHostedGame');
 
       // Remove from state
       this.setState({
@@ -152,22 +154,24 @@ export default class Host extends React.Component {
         gamecode: null,
       });
 
-      return res("Ended game");
+      return res('Ended game');
     }).then(() => {
       window.location.reload();
     });
   };
 
   toggleAudio = () => {
+    window.localStorage.setItem('quipMuted', !this.state.muted);
     this.setState({ muted: !this.state.muted });
-    window.localStorage.setItem("quipMuted", this.state.muted);
   };
 
   render() {
     const { gamestate } = this.state;
     // console.log("gamecode: ", this.state.gamecode);
-    // console.log("gameid: ", this.state.gameid);
+    // console.log('gameid: ', this.state.gameid);
     // console.log("gamestate: ", this.state.gamestate);
+    // const tempId = window.localStorage.getItem('quipHostedGame');
+    // console.log('tempId: ', tempId);
 
     return (
       <div>
@@ -178,13 +182,13 @@ export default class Host extends React.Component {
         />
         {gamestate !== null && gamestate !== GameState.quipping && (
           <MusicPlayer
-            src={"music/cropped-upbeat-music.m4a"}
+            src={'music/cropped-upbeat-music.m4a'}
             muted={this.state.muted}
           />
         )}
         {gamestate === GameState.quipping && (
           <MusicPlayer
-            src={"music/background-music.mp3"}
+            src={'music/background-music.mp3'}
             muted={this.state.muted}
           />
         )}
@@ -209,7 +213,7 @@ export default class Host extends React.Component {
           />
         )}
         {gamestate === GameState.scoreboard && (
-          <ScorePage gameId={this.state.gameId} endGame={this.exitGame} />
+          <ScorePage gameId={this.state.gameid} endGame={this.exitGame} />
         )}
         <Footer exit={this.exitGame} inGame={!!this.state.gameid} />
       </div>

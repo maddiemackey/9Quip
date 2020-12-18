@@ -17,3 +17,7 @@
 .quipping-answer-button {
   width: 75vw;
 }
+
+.quipping-answer-input {
+  min-height: 10vh;
+}

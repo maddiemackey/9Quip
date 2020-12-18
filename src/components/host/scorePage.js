@@ -1,28 +1,28 @@
-import React from "react";
-import "../../App.css";
-import { Button, Table } from "reactstrap";
-import firebase from "../../Firebase/firebase";
-import "firebase/database";
+import React from 'react';
+import '../../App.css';
+import { Button, Table } from 'reactstrap';
+import firebase from '../../Firebase/firebase';
+import 'firebase/database';
+import PlayerLegoHead from '../shared/playerLegoHead';
+import { ordinal } from '../../utils/ordinal';
 
 export default class ScorePage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { playerList: {} };
+    this.state = { playerList: [] };
   }
 
   componentDidMount() {
     const refPlayers = firebase
       .database()
       .ref(`games/${this.props.gameId}/players`);
-    refPlayers.once("value", (snapshot) => {
+    refPlayers.once('value', (snapshot) => {
       let playerData = snapshot.val();
       if (playerData) {
-        console.log("not so far");
         const entries = Object.entries(playerData);
         let playerList = [...entries].sort((a, b) => {
           return b[1].score - a[1].score;
         });
-        playerList = this.formatPlayerObject(playerList);
         this.setState({
           playerList,
         });
@@ -30,52 +30,99 @@ export default class ScorePage extends React.Component {
     });
   }
 
-  formatPlayerObject(playerList) {
-    let newObj = {};
-    console.log("here");
-    for (const values of Object.values(playerList)) {
-      newObj[values.icon] = values.score;
-    }
-    return newObj;
+  componentWillUnmount() {
+    this.props.endGame();
   }
 
   render() {
-    let rowCount = 0;
     const { playerList } = this.state;
-    rowCount = Math.floor(playerList / 5);
     return (
-      <div className="App-body">
-        <h1>There's meant to be a socreboard here</h1>
-        <h1>
-          But I think the real winners are the friends we made along the way
-        </h1>
-        <Table id="table">
+      <div className="scoreboard-body">
+        <Table id="table" className="scoreboard-table">
           <thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
+            <tr className="scoreboard-top-five">
+              {playerList &&
+                playerList.map((player, index) => {
+                  if (index === 0) {
+                    return (
+                      <th className="scoreboard-player-first">
+                        <div style={{ justifyContent: 'flex-start' }}>
+                          {ordinal(index)}
+                        </div>
+                        <div>
+                          <PlayerLegoHead
+                            key={`legohead-${index}`}
+                            headName={player[1].icon}
+                            playerName={player[1].name}
+                            classThing={'playerLegoHeadImglrg'}
+                          />
+                          <div className="name">{player[1].name}</div>
+                          <div className="score">{player[1].score}</div>
+                        </div>
+                      </th>
+                    );
+                  } else if (index <= 4) {
+                    return (
+                      <th className="scoreboard-player-top-row">
+                        <div style={{ justifyContent: 'flex-start' }}>
+                          {ordinal(index)}
+                        </div>
+                        <div>
+                          <PlayerLegoHead
+                            key={`legohead-${index}`}
+                            headName={player[1].icon}
+                            playerName={player[1].name}
+                            classThing={'playerLegoHeadImgmed'}
+                          />
+                          <div className="name">{player[1].name}</div>
+                          <div className="score">{player[1].score}</div>
+                        </div>
+                      </th>
+                    );
+                  } else {
+                    return <div></div>;
+                  }
+                })}
             </tr>
           </thead>
-          {rowCount > 1 && (
+          {playerList.length > 5 && (
             <tbody>
-              {(
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+              {
+                <tr className="scoreboard-everyone-else-row">
+                  {playerList &&
+                    playerList.map((player, index) => {
+                      if (index > 4) {
+                        return (
+                          <td className="scoreboard-everyone-else">
+                            <div style={{ justifyContent: 'flex-start' }}>
+                              {ordinal(index)}
+                            </div>
+                            <PlayerLegoHead
+                              key={`legohead-${index}`}
+                              headName={player[1].icon}
+                              playerName={player[1].name}
+                              classThing={'playerLegoHeadImgsml'}
+                            />
+                            <div className="name">{player[1].name}</div>
+                            <div className="score">{player[1].score}</div>
+                          </td>
+                        );
+                      } else {
+                        return <div></div>;
+                      }
+                    })}
                 </tr>
-              ) *
-                rowCount -
-                1}
+              }
             </tbody>
           )}
         </Table>
-        <Button onClick={this.props.endGame}>End game</Button>
+        <Button
+          onClick={this.props.endGame}
+          style={{ maxHeight: '9vh', fontSize: '50%' }}
+          color="primary"
+        >
+          END GAME
+        </Button>
       </div>
     );
   }

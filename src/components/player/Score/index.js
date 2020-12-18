@@ -1,22 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 
-import "./index.css";
+import './index.css';
 
-import { ClientGameContext } from "../GameContext";
-import PlayerLegoHead from "../../shared/playerLegoHead";
-
-// "borrowed" from the internet, don't ask what it does, this is a hackathon for god sakes!
-function ordinal(n) {
-  n++; // because it's using the index
-  const s = ["th", "st", "nd", "rd"];
-  const v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
-}
+import { ClientGameContext } from '../GameContext';
+import PlayerLegoHead from '../../shared/playerLegoHead';
+import { ordinal } from '../../../utils/ordinal';
 
 //WIP
 // TODO: break out into it's own component
 function Avatar({ iconName }) {
-  return <PlayerLegoHead classThing={"user-avatar"} headName={iconName} />;
+  return <PlayerLegoHead classThing={'user-avatar'} headName={iconName} />;
 }
 
 function Score() {
@@ -28,7 +21,7 @@ function Score() {
         <div className="score-bubble">
           {context.playerPosition || context.playerPosition === 0
             ? ordinal(context.playerPosition)
-            : "?"}
+            : '?'}
         </div>
       </div>
       <div>
