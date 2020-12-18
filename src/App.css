@@ -282,7 +282,7 @@
   flex-direction: column;
   color: #ffffff;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   position: relative;
   min-height: 72vh;
@@ -314,7 +314,7 @@
 
 .voting-timer {
   position: absolute;
-  top: 45%;
+  top: 36%;
   z-index: 500;
 }
 

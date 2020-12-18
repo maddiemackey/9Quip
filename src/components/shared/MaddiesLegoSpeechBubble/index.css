@@ -20,14 +20,15 @@
   position: relative;
   text-align: center;
   padding: 20px;
-  width: 18vw;
+  min-width: 18vw;
+  max-width: 75vw;
   border-radius: 10px;
   margin-top: 2vh;
   margin-bottom: 3vh;
 }
 
 .speech-bubble-maddie:after {
-  content: "";
+  content: '';
   position: absolute;
   display: block;
   top: 50%;
