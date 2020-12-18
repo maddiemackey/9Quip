@@ -251,6 +251,7 @@ export class ClientGameContextProvider extends React.Component {
         }
         let quips = [];
         let i = 0;
+        let canVote = true;
         snapshotValue.forEach((prompt) => {
           if (prompt.prompt === this.state.voteState) {
             let p = 0;
@@ -259,13 +260,14 @@ export class ClientGameContextProvider extends React.Component {
                 quip: player.quip,
                 path: `games/${this.state.gameId}/rounds/${this.state.round}/promptsReturned/${i}/players/${p}`,
               });
+              canVote = canVote && player.id !== this.state.playerId;
               p++;
             });
           }
           i++;
         });
 
-        return res(quips);
+        return res({ quips, canVote });
       });
     });
   }

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import LegoSpeechBubble from "../LegoSpeechBubble";
-import "./index.css";
-import { ClientGameContext } from "../GameContext";
+import React, { useContext, useEffect, useState } from 'react';
+import LegoSpeechBubble from '../LegoSpeechBubble';
+import './index.css';
+import { ClientGameContext } from '../GameContext';
 
 function Option({ text, colour, onClick, disabled }) {
   return (
@@ -19,7 +19,7 @@ function Option({ text, colour, onClick, disabled }) {
         }}
         className="voting-option-colour"
       ></div>
-      <div className="voting-option-text">{text ? text : "no answer"}</div>
+      <div className="voting-option-text">{text ? text : 'no answer'}</div>
       {disabled && <div className="disabled-cover"></div>}
     </div>
   );
@@ -28,18 +28,18 @@ function Option({ text, colour, onClick, disabled }) {
 function getColour(index) {
   switch (index) {
     case 0:
-      return "#D22C25";
+      return '#D22C25';
     case 1:
-      return "#0085CD";
+      return '#0085CD';
     case 2:
-      return "#1FC02C";
+      return '#1FC02C';
     case 3:
-      return "#FFF200";
+      return '#FFF200';
     case 4:
-      return "#BD008B";
+      return '#BD008B';
     default: {
-      console.log("Unknown index only meant to be 5 ");
-      return "black";
+      console.log('Unknown index only meant to be 5 ');
+      return 'black';
     }
   }
 }
@@ -48,16 +48,22 @@ function Voting() {
   const thing = useContext(ClientGameContext);
   const [quips, setQuips] = useState([]);
   const [voted, setVoted] = useState(false);
-  const [speech, updateSpeechBubble] = useState("Loading...");
+  const [canVote, setCanVote] = useState(true);
+  const [speech, updateSpeechBubble] = useState('Loading...');
 
   useEffect(() => {
     setVoted(false);
     thing.getQuipsForPrompt().then((resQ) => {
       if (resQ === null) {
-        alert("Failed to see voting, sorry :(");
+        alert('Failed to see voting, sorry :(');
       } else {
-        setQuips(resQ);
-        updateSpeechBubble(whatToSay(resQ));
+        setQuips(resQ.quips);
+        setCanVote(resQ.canVote);
+        if (!resQ.canVote) {
+          updateSpeechBubble('Please wait while others vote.');
+        } else {
+          updateSpeechBubble(whatToSay(resQ.quips));
+        }
       }
     });
     // eslint-disable-next-line
@@ -65,7 +71,7 @@ function Voting() {
 
   function whatToSay(resQ) {
     if (resQ.length === 0) {
-      return "Hahaha!";
+      return 'Hahaha!';
     } else if (!voted) {
       return thing.voteState;
     }
@@ -78,19 +84,19 @@ function Voting() {
         {/* TODO: replace with quip from gamestate  */}
         <LegoSpeechBubble bubbleText={speech}></LegoSpeechBubble>
       </div>
-      {!voted && (
+      {!voted && canVote && (
         <div className="voting-options-container">
           {quips &&
             quips.map((quip, i) => {
               return (
                 <Option
                   text={quip.quip}
-                  disabled={quip.quip === ""}
+                  disabled={quip.quip === ''}
                   colour={getColour(i)}
                   onClick={() => {
                     thing.vote(quip.path);
                     setVoted(true);
-                    updateSpeechBubble("Please wait while others vote.");
+                    updateSpeechBubble('Please wait while others vote.');
                   }}
                 />
               );
