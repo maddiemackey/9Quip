@@ -56,22 +56,29 @@ export default function assignQuips(
   players = defaultPlayers,
   prompts = defaultPrompts
 ) {
+  let upperLimit, lowerLimit;
+  if (players.length > 16) upperLimit = 5;
+  else if (players.length > 9) upperLimit = 4;
+  else if (players.length > 4) upperLimit = 3;
+  else upperLimit = 2;
+  lowerLimit = upperLimit - 1;
+
   let playersReturned = {};
   let promptsReturned = [];
-  let remainder = (players.length * 2) % 5;
+  let remainder = (players.length * 2) % upperLimit;
   let assigningLimit =
     remainder > 0
-      ? Math.floor((players.length * 2) / 5) + 1
-      : Math.floor((players.length * 2) / 5);
+      ? Math.floor((players.length * 2) / upperLimit) + 1
+      : Math.floor((players.length * 2) / upperLimit);
   let randPrompts = getRandomInArray(prompts, assigningLimit);
-  let lowerLimitCount = remainder === 0 ? 0 : 5 - remainder;
+  let lowerLimitCount = remainder === 0 ? 0 : upperLimit - remainder;
 
   for (const player of players) {
     playersReturned[player] = [];
   }
 
   randPrompts.forEach((prompt) => {
-    let playersToAssign = lowerLimitCount > 0 ? 4 : 5;
+    let playersToAssign = lowerLimitCount > 0 ? lowerLimit : upperLimit;
     let playersNotAssigned = { ...playersReturned };
     let promptToPush = { prompt: prompt, players: [] };
     while (playersToAssign > 0) {
