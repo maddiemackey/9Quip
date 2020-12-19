@@ -460,6 +460,19 @@
   border-bottom: 0px solid;
 }
 
+.spectate-gamecode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 1%;
+  right: 6vw;
+  color: white;
+  font-size: 100%;
+  padding: 5px;
+  border: 1px solid grey;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

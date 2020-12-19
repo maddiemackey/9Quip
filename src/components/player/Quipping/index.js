@@ -14,17 +14,20 @@ function Quipping() {
   const [loading, setLoading] = useState(true);
   const [answer, setAnswer] = useState('');
   const [quipMessage, setQuipMessage] = useState(null);
+  const [spectatorMode, setSpectatorMode] = useState(false);
 
   useEffect(() => {
     if (loading === true) {
-      thing.getPrompts().then((res) => {
-        if (res === null) {
-          alert('Failed to get prompts, sorry :(');
-        } else {
+      thing
+        .getPrompts()
+        .then((res) => {
           setPrompts(res);
           setLoading(false);
-        }
-      });
+        })
+        .catch((rej) => {
+          setSpectatorMode(true);
+          setLoading(false);
+        });
     }
   }, [loading, prompts, thing]);
 
@@ -74,46 +77,49 @@ function Quipping() {
   return (
     <div className="quipping-container">
       <div>
-        {promptIndex < 2 && ( // TODO: hardcoded for 2 prompts per player, should fix that
-          <div>
-            <div className="quipping-question-container">
-              <LegoSpeechBubble
-                bubbleText={!loading ? prompts[promptIndex] : 'Loading...'}
-              />
+        {promptIndex < 2 &&
+          !spectatorMode && ( // TODO: hardcoded for 2 prompts per player, should fix that
+            <div>
+              <div className="quipping-question-container">
+                <LegoSpeechBubble
+                  bubbleText={
+                    !loading && prompts ? prompts[promptIndex] : 'Loading...'
+                  }
+                />
+              </div>
+              <div className="quipping-answer-container">
+                <Form onSubmit={handleQuipSubmit}>
+                  <Input
+                    id="quip-input"
+                    className="quipping-answer-input"
+                    placeholder="Enter quip here"
+                    type="textarea"
+                    value={answer}
+                    onChange={handleInputOnChange}
+                    innerRef={quipRef}
+                    autoFocus={true}
+                  ></Input>
+                  <div
+                    style={{
+                      height: '3vh',
+                      fontSize: '80%',
+                      textAlign: 'center',
+                      margin: '1%',
+                    }}
+                  >
+                    {quipMessage}
+                  </div>
+                  <Button
+                    type="submit"
+                    className="quipping-answer-button"
+                    color="primary"
+                  >
+                    Submit Answer
+                  </Button>
+                </Form>
+              </div>
             </div>
-            <div className="quipping-answer-container">
-              <Form onSubmit={handleQuipSubmit}>
-                <Input
-                  id="quip-input"
-                  className="quipping-answer-input"
-                  placeholder="Enter quip here"
-                  type="textarea"
-                  value={answer}
-                  onChange={handleInputOnChange}
-                  innerRef={quipRef}
-                  autoFocus={true}
-                ></Input>
-                <div
-                  style={{
-                    height: '3vh',
-                    fontSize: '80%',
-                    textAlign: 'center',
-                    margin: '1%',
-                  }}
-                >
-                  {quipMessage}
-                </div>
-                <Button
-                  type="submit"
-                  className="quipping-answer-button"
-                  color="primary"
-                >
-                  Submit Answer
-                </Button>
-              </Form>
-            </div>
-          </div>
-        )}
+          )}
         {promptIndex >= 2 && (
           <div>
             <div className="quipping-question-container">
@@ -121,6 +127,13 @@ function Quipping() {
                 bubbleText={'Please wait while others finish quipping.'}
               />
             </div>
+          </div>
+        )}
+        {spectatorMode && (
+          <div className="quipping-question-container">
+            <LegoSpeechBubble
+              bubbleText={'Please wait while the players submit their quips.'}
+            />
           </div>
         )}
       </div>

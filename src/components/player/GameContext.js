@@ -189,6 +189,10 @@ export class ClientGameContextProvider extends React.Component {
         );
       ref.once('value', (snapshot) => {
         const prompts = snapshot.val();
+        console.log('PROMPTS:', prompts);
+        if (!prompts || prompts[0] === '') {
+          return rej('No prompts available for this player.');
+        }
         this.setState({
           prompts: prompts,
         });

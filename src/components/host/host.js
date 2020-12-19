@@ -196,6 +196,12 @@ export default class Host extends React.Component {
           gameState={gamestate}
           muted={this.state.muted}
         />
+        {this.state.gamecode && this.state.gamestate !== GameState.joining && (
+          <div className="spectate-gamecode">
+            <div>Join as a spectator!</div>
+            <div style={{ marginTop: '-4%' }}>{this.state.gamecode}</div>
+          </div>
+        )}
         {gamestate !== null && gamestate !== GameState.quipping && (
           <MusicPlayer
             src={'music/cropped-upbeat-music.m4a'}

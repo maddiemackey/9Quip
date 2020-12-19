@@ -80,7 +80,7 @@ export default class PlayerList extends React.Component {
                 <table>
                   <tbody>
                     {this.state.formattedPlayers.map((row, index) => (
-                      <tr key={row[index]}>
+                      <tr key={'row' + row[index]}>
                         {row.map((player, i) => (
                           <th key={`head-${i}`}>
                             <PlayerSquare

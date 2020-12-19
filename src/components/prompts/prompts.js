@@ -270,10 +270,10 @@ export default class Prompts extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.prompts !== this.state.prompts) {
-      if (this.state.prompts.length < 10) {
+      if (this.state.prompts.length < 20) {
         this.setState({
           publishedMessage: setFeedbackMessage(
-            'Warning: 10 prompts minimum required to play',
+            'Warning: 20 prompts minimum required to play',
             MessageType.WARNING
           ),
         });
