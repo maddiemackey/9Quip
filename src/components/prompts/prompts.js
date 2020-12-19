@@ -126,9 +126,6 @@ export default class Prompts extends React.Component {
         this.setState({
           searchMessage: setFeedbackMessage(rej, MessageType.ERROR),
           createMessage: null,
-          // currentPack: "",
-          // currentCode: "",
-          // prompts: [],
         });
       })
       .then(() => {

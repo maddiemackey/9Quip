@@ -3,52 +3,48 @@ import '../../App.css';
 import firebase from '../../Firebase/firebase';
 import 'firebase/database';
 import PlayerSquare from './playerSquare';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 export default class PlayerList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { players: [], formattedPlayers: [] };
+
+    this.refPlayers = firebase
+      .database()
+      .ref(`/games/${this.props.gameid}/players`);
   }
 
   componentDidMount() {
-    const refPlayers = firebase
-      .database()
-      .ref(`/games/${this.props.gameid}/players`);
-    refPlayers.on('value', (snapshot) => {
-      let playersArr = [];
-      // let players = snapshot.val();
-      // if (players) {
-      //   let submittedQuipCount = 0;
-      //   for (var property in players) {
-      //     if (players.hasOwnProperty(property)) {
-      //       if (this.props.showOnQuip) {
-      //         console.log(
-      //           'ALLQSUB:',
-      //           players[property].allQuipsSubmitted[this.props.round]
-      //         );
-
-      //         if (players[property].allQuipsSubmitted[this.props.round]) {
-      //           playersArr.push(players[property]);
-      //           submittedQuipCount++;
-      //         }
-      //         console.log('SIZE:', _.size(players));
-      //         console.log('sUBMITTED:', submittedQuipCount);
-      //         console.log('WHAT:', submittedQuipCount === _.size(players));
-      //         if (submittedQuipCount === _.size(players)) {
-      //           this.props.onAllQuipsSubmitted();
-      //         }
-      //       } else {
-      //         playersArr.push(players[property]);
-      //       }
-      //     }
-      //   }
-      // }
+    this.refPlayers.on('value', (snapshot) => {
+      let playersSubmittedArr = [];
+      let players = snapshot.val();
+      if (players) {
+        let submittedQuipCount = 0;
+        const playersArr = Object.values(players);
+        playersArr.forEach((player) => {
+          if (this.props.showOnQuip) {
+            if (player.allQuipsSubmitted[this.props.round]) {
+              playersSubmittedArr.push(player);
+              submittedQuipCount++;
+            }
+            if (submittedQuipCount === _.size(players)) {
+              this.props.onAllQuipsSubmitted();
+            }
+          } else {
+            playersSubmittedArr.push(player);
+          }
+        });
+      }
       this.setState({
-        players: playersArr,
+        players: playersSubmittedArr,
       });
       this.formatPlayers();
     });
+  }
+
+  componentWillUnmount() {
+    this.refPlayers.off();
   }
 
   formatPlayers() {

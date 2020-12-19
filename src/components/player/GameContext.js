@@ -39,6 +39,7 @@ export class ClientGameContextProvider extends React.Component {
       playerPosition: null,
       voteState: null,
       allQuipsSubmitted: [false, false], //TODO: also hardcoded coz its 2am yeet
+      votingRef: null,
     };
 
     this.joinGame = this.joinGame.bind(this);
@@ -49,6 +50,8 @@ export class ClientGameContextProvider extends React.Component {
     this.startWatchingVoting = this.startWatchingVoting.bind(this);
     this.getQuipsForPrompt = this.getQuipsForPrompt.bind(this);
     this.vote = this.vote.bind(this);
+
+    this.gameRef = firebase.database().ref('games');
   }
 
   handleGameStateChange() {}
@@ -154,6 +157,10 @@ export class ClientGameContextProvider extends React.Component {
         // If the game has already started, just mark as INACTIVE
         exitPlayerRef.update({ active: false });
       }
+
+      // Stop watching games / voting
+      this.gameRef.off();
+      this.state.votingRef && this.state.votingRef.off();
 
       // Remove from localStorage
       window.localStorage.removeItem('quipGameId');
@@ -292,9 +299,11 @@ export class ClientGameContextProvider extends React.Component {
     });
   }
 
-  startWatchingVoting(gameId) {
-    const ref = firebase.database().ref(`games/${gameId}/currentVote`);
-    ref.on('value', (snapshot) => {
+  startWatchingVoting(gameid) {
+    this.setState({
+      votingRef: firebase.database().ref(`games/${gameid}/currentVote`),
+    });
+    this.state.votingRef.on('value', (snapshot) => {
       const voteState = snapshot.val();
       this.setState({
         voteState: voteState,
@@ -304,9 +313,7 @@ export class ClientGameContextProvider extends React.Component {
 
   startWatchingGame(gameCode) {
     return new Promise((res, rej) => {
-      const ref = firebase.database().ref('games');
-
-      ref
+      this.gameRef
         .orderByChild('gamecode')
         .equalTo(gameCode)
         .on('value', (snapshot) => {
@@ -336,7 +343,7 @@ export class ClientGameContextProvider extends React.Component {
           });
         });
     }).catch((rej) => {
-      window.location.reload();
+      this.gameRef.off();
     });
   }
 

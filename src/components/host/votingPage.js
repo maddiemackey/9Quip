@@ -118,7 +118,7 @@ export default class VotingPage extends React.Component {
     this.setState({
       promptNumber,
       votingMode: 'VOTING',
-      seconds: this.state.seconds + 1,
+      seconds: this.state.seconds,
     });
   };
 
