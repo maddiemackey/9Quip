@@ -1,4 +1,5 @@
 import React from 'react';
+import { Spinner } from 'reactstrap';
 import '../../App.css';
 import { GameState } from '../../utils/enum';
 import Footer from '../footer';
@@ -18,22 +19,28 @@ export default class Player extends React.Component {
   }
 
   getViewToRender() {
-    switch (this.context.mainGameState) {
-      case null:
-        return <JoinGame />;
-      case GameState.joining:
-        return <Loading loadingText="Waiting on Players" />;
-      case GameState.quipping:
-        return <Quipping />;
-      case GameState.voting:
-        return <Voting />;
-      case GameState.scoreboard:
-        return <Score />;
-      default: {
-        alert(
-          "Booo, you got into an unknown state, just because it's a hackathon doesn't mean you can hack my project. Shame on you!"
-        );
+    if (!this.context.loading) {
+      switch (this.context.mainGameState) {
+        case null:
+          return <JoinGame />;
+        case GameState.joining:
+          return <Loading loadingText="Waiting on Players" />;
+        case GameState.quipping:
+          return <Quipping />;
+        case GameState.voting:
+          return <Voting />;
+        case GameState.scoreboard:
+          return <Score />;
+        default: {
+          alert(
+            "Booo, you got into an unknown state, just because it's a hackathon doesn't mean you can hack my project. Shame on you!"
+          );
+        }
       }
+    } else {
+      return (
+        <Spinner color="light" style={{ width: '50px', height: '50px' }} />
+      );
     }
   }
 

@@ -40,6 +40,7 @@ export class ClientGameContextProvider extends React.Component {
       voteState: null,
       allQuipsSubmitted: [false, false], //TODO: also hardcoded coz its 2am yeet
       votingRef: null,
+      loading: true,
     };
 
     this.joinGame = this.joinGame.bind(this);
@@ -52,6 +53,70 @@ export class ClientGameContextProvider extends React.Component {
     this.vote = this.vote.bind(this);
 
     this.gameRef = firebase.database().ref('games');
+  }
+
+  componentDidMount() {
+    const existingPlayerId = window.localStorage.getItem('quipPlayerId');
+    const existingGameId = window.localStorage.getItem('quipGameId');
+    if (existingPlayerId && existingGameId) {
+      this.findReturningPlayer(existingPlayerId, existingGameId).catch(
+        (rej) => {
+          this.setState({ loading: false });
+        }
+      );
+    } else {
+      this.setState({ loading: false });
+    }
+  }
+
+  findReturningPlayer(existingPlayerId, existingGameId) {
+    return new Promise((res, rej) => {
+      // Must check for game id first, because if it doesn't exist it means the game has ended and the page should not try load old data
+      const playerRef = firebase
+        .database()
+        .ref(`games/${existingGameId}/players/${existingPlayerId}`);
+
+      const gameRef = firebase.database().ref(`games/${existingGameId}`);
+      gameRef.once('value', (snapshot) => {
+        const existingGame = snapshot.val();
+        if (!existingGame) {
+          return rej('Game does not exist');
+        }
+        if (existingGame) {
+          const player = existingGame.players[existingPlayerId];
+          if (!player) {
+            return rej('Player does not exist');
+          }
+          if (player) {
+            playerRef.update({ active: true });
+            this.setState({
+              mainGameState: existingGame.gamestate,
+              gameId: existingGameId,
+              playerId: existingPlayerId,
+              round: existingGame.round,
+              playerScore: player.score,
+              playerHead: player.icon,
+              allQuipsSubmitted: player.allQuipsSubmitted,
+              loading: false,
+            });
+            // Get game code
+            const gameCodeRef = firebase
+              .database()
+              .ref(`games/${existingGameId}/gamecode`);
+            gameCodeRef.once('value', (snapshot) => {
+              const gamecode = snapshot.val();
+              if (!gamecode) {
+                return rej('Game CODE does not exist (???)');
+              }
+              this.startWatchingGame(gamecode);
+            });
+
+            this.startWatchingVoting(existingGameId);
+            return res('found player');
+          }
+        }
+      });
+    });
   }
 
   handleGameStateChange() {}
@@ -84,12 +149,25 @@ export class ClientGameContextProvider extends React.Component {
 
           // CHECK DUPLICATE NAMES
           if (players) {
-            for (const player of Object.values(players)) {
-              if (player.name === nameInput) {
+            for (const player of Object.entries(players)) {
+              if (player[1].name === nameInput && player[1].active === true) {
                 return rej({
                   text: `The name ${nameInput} is taken. Please enter a new one.`,
                   nameError: true,
                 });
+              } else if (
+                player[1].name === nameInput &&
+                player[1].active === false
+              ) {
+                // Player is returning from being inactive
+                let playerId = player[0];
+                let resolutionObj = {
+                  newPlayer: { key: playerId },
+                  gameId,
+                  returning: true,
+                };
+                this.findReturningPlayer(playerId, gameId);
+                return res(resolutionObj);
               }
             }
           }
@@ -134,14 +212,17 @@ export class ClientGameContextProvider extends React.Component {
       // Store player in local storage to maintain session
       window.localStorage.setItem('quipGameId', res.gameId);
       window.localStorage.setItem('quipPlayerId', res.newPlayer.key);
-      // Set in state
-      this.setState({
-        gameId: res.gameId,
-        playerId: res.newPlayer.key,
-        round: 0,
-      });
-      this.startWatchingGame(gameCode);
-      this.startWatchingVoting(res.gameId);
+
+      if (!res.returning) {
+        // Set in state
+        this.setState({
+          gameId: res.gameId,
+          playerId: res.newPlayer.key,
+          round: 0,
+        });
+        this.startWatchingGame(gameCode);
+        this.startWatchingVoting(res.gameId);
+      }
     });
   }
 
@@ -153,7 +234,7 @@ export class ClientGameContextProvider extends React.Component {
       if (this.state.mainGameState === GameState.joining) {
         // If people are still joining the game, remove the player
         exitPlayerRef.remove();
-      } else {
+      } else if (this.state.mainGameState) {
         // If the game has already started, just mark as INACTIVE
         exitPlayerRef.update({ active: false });
       }
@@ -348,6 +429,9 @@ export class ClientGameContextProvider extends React.Component {
         });
     }).catch((rej) => {
       this.gameRef.off();
+      if (this.state.mainGameState !== GameState.scoreboard) {
+        this.exitGame();
+      }
     });
   }
 

@@ -38,7 +38,7 @@ export default class VotingPage extends React.Component {
       const refRounds = firebase
         .database()
         .ref(`games/${this.props.gameId}/rounds`);
-      refRounds.once('value', (snapshot) => {
+      refRounds.on('value', (snapshot) => {
         let roundData = snapshot.val();
         if (roundData) {
           this.setState({
@@ -54,7 +54,7 @@ export default class VotingPage extends React.Component {
         .ref(`games/${this.props.gameId}/currentVote`);
       currentRef.once('value', (snapshot) => {
         const currentVote = snapshot.val();
-        if (currentVote !== '') {
+        if (currentVote) {
           const actualRoundData =
             roundData[0].promptsReturned[this.props.round];
 
@@ -66,7 +66,6 @@ export default class VotingPage extends React.Component {
               return;
             }
           });
-        } else {
           const ref = firebase.database().ref(`games/${this.props.gameId}`);
           ref.update({
             currentVote:
@@ -85,7 +84,6 @@ export default class VotingPage extends React.Component {
     refPlayers.once('value', (snapshot) => {
       let playerData = snapshot.val();
       if (playerData) {
-        // console.log(playerData);
         const pointsToAssign = calculatePoints(
           playerData,
           roundData[0].promptsReturned[this.props.round][promptNumber]
@@ -94,7 +92,6 @@ export default class VotingPage extends React.Component {
           if (playerData[playerID]) {
             let newScore =
               playerData[playerID].score + pointsToAssign[playerID];
-            // console.log("POINTS: ", pointsToAssign[playerID]);
             const refPlayer = firebase
               .database()
               .ref(`games/${this.props.gameId}/players/${playerID}`);
@@ -127,16 +124,22 @@ export default class VotingPage extends React.Component {
 
   handleNext = () => {
     let { roundData, promptNumber } = this.state;
-    roundData[0] &&
-    promptNumber < roundData[0].promptsReturned[this.props.round].length - 1
-      ? promptNumber++
-      : this.props.startScoring();
     const ref = firebase.database().ref(`games/${this.props.gameId}`);
-    ref.update({
-      currentVote:
-        roundData[0].promptsReturned[this.props.round][promptNumber].prompt,
-    });
-
+    if (
+      roundData[0] &&
+      promptNumber < roundData[0].promptsReturned[this.props.round].length - 1
+    ) {
+      promptNumber++;
+      ref.update({
+        currentVote:
+          roundData[0].promptsReturned[this.props.round][promptNumber].prompt,
+      });
+    } else {
+      ref.update({
+        currentVote: null,
+      });
+      this.props.startScoring();
+    }
     this.setState({
       promptNumber,
       votingMode: 'VOTING',

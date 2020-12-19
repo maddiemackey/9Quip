@@ -3,10 +3,9 @@ import LegoSpeechBubble from '../LegoSpeechBubble';
 import './index.css';
 import { ClientGameContext } from '../GameContext';
 
-function Option({ key, text, colour, onClick, disabled }) {
+function Option({ text, colour, onClick, disabled }) {
   return (
     <div
-      key={key}
       className="voting-option"
       onClick={() => {
         if (!disabled) {
