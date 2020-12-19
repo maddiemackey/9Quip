@@ -38,7 +38,7 @@ export default class VotingPage extends React.Component {
       const refRounds = firebase
         .database()
         .ref(`games/${this.props.gameId}/rounds`);
-      refRounds.on('value', (snapshot) => {
+      refRounds.once('value', (snapshot) => {
         let roundData = snapshot.val();
         if (roundData) {
           this.setState({
@@ -48,9 +48,31 @@ export default class VotingPage extends React.Component {
         }
       });
     }).then((roundData) => {
-      const ref = firebase.database().ref(`games/${this.props.gameId}`);
-      ref.update({
-        currentVote: roundData[0].promptsReturned[this.props.round][0].prompt,
+      // Set prompt number based on current vote if page reloaded
+      const currentRef = firebase
+        .database()
+        .ref(`games/${this.props.gameId}/currentVote`);
+      currentRef.once('value', (snapshot) => {
+        const currentVote = snapshot.val();
+        if (currentVote !== '') {
+          const actualRoundData =
+            roundData[0].promptsReturned[this.props.round];
+
+          actualRoundData.forEach((round) => {
+            if (round.prompt === currentVote) {
+              this.setState({
+                promptNumber: actualRoundData.indexOf(round),
+              });
+              return;
+            }
+          });
+        } else {
+          const ref = firebase.database().ref(`games/${this.props.gameId}`);
+          ref.update({
+            currentVote:
+              roundData[0].promptsReturned[this.props.round][0].prompt,
+          });
+        }
       });
     });
   }
@@ -134,7 +156,8 @@ export default class VotingPage extends React.Component {
       quipCount = 0,
       grid = [],
       row = [];
-    roundData[0] &&
+    roundData &&
+      roundData[0] &&
       roundData[0].promptsReturned[this.props.round][
         promptNumber
       ].players.forEach((player, playerIndex) => {
@@ -315,6 +338,7 @@ export default class VotingPage extends React.Component {
             <MaddiesLegoSpeechBubble
               style={{ minWidth: '30vw' }}
               bubbleText={
+                roundData &&
                 roundData[0] &&
                 roundData[0].promptsReturned[this.props.round][promptNumber]
                   .prompt

@@ -15,6 +15,7 @@ import MusicPlayer from '../shared/musicPlayer';
 import AudioIcon from '../shared/audioIcon';
 import { generateGamecode } from '../../utils/generateGameCode';
 import _ from 'lodash';
+import { Spinner } from 'reactstrap';
 
 export default class Host extends React.Component {
   constructor(props) {
@@ -26,10 +27,52 @@ export default class Host extends React.Component {
       muted: false,
       promptPack: 'Party',
       round: 0,
+      loading: true,
     };
   }
 
   componentDidMount() {
+    const existingGameId = window.localStorage.getItem('quipHostedGame');
+    if (existingGameId) {
+      // Set up necessary state for existing game
+      const gameRef = firebase.database().ref(`games/${existingGameId}`);
+      gameRef.once('value', (snapshot) => {
+        const existingGame = snapshot.val();
+        if (!existingGame) {
+          this.setState({
+            loading: false,
+          });
+          return;
+        }
+        const promptPackId = existingGame.promptPack;
+        // Get prompts pack name for state from id in game
+        const promptPacksRef = firebase.database().ref(`promptPacks`);
+        promptPacksRef
+          .orderByChild('code')
+          .equalTo(promptPackId)
+          .once('value', (snapshot) => {
+            let promptPack = snapshot.val();
+            if (!promptPack) {
+              alert('Prompt Pack does not exist!');
+              return;
+            }
+            const packName = Object.keys(promptPack)[0];
+
+            this.setState({
+              gameid: existingGameId,
+              gamestate: existingGame.gamestate,
+              gamecode: existingGame.gamecode,
+              promptPack: packName,
+              round: existingGame.round,
+              loading: false,
+            });
+          });
+      });
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
     this.setState({
       muted: window.localStorage.getItem('quipMuted') === 'true',
     });
@@ -89,7 +132,6 @@ export default class Host extends React.Component {
     new Promise((res, rej) => {
       ref.once('value', (snapshot) => {
         let db = snapshot.val();
-
         if (db.promptPacks[this.state.promptPack].prompts) {
           if (db.games[this.state.gameid].players) {
             let players = db.games[this.state.gameid].players;
@@ -191,59 +233,66 @@ export default class Host extends React.Component {
 
     return (
       <div>
-        <AudioIcon
-          toggleAudio={this.toggleAudio}
-          gameState={gamestate}
-          muted={this.state.muted}
-        />
-        {this.state.gamecode && this.state.gamestate !== GameState.joining && (
-          <div className="spectate-gamecode">
-            <div>Join as a spectator!</div>
-            <div style={{ marginTop: '-4%' }}>{this.state.gamecode}</div>
+        {!this.state.loading && (
+          <div>
+            <AudioIcon
+              toggleAudio={this.toggleAudio}
+              gameState={gamestate}
+              muted={this.state.muted}
+            />
+            {this.state.gamecode && this.state.gamestate !== GameState.joining && (
+              <div className="spectate-gamecode">
+                <div>Join as a spectator!</div>
+                <div style={{ marginTop: '-4%' }}>{this.state.gamecode}</div>
+              </div>
+            )}
+            {gamestate !== null && gamestate !== GameState.quipping && (
+              <MusicPlayer
+                src={'music/cropped-upbeat-music.m4a'}
+                muted={this.state.muted}
+              />
+            )}
+            {gamestate === GameState.quipping && (
+              <MusicPlayer
+                src={'music/background-music.mp3'}
+                muted={this.state.muted}
+              />
+            )}
+            {gamestate === null && <StartPage createGame={this.createGame} />}
+            {gamestate === GameState.joining && (
+              <JoiningPage
+                gamecode={this.state.gamecode}
+                startGame={this.startGame}
+                gameid={this.state.gameid}
+              />
+            )}
+            {gamestate === GameState.quipping && (
+              <QuippingPage
+                startVoting={this.startVoting}
+                gameid={this.state.gameid}
+                round={this.state.round}
+              />
+            )}
+            {gamestate === GameState.voting && (
+              <VotingPage
+                gameId={this.state.gameid}
+                round={this.state.round}
+                startScoring={this.startScoring}
+              />
+            )}
+            {gamestate === GameState.scoreboard && (
+              <ScorePage
+                gameId={this.state.gameid}
+                endGame={this.exitGame}
+                nextRound={this.nextRound}
+                gameEnded={this.state.round === 2}
+                round={this.state.round}
+              />
+            )}
           </div>
         )}
-        {gamestate !== null && gamestate !== GameState.quipping && (
-          <MusicPlayer
-            src={'music/cropped-upbeat-music.m4a'}
-            muted={this.state.muted}
-          />
-        )}
-        {gamestate === GameState.quipping && (
-          <MusicPlayer
-            src={'music/background-music.mp3'}
-            muted={this.state.muted}
-          />
-        )}
-        {gamestate === null && <StartPage createGame={this.createGame} />}
-        {gamestate === GameState.joining && (
-          <JoiningPage
-            gamecode={this.state.gamecode}
-            startGame={this.startGame}
-            gameid={this.state.gameid}
-          />
-        )}
-        {gamestate === GameState.quipping && (
-          <QuippingPage
-            startVoting={this.startVoting}
-            gameid={this.state.gameid}
-            round={this.state.round}
-          />
-        )}
-        {gamestate === GameState.voting && (
-          <VotingPage
-            gameId={this.state.gameid}
-            round={this.state.round}
-            startScoring={this.startScoring}
-          />
-        )}
-        {gamestate === GameState.scoreboard && (
-          <ScorePage
-            gameId={this.state.gameid}
-            endGame={this.exitGame}
-            nextRound={this.nextRound}
-            gameEnded={this.state.round === 2}
-            round={this.state.round}
-          />
+        {this.state.loading && (
+          <Spinner color="light" style={{ width: '75px', height: '75px' }} />
         )}
         <Footer exit={this.exitGame} inGame={!!this.state.gameid} />
       </div>

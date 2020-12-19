@@ -56,7 +56,10 @@ export default class ScorePage extends React.Component {
                 playerList.map((player, index) => {
                   if (index === 0) {
                     return (
-                      <th className="scoreboard-player-first">
+                      <th
+                        className="scoreboard-player-first"
+                        key={`head-${index}`}
+                      >
                         <div style={{ justifyContent: 'flex-start' }}>
                           {ordinal(index)}
                         </div>
@@ -74,7 +77,10 @@ export default class ScorePage extends React.Component {
                     );
                   } else if (index <= 4) {
                     return (
-                      <th className="scoreboard-player-top-row">
+                      <th
+                        className="scoreboard-player-top-row"
+                        key={`head-${index}`}
+                      >
                         <div style={{ justifyContent: 'flex-start' }}>
                           {ordinal(index)}
                         </div>
@@ -104,7 +110,7 @@ export default class ScorePage extends React.Component {
                     playerList.map((player, index) => {
                       if (index > 4) {
                         return (
-                          <td className="scoreboard-everyone-else">
+                          <td className="scoreboard-everyone-else" key={`tablediv-${index}`}>
                             <div style={{ justifyContent: 'flex-start' }}>
                               {ordinal(index)}
                             </div>
