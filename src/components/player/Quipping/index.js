@@ -93,7 +93,7 @@ function Quipping() {
                     id="quip-input"
                     className="quipping-answer-input"
                     placeholder="Enter quip here"
-                    type="textarea"
+                    type="text"
                     value={answer}
                     onChange={handleInputOnChange}
                     innerRef={quipRef}
