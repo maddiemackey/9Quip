@@ -23,7 +23,7 @@ export default class VotingPage extends React.Component {
       playerData: {},
       promptNumber: 0,
       votingMode: 'VOTING',
-      seconds: 15,
+      seconds: 25,
       pointsToAssign: {},
       viewingTimeout: null,
     };
