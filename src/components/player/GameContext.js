@@ -234,7 +234,8 @@ export class ClientGameContextProvider extends React.Component {
       if (
         this.state.mainGameState === GameState.joining ||
         (this.state.mainGameState === GameState.scoreboard &&
-          this.state.round === 2) // TODO: hardcoded too lol
+          this.state.round === 2) ||
+        this.state.round === null // TODO: hardcoded too lol
       ) {
         // If people are still joining the game or scoreboard is up, remove the player
         exitPlayerRef.remove();
