@@ -231,8 +231,12 @@ export class ClientGameContextProvider extends React.Component {
       const exitPlayerRef = firebase
         .database()
         .ref(`games/${this.state.gameId}/players/${this.state.playerId}`);
-      if (this.state.mainGameState === GameState.joining) {
-        // If people are still joining the game, remove the player
+      if (
+        this.state.mainGameState === GameState.joining ||
+        (this.state.mainGameState === GameState.scoreboard &&
+          this.state.round === 2) // TODO: hardcoded too lol
+      ) {
+        // If people are still joining the game or scoreboard is up, remove the player
         exitPlayerRef.remove();
       } else if (this.state.mainGameState) {
         // If the game has already started, just mark as INACTIVE
