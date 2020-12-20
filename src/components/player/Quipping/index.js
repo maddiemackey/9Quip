@@ -98,6 +98,7 @@ function Quipping() {
                     onChange={handleInputOnChange}
                     innerRef={quipRef}
                     autoFocus={true}
+                    autocomplete="off"
                   ></Input>
                   <div
                     style={{
